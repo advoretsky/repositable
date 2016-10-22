@@ -1,17 +1,33 @@
 package org.perfectable.artifactable;
 
-import com.google.common.net.MediaType;
 import org.perfectable.webable.handler.HttpRequest;
 import org.perfectable.webable.handler.HttpResponse;
+import org.perfectable.webable.handler.HttpStatus;
 import org.perfectable.webable.handler.RequestHandler;
 
-import java.nio.charset.StandardCharsets;
+public final class ServerHandler implements RequestHandler {
+	private final Server server;
 
-public class ServerHandler implements RequestHandler {
-	public static final ServerHandler INSTANCE = new ServerHandler();
+	public static ServerHandler of(Server server) {
+		return new ServerHandler(server);
+	}
+
+	private ServerHandler(Server server) {
+		this.server = server;
+	}
 
 	@Override
 	public HttpResponse handle(HttpRequest request) {
-		return HttpResponse.constant(MediaType.PLAIN_TEXT_UTF_8, "Found".getBytes(StandardCharsets.UTF_8));
+		ArtifactLocation location = ArtifactLocation.fromPath(request.completePath());
+		switch(request.method()) {
+			case GET:
+				Artifact artifact = server.find(location);
+				return ArtifactHttpResponse.of(artifact);
+			case POST:
+				server.add(location, request.content());
+				return HttpResponse.status(HttpStatus.OK);
+			default:
+				return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);
+		}
 	}
 }
