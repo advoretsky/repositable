@@ -1,0 +1,48 @@
+package org.perfectable.artifactable;
+
+import java.time.LocalDateTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import static com.google.common.base.Preconditions.checkState;
+
+public class SnapshotLocation {
+
+	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar"
+	static final Pattern PATH_PATTERN =
+			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]+)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)-SNAPSHOT\\/\\3-\\4-([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z]+))?\\.(\\w+)(?:\\.(\\w+))?$");
+
+	final String repositoryName;
+	final SnapshotIdentifier snapshotIdentifier;
+	final HashMethod hashMethod;
+
+	private SnapshotLocation(String repositoryName, SnapshotIdentifier snapshotIdentifier, HashMethod hashMethod) {
+		this.repositoryName = repositoryName;
+		this.snapshotIdentifier = snapshotIdentifier;
+		this.hashMethod = hashMethod;
+	}
+
+	public static boolean matchesPath(String path)
+	{
+		return PATH_PATTERN.matcher(path).matches();
+	}
+
+	public static SnapshotLocation fromPath(String path) {
+		Matcher matcher = PATH_PATTERN.matcher(path);
+		checkState(matcher.matches());
+		String repositoryName = matcher.group(1);
+		String groupId = matcher.group(2).replace('/', '.');
+		String artifactId = matcher.group(3);
+		String versionBare = matcher.group(4);
+		String timestampString = matcher.group(5);
+		LocalDateTime timestamp = LocalDateTime.parse(timestampString, SnapshotIdentifier.TIMESTAMP_FORMATTER);
+		String buildId = matcher.group(6);
+		String classifier = matcher.group(7);
+		String packaging = matcher.group(8);
+		HashMethod hashMethod = HashMethod.byExtension(matcher.group(9));
+		ArtifactIdentifier artifactIdentifier = ArtifactIdentifier.of(groupId, artifactId);
+		VersionIdentifier versionIdentifier = VersionIdentifier.of(artifactIdentifier, versionBare, "SNAPSHOT", classifier, packaging);
+		SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.of(versionIdentifier, timestamp, buildId);
+		return new SnapshotLocation(repositoryName, snapshotIdentifier, hashMethod);
+	}
+}
