@@ -6,6 +6,7 @@ public final class Entry {
 
 	public static void main(String[] args) {
 		WebApplication.begin()
+			.withRootHandler(ServerHandler.INSTANCE)
 			.serveBlocking();
 	}
 
