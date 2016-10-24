@@ -1,5 +1,7 @@
 package org.perfectable.artifactable;
 
+import org.perfectable.artifactable.metadata.Metadata;
+
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -14,9 +16,9 @@ public class SnapshotIdentifier implements FileIdentifier {
 
 	static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd.HHmmss");
 
-	final VersionIdentifier versionIdentifier;
-	final LocalDateTime timestamp;
-	final String buildId;
+	private final VersionIdentifier versionIdentifier;
+	private final LocalDateTime timestamp;
+	private final String buildId;
 
 	public SnapshotIdentifier(VersionIdentifier versionIdentifier, LocalDateTime timestamp, String buildId) {
 		this.versionIdentifier = versionIdentifier;
@@ -32,7 +34,7 @@ public class SnapshotIdentifier implements FileIdentifier {
 		Path entryPath = nested.subpath(1,nested.getNameCount());
 		entryPath = versionIdentifier.asFilePath().relativize(entryPath);
 		String fileName = entryPath.getFileName().toString();
-		String baseName = versionIdentifier.artifactIdentifier.artifactId + "-" + versionIdentifier.versionBare;
+		String baseName = versionIdentifier.fileBaseName();
 		checkState(fileName.startsWith(baseName));
 		String suffix = fileName.substring(baseName.length() + 1);
 		Matcher matcher = SUFFIX_PATTERN.matcher(suffix);
@@ -47,10 +49,10 @@ public class SnapshotIdentifier implements FileIdentifier {
 
 	@Override
 	public Path asFilePath() {
-		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
-		Path artifactPath = versionIdentifier.asBasePath();
-		String classifierSuffix = versionIdentifier.classifier == null ? "" : "-" + versionIdentifier.classifier;
-		String filePath = versionIdentifier.artifactIdentifier.artifactId + "-" + versionIdentifier.versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + versionIdentifier.packaging;
-		return artifactPath.resolve(filePath);
+		return versionIdentifier.asSnapshotPath(timestamp, buildId);
+	}
+
+	public void appendVersion(Metadata metadata) {
+		versionIdentifier.addSnapshotVersion(metadata, timestamp, buildId);
 	}
 }

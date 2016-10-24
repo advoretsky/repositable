@@ -28,9 +28,9 @@ public final class ReleaseHandler implements RequestHandler {
 				if(!artifact.isPresent()) {
 					return HttpResponse.NOT_FOUND;
 				}
-				return ArtifactHttpResponse.of(artifact.get(), location.hashMethod);
+				return location.createResponse(artifact.get());
 			case PUT:
-				if(HashMethod.NONE.equals(location.hashMethod)) {
+				if(location.allowsAdding()) {
 					server.add(location, request.contentSource());
 				}
 				return HttpResponse.status(HttpStatus.OK);

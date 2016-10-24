@@ -29,7 +29,7 @@ public final class ArtifactMetadataHandler implements RequestHandler {
 				if (!metadata.isPresent()) {
 					return HttpResponse.NOT_FOUND;
 				}
-				return MetadataHttpResponse.of(metadata.get(), location.hashMethod);
+				return location.createResponse(metadata.get());
 			case PUT:
 				// MARK metadata upload is ignored
 				return HttpResponse.status(HttpStatus.OK);

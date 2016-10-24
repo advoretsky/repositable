@@ -2,7 +2,6 @@ package org.perfectable.artifactable;
 
 import com.google.common.io.ByteSource;
 import org.perfectable.artifactable.metadata.Metadata;
-import org.perfectable.artifactable.metadata.Version;
 import org.perfectable.webable.WebApplication;
 import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.RequestHandler;
@@ -24,77 +23,27 @@ public class Server {
 	private List<Repository> repositories;
 
 	public Optional<Metadata> find(ArtifactMetadataLocation location) {
-		String repositoryName = location.repositoryName; // MARK
-		Optional<Repository> selectedRepositoryOption = selectRepository(repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return Optional.empty();
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		ArtifactIdentifier artifactIdentifier = location.artifactIdentifier; // MARK
-		return selectedRepository.findMetadata(artifactIdentifier);
+		return location.find(repositories);
 	}
 
 	public Optional<Metadata> find(VersionMetadataLocation location) {
-		String repositoryName = location.repositoryName; // MARK
-		Optional<Repository> selectedRepositoryOption = selectRepository(repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return Optional.empty();
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		VersionIdentifier versionIdentifier = location.versionIdentifier; // MARK
-		return selectedRepository.findMetadata(versionIdentifier);
+		return location.find(repositories);
 	}
 
 	public Optional<Artifact> find(SnapshotLocation location) {
-		String repositoryName = location.repositoryName; // MARK
-		Optional<Repository> selectedRepositoryOption = selectRepository(repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return Optional.empty();
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		SnapshotIdentifier artifactIdentifier = location.snapshotIdentifier; // MARK
-		return selectedRepository.findArtifact(artifactIdentifier);
+		return location.find(repositories);
 	}
 
 	public Optional<Artifact> find(ReleaseLocation location) {
-		String repositoryName = location.repositoryName; // MARK
-		Optional<Repository> selectedRepositoryOption = selectRepository(repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return Optional.empty();
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		VersionIdentifier versionIdentifier = location.versionIdentifier; // MARK
-		return selectedRepository.findArtifact(versionIdentifier);
-	}
-
-	private Optional<Repository> selectRepository(String repositoryName) {
-		return repositories.stream()
-			.filter(r -> repositoryName.equals(r.name))
-			.findFirst();
+		return location.find(repositories);
 	}
 
 	public void add(SnapshotLocation location, ByteSource source) {
-		String repositoryName = location.repositoryName; // MARK
-		Optional<Repository> selectedRepositoryOption = selectRepository(repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return; // MARK return not found
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		SnapshotIdentifier snapshotIdentifier = location.snapshotIdentifier; // MARK
-		Artifact artifact = Artifact.of(snapshotIdentifier, source);
-		selectedRepository.put(artifact);
+		location.add(repositories, source);
 	}
 
 	public void add(ReleaseLocation location, ByteSource source) {
-		String repositoryName = location.repositoryName; // MARK
-		Optional<Repository> selectedRepositoryOption = selectRepository(repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return; // MARK return not found
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		VersionIdentifier releaseLocation = location.versionIdentifier; // MARK
-		Artifact artifact = Artifact.of(releaseLocation, source);
-		selectedRepository.put(artifact);
+		location.add(repositories, source);
 	}
 
 	public void serve() {

@@ -1,6 +1,11 @@
 package org.perfectable.artifactable;
 
+import com.google.common.io.ByteSource;
+import org.perfectable.webable.handler.HttpResponse;
+
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -12,9 +17,9 @@ public class SnapshotLocation {
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]+)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)-SNAPSHOT\\/\\3-\\4-([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z]+))?\\.(\\w+)(?:\\.(\\w+))?$");
 
-	final String repositoryName;
-	final SnapshotIdentifier snapshotIdentifier;
-	final HashMethod hashMethod;
+	private final String repositoryName;
+	private final SnapshotIdentifier snapshotIdentifier;
+	private final HashMethod hashMethod;
 
 	private SnapshotLocation(String repositoryName, SnapshotIdentifier snapshotIdentifier, HashMethod hashMethod) {
 		this.repositoryName = repositoryName;
@@ -44,5 +49,32 @@ public class SnapshotLocation {
 		VersionIdentifier versionIdentifier = VersionIdentifier.of(artifactIdentifier, versionBare, "SNAPSHOT", classifier, packaging);
 		SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.of(versionIdentifier, timestamp, buildId);
 		return new SnapshotLocation(repositoryName, snapshotIdentifier, hashMethod);
+	}
+
+	public Optional<Artifact> find(List<Repository> repositories) {
+		Optional<Repository> selectedRepositoryOption = Repository.selectByName(repositories, repositoryName);
+		if(!selectedRepositoryOption.isPresent()) {
+			return Optional.empty();
+		}
+		Repository selectedRepository = selectedRepositoryOption.get();
+		return selectedRepository.findArtifact(snapshotIdentifier);
+	}
+
+	public void add(List<Repository> repositories, ByteSource source) {
+		Optional<Repository> selectedRepositoryOption = Repository.selectByName(repositories, repositoryName);
+		if(!selectedRepositoryOption.isPresent()) {
+			return; // MARK return not found
+		}
+		Repository selectedRepository = selectedRepositoryOption.get();
+		Artifact artifact = Artifact.of(snapshotIdentifier, source);
+		selectedRepository.put(artifact);
+	}
+
+	public HttpResponse createResponse(Artifact artifact) {
+		return ArtifactHttpResponse.of(artifact, hashMethod);
+	}
+
+	public boolean allowsAdding() {
+		return HashMethod.NONE == hashMethod;
 	}
 }

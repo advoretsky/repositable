@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 
 import static java.nio.file.Files.newDirectoryStream;
@@ -22,31 +23,24 @@ import static java.nio.file.Files.newDirectoryStream;
 public class Repository {
 
 	@XmlAttribute(name = "name")
-	String name;
+	private String name;
 
 	@XmlJavaTypeAdapter(value = XmlPathAdapter.class)
 	@XmlElement(name = "location")
 	private Path location;
 
 	public Optional<Metadata> findMetadata(ArtifactIdentifier artifactIdentifier) {
-		Metadata metadata = new Metadata();
-		metadata.setArtifactId(artifactIdentifier.artifactId);
-		metadata.setGroupId(artifactIdentifier.groupId);
+		Metadata metadata = artifactIdentifier.createEmptyMetadata();
 		Path artifactPath = artifactIdentifier.asBasePath();
 		Path absolutePath = location.resolve(artifactPath);
 		try (DirectoryStream<Path> versionStream = newDirectoryStream(absolutePath)) {
 			for (Path versionPath : versionStream) {
 				VersionIdentifier versionIdentifier = VersionIdentifier.ofEntry(artifactIdentifier, versionPath);
 				String version = versionIdentifier.completeVersion();
-				if("SNAPSHOT".equals(versionIdentifier.versionModifier)) {
-					// MARK ignore snapshots
-				}
-				else {
-					metadata.addVersion(version);
-				}
+				metadata.addVersion(version);
 			}
 		}
-		catch (NoSuchFileException e) {
+		catch (NoSuchFileException e) { // NOPMD
 			// just dont add versions
 		}
 		catch (IOException e) {
@@ -56,21 +50,13 @@ public class Repository {
 	}
 
 	public Optional<Metadata> findMetadata(VersionIdentifier versionIdentifier) {
-		Metadata metadata = new Metadata();
-		metadata.setArtifactId(versionIdentifier.artifactIdentifier.artifactId);
-		metadata.setGroupId(versionIdentifier.artifactIdentifier.groupId);
+		Metadata metadata = versionIdentifier.createEmptyMetadata();
 		Path artifactPath = versionIdentifier.asBasePath();
 		Path absolutePath = location.resolve(artifactPath);
 		try (DirectoryStream<Path> versionEntryStream = newDirectoryStream(absolutePath)) {
 			for (Path versionEntryPath : versionEntryStream) {
 				SnapshotIdentifier target = SnapshotIdentifier.ofEntry(versionIdentifier, versionEntryPath);
-				String version = target.versionIdentifier.versionBare + "-" + target.timestamp.format(SnapshotIdentifier.TIMESTAMP_FORMATTER) + "-" + target.buildId;
-				if("SNAPSHOT".equals(target.versionIdentifier.versionModifier)) {
-					metadata.addSnapshotVersion(target.versionIdentifier.packaging, version, target.timestamp);
-				}
-				else {
-					metadata.addVersion(version);
-				}
+				target.appendVersion(metadata);
 			}
 		}
 		catch (NoSuchFileException e) {
@@ -108,8 +94,8 @@ public class Repository {
 		Path absolutePath = location.resolve(artifactPath);
 		Path parent = absolutePath.resolveSibling(".");
 		createDirectoryIfNeeded(parent);
+		InputStream source = artifact.openStream();
 		try {
-			InputStream source = artifact.byteSource.openStream();
 			Files.asByteSink(absolutePath.toFile()).writeFrom(source);
 		}
 		catch (IOException e) {
@@ -122,5 +108,10 @@ public class Repository {
 	}
 
 
+	public static Optional<Repository> selectByName(List<Repository> repositories, String repositoryName) {
+		return repositories.stream()
+				.filter(r -> repositoryName.equals(r.name))
+				.findFirst();
+	}
 }
 

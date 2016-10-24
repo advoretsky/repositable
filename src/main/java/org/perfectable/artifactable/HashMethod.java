@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-import static javax.swing.text.html.parser.DTDConstants.MD;
-
 public enum HashMethod {
 	NONE {
 		@Override
