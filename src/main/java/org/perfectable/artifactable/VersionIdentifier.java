@@ -4,6 +4,7 @@ import org.perfectable.artifactable.metadata.Metadata;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import static org.perfectable.artifactable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
 
@@ -11,15 +12,15 @@ import static org.perfectable.artifactable.SnapshotIdentifier.TIMESTAMP_FORMATTE
 public final class VersionIdentifier implements FileIdentifier {
 	private final ArtifactIdentifier artifactIdentifier;
 	private final String versionBare;
-	private final String versionModifier;
-	private final String classifier;
+	private final Optional<String> versionModifier;
+	private final Optional<String> classifier;
 	private final String packaging;
 
-	public static VersionIdentifier of(ArtifactIdentifier artifactIdentifier, String versionBare, String versionModifier, String classifier, String packaging) {
+	public static VersionIdentifier of(ArtifactIdentifier artifactIdentifier, String versionBare, Optional<String> versionModifier, Optional<String> classifier, String packaging) {
 		return new VersionIdentifier(artifactIdentifier, versionBare, versionModifier, classifier, packaging);
 	}
 
-	private VersionIdentifier(ArtifactIdentifier artifactIdentifier, String versionBare, String versionModifier, String classifier, String packaging) {
+	private VersionIdentifier(ArtifactIdentifier artifactIdentifier, String versionBare, Optional<String> versionModifier, Optional<String> classifier, String packaging) {
 		this.artifactIdentifier = artifactIdentifier;
 		this.versionBare = versionBare;
 		this.classifier = classifier;
@@ -28,7 +29,7 @@ public final class VersionIdentifier implements FileIdentifier {
 	}
 
 	public VersionIdentifier withClassifier(String newClassifier) {
-		return new VersionIdentifier(artifactIdentifier, versionBare, versionModifier, newClassifier, packaging);
+		return new VersionIdentifier(artifactIdentifier, versionBare, versionModifier, Optional.of(newClassifier), packaging);
 	}
 
 	public VersionIdentifier withPackaging(String newPackaging) {
@@ -54,22 +55,20 @@ public final class VersionIdentifier implements FileIdentifier {
 		entryPath = artifactIdentifier.asBasePath().relativize(entryPath);
 		String fileName = entryPath.getFileName().toString();
 		String versionBare;
-		String versionModifier;
+		Optional<String> versionModifier;
 		if(fileName.endsWith("-SNAPSHOT")) {
 			versionBare = fileName.replace("-SNAPSHOT$", "");
-			versionModifier = "SNAPSHOT";
+			versionModifier = Optional.of("SNAPSHOT");
 		}
 		else {
 			versionBare = fileName;
-			versionModifier = null;
+			versionModifier = Optional.empty();
 		}
-		String classifier = null; // MARK
-		String packaging = "pom"; // MARK
-		return of(artifactIdentifier, versionBare, versionModifier, classifier, packaging);
+		return of(artifactIdentifier, versionBare, versionModifier, null, "pom");
 	}
 
 	public String completeVersion() {
-		return (versionModifier == null) ? versionBare : (versionBare + "-" + versionModifier);
+		return versionModifier.isPresent() ? (versionBare + "-" + versionModifier.get()) : versionBare;
 	}
 
 	public String fileBaseName() {
@@ -85,7 +84,9 @@ public final class VersionIdentifier implements FileIdentifier {
 	public Path asSnapshotPath(LocalDateTime timestamp, String buildId) {
 		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
 		Path artifactPath = asBasePath();
-		String fileName = artifactIdentifier.asSnapshotFilename(versionBare, timestampString, buildId, classifier, packaging);
+		String classifierSuffix = classifier == null ? "" : "-" + classifier;
+		String fullVersion = versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
+		String fileName = artifactIdentifier.asSnapshotFilename(fullVersion);
 		return artifactPath.resolve(fileName);
 
 	}

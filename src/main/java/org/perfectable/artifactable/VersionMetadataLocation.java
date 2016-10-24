@@ -12,7 +12,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class VersionMetadataLocation {
 
-	// ex. "/libs-snapshot-local/org/perfectable/webable/1.1.0-SNAPSHOT/maven-metadata.xml"
+	// ex. "/libs-snapshot-local/org/perfectable/webable/1.1.0-SNAPSHOT/maven-metadata.xml" // NOPMD
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]*)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)(?:-(SNAPSHOT))?\\/maven-metadata\\.xml(?:\\.(\\w+))?");
 
@@ -41,7 +41,7 @@ public class VersionMetadataLocation {
 		String versionModifier = matcher.group(5);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(6));
 		ArtifactIdentifier artifactIdentifier = ArtifactIdentifier.of(groupId, artifactId);
-		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(artifactIdentifier, versionBare, versionModifier, null, "pom"), hashMethod);
+		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(artifactIdentifier, versionBare, Optional.ofNullable(versionModifier), null, "pom"), hashMethod);
 	}
 
 	public Optional<Metadata> find(List<Repository> repositories) {

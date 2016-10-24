@@ -4,6 +4,7 @@ import org.perfectable.artifactable.metadata.Metadata;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 public final class ArtifactIdentifier {
 	private final String groupId;
@@ -27,8 +28,8 @@ public final class ArtifactIdentifier {
 		return artifactId + "-" + versionBare;
 	}
 
-	public String asFileName(String version, String classifier, String packaging) {
-		String classifierSuffix = classifier == null ? "" : "-" + classifier;
+	public String asFileName(String version, Optional<String> classifier, String packaging) {
+		String classifierSuffix = classifier.isPresent() ? "-" + classifier.get() : "";
 		String fileName = artifactId + "-" + version + classifierSuffix + "." + packaging;
 		return fileName;
 	}
@@ -40,9 +41,8 @@ public final class ArtifactIdentifier {
 		return metadata;
 	}
 
-	public String asSnapshotFilename(String versionBare, String timestampString, String buildId, String classifier, String packaging) {
-		String classifierSuffix = classifier == null ? "" : "-" + classifier;
-		String filePath = artifactId + "-" + versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
+	public String asSnapshotFilename(String fullVersionWithExtension) {
+		String filePath = artifactId + "-" + fullVersionWithExtension;
 		return filePath;
 	}
 }

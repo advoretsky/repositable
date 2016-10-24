@@ -59,7 +59,7 @@ public class Repository {
 				target.appendVersion(metadata);
 			}
 		}
-		catch (NoSuchFileException e) {
+		catch (NoSuchFileException e) { // NOPMD
 			// just dont add versions
 		}
 		catch (IOException e) {
@@ -110,7 +110,7 @@ public class Repository {
 
 	public static Optional<Repository> selectByName(List<Repository> repositories, String repositoryName) {
 		return repositories.stream()
-				.filter(r -> repositoryName.equals(r.name))
+				.filter(candidate -> repositoryName.equals(candidate.name))
 				.findFirst();
 	}
 }

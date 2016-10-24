@@ -43,7 +43,10 @@ public class SnapshotIdentifier implements FileIdentifier {
 		String buildId = matcher.group(2);
 		String classifier = matcher.group(3);
 		String packaging = matcher.group(4);
-		VersionIdentifier actualVersionIdentifier = versionIdentifier.withPackaging(packaging).withClassifier(classifier);
+		VersionIdentifier actualVersionIdentifier = versionIdentifier.withPackaging(packaging);
+		if(classifier != null) {
+			actualVersionIdentifier = actualVersionIdentifier.withClassifier(classifier);
+		}
 		return of(actualVersionIdentifier, timestamp, buildId);
 	}
 

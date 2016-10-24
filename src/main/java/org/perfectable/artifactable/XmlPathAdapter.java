@@ -6,12 +6,12 @@ import java.nio.file.Paths;
 
 class XmlPathAdapter extends XmlAdapter<String, Path> {
 	@Override
-	public Path unmarshal(String s) throws Exception {
-		return Paths.get(s);
+	public Path unmarshal(String pathRepresentation) {
+		return Paths.get(pathRepresentation);
 	}
 
 	@Override
-	public String marshal(Path path) throws Exception {
+	public String marshal(Path path) {
 		return path.toString();
 	}
 }

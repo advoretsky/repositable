@@ -11,9 +11,9 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class SnapshotLocation {
+public final class SnapshotLocation {
 
-	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar"
+	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar" // NOPMD
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]+)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)-SNAPSHOT\\/\\3-\\4-([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z]+))?\\.(\\w+)(?:\\.(\\w+))?$");
 
@@ -46,7 +46,7 @@ public class SnapshotLocation {
 		String packaging = matcher.group(8);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(9));
 		ArtifactIdentifier artifactIdentifier = ArtifactIdentifier.of(groupId, artifactId);
-		VersionIdentifier versionIdentifier = VersionIdentifier.of(artifactIdentifier, versionBare, "SNAPSHOT", classifier, packaging);
+		VersionIdentifier versionIdentifier = VersionIdentifier.of(artifactIdentifier, versionBare, Optional.of("SNAPSHOT"), Optional.ofNullable(classifier), packaging);
 		SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.of(versionIdentifier, timestamp, buildId);
 		return new SnapshotLocation(repositoryName, snapshotIdentifier, hashMethod);
 	}

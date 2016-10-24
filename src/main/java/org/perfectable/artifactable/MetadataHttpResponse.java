@@ -1,22 +1,17 @@
 package org.perfectable.artifactable;
 
-import com.google.common.hash.HashFunction;
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
 import org.perfectable.artifactable.metadata.Metadata;
 import org.perfectable.webable.handler.HttpResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.OutputStream;
 
 
-public class MetadataHttpResponse implements HttpResponse {
+public final class MetadataHttpResponse implements HttpResponse {
 	private final Metadata metadata;
 	private final HashMethod hashMethod;
 

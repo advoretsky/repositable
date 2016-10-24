@@ -57,8 +57,8 @@ public enum HashMethod {
 		}
 
 		@Override
-		public void write(int i) throws IOException {
-			hasher.putByte((byte) i);
+		public void write(int data) throws IOException {
+			hasher.putByte((byte) data);
 		}
 
 		@Override

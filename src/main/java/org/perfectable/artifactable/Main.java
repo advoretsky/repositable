@@ -1,14 +1,14 @@
 package org.perfectable.artifactable;
 
 import javax.xml.bind.JAXBException;
-import java.nio.file.Path;
-import java.time.LocalDateTime;
 
 public final class Main {
 
+	private static final int REQUIRED_ARGUMENTS_COUNT = 1;
+
 	public static void main(String[] args) throws JAXBException {
-		if(args.length < 1) {
-			System.out.println("Usage: artifactable <configuration>");
+		if(args.length < REQUIRED_ARGUMENTS_COUNT) {
+			System.out.println("Usage: artifactable <configuration>"); // NOPMD actual use of system out
 			return;
 		}
 		String configurationLocation = args[0];

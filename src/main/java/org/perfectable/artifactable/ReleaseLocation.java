@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class ReleaseLocation {
+public final class ReleaseLocation {
 
 	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.0/buildable-1.2.0.jar"
 	static final Pattern PATH_PATTERN =
@@ -42,7 +42,7 @@ public class ReleaseLocation {
 		String packaging = matcher.group(6);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(7));
 		ArtifactIdentifier artifactIdentifier = ArtifactIdentifier.of(groupId, artifactId);
-		VersionIdentifier versionIdentifier = VersionIdentifier.of(artifactIdentifier, version, null, classifier, packaging);
+		VersionIdentifier versionIdentifier = VersionIdentifier.of(artifactIdentifier, version, Optional.empty(), Optional.of(classifier), packaging);
 		return new ReleaseLocation(repositoryName, versionIdentifier, hashMethod);
 	}
 
