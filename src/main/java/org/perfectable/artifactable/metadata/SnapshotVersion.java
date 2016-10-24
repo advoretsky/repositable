@@ -1,24 +1,17 @@
 package org.perfectable.artifactable.metadata;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
 
-import static com.oracle.jrockit.jfr.ContentType.Timestamp;
-
+@XmlAccessorType(XmlAccessType.NONE)
 public class SnapshotVersion {
-	@XmlElement(name = "classifier")
 	private String classifier;
-
-	@XmlElement(name = "extension")
 	private String packaging;
-
-	@XmlElement(name = "value")
-	private String value;
-
-	@XmlJavaTypeAdapter(TimestampAdapter.class)
-	@XmlElement(name = "timestamp")
-	private LocalDateTime timestamp;
+	private String value; // NOPMD is read only by JAXB
+	private LocalDateTime timestamp; // NOPMD is read only by JAXB
 
 	public static SnapshotVersion of(String classifier, String packaging, String value, LocalDateTime timestamp) {
 		SnapshotVersion snapshotVersion = new SnapshotVersion();
@@ -29,19 +22,44 @@ public class SnapshotVersion {
 		return snapshotVersion;
 	}
 
-	public void setClassifier(String classifier) {
+	@SuppressWarnings("unused")
+	@XmlElement(name = "classifier")
+	public String getClassifier() {
+		return classifier;
+	}
+
+	private void setClassifier(String classifier) {
 		this.classifier = classifier;
 	}
 
-	public void setPackaging(String packaging) {
+	@SuppressWarnings("unused")
+	@XmlElement(name = "extension")
+	public String getPackaging() {
+		return packaging;
+	}
+
+	private void setPackaging(String packaging) {
 		this.packaging = packaging;
 	}
 
-	public void setValue(String value) {
+	@SuppressWarnings("unused")
+	@XmlElement(name = "value")
+	public String getValue() {
+		return value;
+	}
+
+	private void setValue(String value) {
 		this.value = value;
 	}
 
-	public void setTimestamp(LocalDateTime timestamp) {
+	@SuppressWarnings("unused")
+	@XmlJavaTypeAdapter(TimestampAdapter.class)
+	@XmlElement(name = "timestamp")
+	public LocalDateTime getTimestamp() {
+		return timestamp;
+	}
+
+	private void setTimestamp(LocalDateTime timestamp) {
 		this.timestamp = timestamp;
 	}
 }
