@@ -19,15 +19,15 @@ public class SnapshotIdentifier implements ArtifactIdentifier, MetadataIdentifie
 
 	private final VersionIdentifier versionIdentifier;
 	private final LocalDateTime timestamp;
-	private final String buildId;
+	private final int buildId;
 
-	public SnapshotIdentifier(VersionIdentifier versionIdentifier, LocalDateTime timestamp, String buildId) {
+	public SnapshotIdentifier(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId) {
 		this.versionIdentifier = versionIdentifier;
 		this.timestamp = timestamp;
 		this.buildId = buildId;
 	}
 
-	public static SnapshotIdentifier of(VersionIdentifier versionIdentifier, LocalDateTime timestamp, String buildId) {
+	public static SnapshotIdentifier of(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId) {
 		return new SnapshotIdentifier(versionIdentifier, timestamp, buildId);
 	}
 
@@ -42,7 +42,7 @@ public class SnapshotIdentifier implements ArtifactIdentifier, MetadataIdentifie
 		Matcher matcher = SUFFIX_PATTERN.matcher(suffix);
 		checkState(matcher.matches());
 		LocalDateTime timestamp = LocalDateTime.parse(matcher.group(1), TIMESTAMP_FORMATTER);
-		String buildId = matcher.group(2);
+		int buildId = Integer.parseInt(matcher.group(2));
 		String classifier = matcher.group(3);
 		String packaging = matcher.group(4);
 		VersionIdentifier actualVersionIdentifier = versionIdentifier.withPackaging(packaging);

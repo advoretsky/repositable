@@ -4,10 +4,13 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 import java.time.LocalDateTime;
 
 @XmlRootElement(name = "metadata")
 @XmlAccessorType(XmlAccessType.NONE)
+@XmlType(name = "Metadata",
+	propOrder = {"groupId", "artifactId", "version", "versioning"}) // plugins are ignored
 public class Metadata {
 	@SuppressWarnings("unused")
 	@XmlElement(name = "groupId")
@@ -19,7 +22,7 @@ public class Metadata {
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "version")
-	private Version mainVersion; // NOPMD is read only by JAXB
+	private Version version; // NOPMD is read only by JAXB
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "versioning")
@@ -37,11 +40,11 @@ public class Metadata {
 		versioning.addVersion(version);
 	}
 
-	public void addSnapshotVersion(String packaging, String value, LocalDateTime timestamp) {
-		versioning.addSnapshotVersion(packaging, value, timestamp);
+	public void addSnapshotVersion(String classifier, String extension, String version, int buildId, LocalDateTime timestamp) {
+		versioning.addSnapshotVersion(classifier, extension, version, buildId, timestamp);
 	}
 
-	public void setMainVersion(String mainVersion) {
-		this.mainVersion = Version.of(mainVersion);
+	public void setVersion(String version) {
+		this.version = Version.of(version);
 	}
 }

@@ -85,11 +85,11 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 	@Override
 	public Metadata createEmptyMetadata() {
 		Metadata metadata = moduleIdentifier.createEmptyMetadata();
-		metadata.setMainVersion(completeVersion());
+		metadata.setVersion(completeVersion());
 		return metadata;
 	}
 
-	public Path asSnapshotPath(LocalDateTime timestamp, String buildId) {
+	public Path asSnapshotPath(LocalDateTime timestamp, int buildId) {
 		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
 		Path artifactPath = asBasePath();
 		String classifierSuffix = classifier.isPresent() ? "-" + classifier : "";
@@ -99,9 +99,9 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 
 	}
 
-	public void addSnapshotVersion(Metadata metadata, LocalDateTime timestamp, String buildId) {
-		String version = versionBare + "-" + timestamp.format(TIMESTAMP_FORMATTER) + "-" + buildId;
-		metadata.addSnapshotVersion(packaging, version, timestamp);
+	public void addSnapshotVersion(Metadata metadata, LocalDateTime timestamp, int buildId) {
+		String version = versionBare + "-" + timestamp.format(SnapshotIdentifier.TIMESTAMP_FORMATTER) + "-" + buildId;
+		metadata.addSnapshotVersion(classifier.orElse(""), packaging, version, buildId, timestamp);
 	}
 
 	@Override

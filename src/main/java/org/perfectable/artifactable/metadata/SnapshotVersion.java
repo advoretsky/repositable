@@ -1,24 +1,36 @@
 package org.perfectable.artifactable.metadata;
 
+import org.perfectable.artifactable.SnapshotIdentifier;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 @XmlAccessorType(XmlAccessType.NONE)
+@XmlType(name = "SnapshotVersion",
+		propOrder = {"classifier", "extension", "value", "updated"})
 public class SnapshotVersion {
-	private String classifier;
-	private String packaging;
-	private String value; // NOPMD is read only by JAXB
-	private LocalDateTime timestamp; // NOPMD is read only by JAXB
 
-	public static SnapshotVersion of(String classifier, String packaging, String value, LocalDateTime timestamp) {
+	public static final Comparator<SnapshotVersion> COMPARATOR = Comparator.comparing(SnapshotVersion::getUpdated);
+
+	private String classifier;
+	private String extension;
+	private String value;
+	private LocalDateTime updated;
+	private int buildId;
+
+	public static SnapshotVersion of(String classifier, String extension, String version, int buildId, LocalDateTime updated) {
 		SnapshotVersion snapshotVersion = new SnapshotVersion();
 		snapshotVersion.setClassifier(classifier);
-		snapshotVersion.setPackaging(packaging);
-		snapshotVersion.setValue(value);
-		snapshotVersion.setTimestamp(timestamp);
+		snapshotVersion.setExtension(extension);
+		snapshotVersion.setValue(version);
+		snapshotVersion.setBuildId(buildId);
+		snapshotVersion.setUpdated(updated);
 		return snapshotVersion;
 	}
 
@@ -34,12 +46,12 @@ public class SnapshotVersion {
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "extension")
-	public String getPackaging() {
-		return packaging;
+	public String getExtension() {
+		return extension;
 	}
 
-	private void setPackaging(String packaging) {
-		this.packaging = packaging;
+	private void setExtension(String extension) {
+		this.extension = extension;
 	}
 
 	@SuppressWarnings("unused")
@@ -54,12 +66,27 @@ public class SnapshotVersion {
 
 	@SuppressWarnings("unused")
 	@XmlJavaTypeAdapter(TimestampAdapter.class)
-	@XmlElement(name = "timestamp")
-	public LocalDateTime getTimestamp() {
-		return timestamp;
+	@XmlElement(name = "updated")
+	public LocalDateTime getUpdated() {
+		return updated;
 	}
 
-	private void setTimestamp(LocalDateTime timestamp) {
-		this.timestamp = timestamp;
+	private void setUpdated(LocalDateTime updated) {
+		this.updated = updated;
+	}
+
+	@SuppressWarnings("unused")
+	@XmlTransient
+	public int getBuildId() {
+		return buildId;
+	}
+
+	private void setBuildId(int buildId) {
+		this.buildId = buildId;
+	}
+
+
+	public Snapshot toSnapshot() {
+		return Snapshot.of(updated, buildId, true);
 	}
 }

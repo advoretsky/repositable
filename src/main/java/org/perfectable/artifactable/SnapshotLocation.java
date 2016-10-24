@@ -35,7 +35,7 @@ public final class SnapshotLocation {
 		String versionBare = matcher.group(4);
 		String timestampString = matcher.group(5);
 		LocalDateTime timestamp = LocalDateTime.parse(timestampString, SnapshotIdentifier.TIMESTAMP_FORMATTER);
-		String buildId = matcher.group(6);
+		int buildId = Integer.parseInt(matcher.group(6));
 		String classifier = matcher.group(7);
 		String packaging = matcher.group(8);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(9));
