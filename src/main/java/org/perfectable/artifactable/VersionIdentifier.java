@@ -71,7 +71,7 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 			versionBare = fileName;
 			versionModifier = Optional.empty();
 		}
-		return of(moduleIdentifier, versionBare, versionModifier, null, "pom");
+		return of(moduleIdentifier, versionBare, versionModifier, Optional.empty(), "pom");
 	}
 
 	private String completeVersion() {
@@ -92,7 +92,7 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 	public Path asSnapshotPath(LocalDateTime timestamp, String buildId) {
 		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
 		Path artifactPath = asBasePath();
-		String classifierSuffix = classifier == null ? "" : "-" + classifier;
+		String classifierSuffix = classifier.isPresent() ? "-" + classifier : "";
 		String fullVersion = versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
 		String fileName = moduleIdentifier.asSnapshotFilename(fullVersion);
 		return artifactPath.resolve(fileName);

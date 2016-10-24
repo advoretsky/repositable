@@ -35,7 +35,7 @@ public class VersionMetadataLocation {
 		String versionModifier = matcher.group(5);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(6));
 		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
-		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionModifier), null, "pom"), hashMethod);
+		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionModifier), Optional.empty(), "pom"), hashMethod);
 	}
 
 	public Optional<Metadata> find(Repositories repositories) {

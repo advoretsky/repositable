@@ -23,7 +23,7 @@ public class Metadata {
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "versioning")
-	private Versioning versioning = new Versioning(); // NOPMD is read only by JAXB
+	private Versioning versioning = Versioning.create(); // NOPMD is read only by JAXB
 
 	public void setArtifactId(String artifactId) {
 		this.artifactId = artifactId;

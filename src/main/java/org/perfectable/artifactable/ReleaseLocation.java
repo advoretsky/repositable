@@ -32,11 +32,11 @@ public final class ReleaseLocation {
 		String groupId = matcher.group(2).replace('/', '.');
 		String artifactId = matcher.group(3);
 		String version = matcher.group(4);
-		String classifier = matcher.group(6);
+		String classifier = matcher.group(5);
 		String packaging = matcher.group(6);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(7));
 		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
-		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, version, Optional.empty(), Optional.of(classifier), packaging);
+		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, version, Optional.empty(), Optional.ofNullable(classifier), packaging);
 		return new ReleaseLocation(repositoryName, versionIdentifier, hashMethod);
 	}
 
