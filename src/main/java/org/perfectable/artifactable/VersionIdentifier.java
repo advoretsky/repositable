@@ -64,7 +64,7 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 		String versionBare;
 		Optional<String> versionModifier;
 		if(fileName.endsWith("-SNAPSHOT")) {
-			versionBare = fileName.replace("-SNAPSHOT$", "");
+			versionBare = fileName.substring(0, fileName.length() - 9);
 			versionModifier = Optional.of("SNAPSHOT");
 		}
 		else {
