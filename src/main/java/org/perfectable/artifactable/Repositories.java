@@ -30,14 +30,14 @@ public final class Repositories {
 		return selectedRepository.findMetadata(artifactIdentifier);
 	}
 
-	public Optional<Artifact> findArtifact(String repositoryName, FileIdentifier versionIdentifier) {
+	public Optional<Artifact> findArtifact(String repositoryName, ArtifactIdentifier versionIdentifier) {
 		Repository selectedRepository = selectByName(repositoryName);
 		return selectedRepository.findArtifact(versionIdentifier);
 	}
 
-	public void add(String repositoryName, FileIdentifier fileIdentifier, ByteSource source) {
+	public void add(String repositoryName, ArtifactIdentifier artifactIdentifier, ByteSource source) {
 		Repository selectedRepository = selectByName(repositoryName);
-		selectedRepository.put(fileIdentifier, Artifact.of(source));
+		selectedRepository.put(artifactIdentifier, Artifact.of(source));
 	}
 
 	private Repository selectByName(String repositoryName) {

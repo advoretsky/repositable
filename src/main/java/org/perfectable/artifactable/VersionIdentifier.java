@@ -10,19 +10,19 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.perfectable.artifactable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
 
 
-public final class VersionIdentifier implements FileIdentifier, MetadataIdentifier, MetadataIdentifier.Entry {
-	private final ArtifactIdentifier artifactIdentifier;
+public final class VersionIdentifier implements ArtifactIdentifier, MetadataIdentifier, MetadataIdentifier.Entry {
+	private final ModuleIdentifier moduleIdentifier;
 	private final String versionBare;
 	private final Optional<String> versionModifier;
 	private final Optional<String> classifier;
 	private final String packaging;
 
-	public static VersionIdentifier of(ArtifactIdentifier artifactIdentifier, String versionBare, Optional<String> versionModifier, Optional<String> classifier, String packaging) {
-		return new VersionIdentifier(artifactIdentifier, versionBare, versionModifier, classifier, packaging);
+	public static VersionIdentifier of(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionModifier, Optional<String> classifier, String packaging) {
+		return new VersionIdentifier(moduleIdentifier, versionBare, versionModifier, classifier, packaging);
 	}
 
-	private VersionIdentifier(ArtifactIdentifier artifactIdentifier, String versionBare, Optional<String> versionModifier, Optional<String> classifier, String packaging) {
-		this.artifactIdentifier = artifactIdentifier;
+	private VersionIdentifier(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionModifier, Optional<String> classifier, String packaging) {
+		this.moduleIdentifier = moduleIdentifier;
 		this.versionBare = versionBare;
 		this.classifier = classifier;
 		this.versionModifier = versionModifier;
@@ -30,15 +30,15 @@ public final class VersionIdentifier implements FileIdentifier, MetadataIdentifi
 	}
 
 	public VersionIdentifier withClassifier(String newClassifier) {
-		return new VersionIdentifier(artifactIdentifier, versionBare, versionModifier, Optional.of(newClassifier), packaging);
+		return new VersionIdentifier(moduleIdentifier, versionBare, versionModifier, Optional.of(newClassifier), packaging);
 	}
 
 	public VersionIdentifier withPackaging(String newPackaging) {
-		return new VersionIdentifier(artifactIdentifier, versionBare, versionModifier, classifier, newPackaging);
+		return new VersionIdentifier(moduleIdentifier, versionBare, versionModifier, classifier, newPackaging);
 	}
 
 	public Path asBasePath() {
-		Path artifactPath = artifactIdentifier.asBasePath();
+		Path artifactPath = moduleIdentifier.asBasePath();
 		String version = completeVersion();
 		return artifactPath.resolve(version);
 	}
@@ -52,13 +52,13 @@ public final class VersionIdentifier implements FileIdentifier, MetadataIdentifi
 	public Path asFilePath() {
 		Path versionPath = asBasePath();
 		String version = completeVersion();
-		String fileName = artifactIdentifier.asFileName(version, classifier, packaging);
+		String fileName = moduleIdentifier.asFileName(version, classifier, packaging);
 		return versionPath.resolve(fileName);
 	}
 
-	public static VersionIdentifier ofEntry(ArtifactIdentifier artifactIdentifier, Path versionPath) {
+	public static VersionIdentifier ofEntry(ModuleIdentifier moduleIdentifier, Path versionPath) {
 		Path entryPath = versionPath.subpath(1,versionPath.getNameCount());
-		entryPath = artifactIdentifier.asBasePath().relativize(entryPath);
+		entryPath = moduleIdentifier.asBasePath().relativize(entryPath);
 		Path filePath = checkNotNull(entryPath.getFileName());
 		String fileName = filePath.toString();
 		String versionBare;
@@ -71,7 +71,7 @@ public final class VersionIdentifier implements FileIdentifier, MetadataIdentifi
 			versionBare = fileName;
 			versionModifier = Optional.empty();
 		}
-		return of(artifactIdentifier, versionBare, versionModifier, null, "pom");
+		return of(moduleIdentifier, versionBare, versionModifier, null, "pom");
 	}
 
 	private String completeVersion() {
@@ -79,11 +79,12 @@ public final class VersionIdentifier implements FileIdentifier, MetadataIdentifi
 	}
 
 	public String fileBaseName() {
-		return artifactIdentifier.asFileBaseName(versionBare);
+		return moduleIdentifier.asFileBaseName(versionBare);
 	}
 
+	@Override
 	public Metadata createEmptyMetadata() {
-		Metadata metadata = artifactIdentifier.createEmptyMetadata();
+		Metadata metadata = moduleIdentifier.createEmptyMetadata();
 		metadata.setMainVersion(completeVersion());
 		return metadata;
 	}
@@ -93,7 +94,7 @@ public final class VersionIdentifier implements FileIdentifier, MetadataIdentifi
 		Path artifactPath = asBasePath();
 		String classifierSuffix = classifier == null ? "" : "-" + classifier;
 		String fullVersion = versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
-		String fileName = artifactIdentifier.asSnapshotFilename(fullVersion);
+		String fileName = moduleIdentifier.asSnapshotFilename(fullVersion);
 		return artifactPath.resolve(fileName);
 
 	}

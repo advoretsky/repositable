@@ -7,8 +7,8 @@ import java.util.Optional;
 public interface Repository {
 	Optional<Metadata> findMetadata(MetadataIdentifier metadataIdentifier);
 
-	Optional<Artifact> findArtifact(FileIdentifier fileIdentifier);
+	Optional<Artifact> findArtifact(ArtifactIdentifier artifactIdentifier);
 
-	void put(FileIdentifier identifier, Artifact content);
+	void put(ArtifactIdentifier identifier, Artifact content);
 
 }

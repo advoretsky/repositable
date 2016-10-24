@@ -45,7 +45,7 @@ public class FileRepository implements Repository {
 	}
 
 	@Override
-	public Optional<Artifact> findArtifact(FileIdentifier releaseIdentifier) {
+	public Optional<Artifact> findArtifact(ArtifactIdentifier releaseIdentifier) {
 		Path artifactPath = releaseIdentifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
 		if(!absolutePath.toFile().exists()) {
@@ -56,7 +56,7 @@ public class FileRepository implements Repository {
 	}
 
 	@Override
-	public void put(FileIdentifier identifier, Artifact artifact) {
+	public void put(ArtifactIdentifier identifier, Artifact artifact) {
 		Path artifactPath = identifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
 		Path parent = absolutePath.resolveSibling(".");

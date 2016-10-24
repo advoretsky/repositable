@@ -25,11 +25,6 @@ public class VersionMetadataLocation {
 		this.hashMethod = hashMethod;
 	}
 
-	public static boolean matchesPath(String path)
-	{
-		return PATH_PATTERN.matcher(path).matches();
-	}
-
 	public static VersionMetadataLocation fromPath(String path) {
 		Matcher matcher = PATH_PATTERN.matcher(path);
 		checkState(matcher.matches());
@@ -39,8 +34,8 @@ public class VersionMetadataLocation {
 		String versionBare = matcher.group(4);
 		String versionModifier = matcher.group(5);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(6));
-		ArtifactIdentifier artifactIdentifier = ArtifactIdentifier.of(groupId, artifactId);
-		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(artifactIdentifier, versionBare, Optional.ofNullable(versionModifier), null, "pom"), hashMethod);
+		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
+		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionModifier), null, "pom"), hashMethod);
 	}
 
 	public Optional<Metadata> find(Repositories repositories) {

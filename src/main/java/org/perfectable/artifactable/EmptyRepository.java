@@ -13,12 +13,12 @@ public final class EmptyRepository implements Repository {
 	}
 
 	@Override
-	public Optional<Artifact> findArtifact(FileIdentifier fileIdentifier) {
+	public Optional<Artifact> findArtifact(ArtifactIdentifier artifactIdentifier) {
 		return Optional.empty();
 	}
 
 	@Override
-	public void put(FileIdentifier fileIdentifier, Artifact artifact) {
+	public void put(ArtifactIdentifier artifactIdentifier, Artifact artifact) {
 		// MARK disable uploading
 	}
 

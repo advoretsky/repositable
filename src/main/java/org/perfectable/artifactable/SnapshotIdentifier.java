@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-public class SnapshotIdentifier implements FileIdentifier, MetadataIdentifier.Entry {
+public class SnapshotIdentifier implements ArtifactIdentifier, MetadataIdentifier.Entry {
 
 	private static final Pattern SUFFIX_PATTERN = Pattern.compile("([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z]+))?\\.(\\w+)$");
 

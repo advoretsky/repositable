@@ -8,21 +8,21 @@ import org.perfectable.webable.handler.RequestHandler;
 
 import java.util.Optional;
 
-public final class ArtifactMetadataHandler implements RequestHandler {
+public final class ModuleMetadataHandler implements RequestHandler {
 	private final Repositories repositories;
 
-	public static ArtifactMetadataHandler of(Repositories repositories) {
-		return new ArtifactMetadataHandler(repositories);
+	public static ModuleMetadataHandler of(Repositories repositories) {
+		return new ModuleMetadataHandler(repositories);
 	}
 
-	private ArtifactMetadataHandler(Repositories repositories) {
+	private ModuleMetadataHandler(Repositories repositories) {
 		this.repositories = repositories;
 	}
 
 	@Override
 	public HttpResponse handle(HttpRequest request) {
 		String path = request.completePath();
-		ArtifactMetadataLocation location = ArtifactMetadataLocation.fromPath(path);
+		ModuleMetadataLocation location = ModuleMetadataLocation.fromPath(path);
 		switch(request.method()) {
 			case GET:
 				Optional<Metadata> metadata = location.find(repositories);

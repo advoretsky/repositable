@@ -32,7 +32,7 @@ public final class Server {
 		WebApplication.begin()
 				.withPort(port)
 				.withHandler(VersionMetadataLocation.PATH_PATTERN, VersionMetadataHandler.of(repositories))
-				.withHandler(ArtifactMetadataLocation.PATH_PATTERN, ArtifactMetadataHandler.of(repositories))
+				.withHandler(ModuleMetadataLocation.PATH_PATTERN, ModuleMetadataHandler.of(repositories))
 				.withHandler(ReleaseLocation.PATH_PATTERN, ReleaseHandler.of(repositories))
 				.withHandler(SnapshotLocation.PATH_PATTERN, SnapshotHandler.of(repositories))
 				.withRootHandler(RequestHandler.constant(HttpResponse.NOT_FOUND))

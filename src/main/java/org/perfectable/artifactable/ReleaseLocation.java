@@ -35,8 +35,8 @@ public final class ReleaseLocation {
 		String classifier = matcher.group(6);
 		String packaging = matcher.group(6);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(7));
-		ArtifactIdentifier artifactIdentifier = ArtifactIdentifier.of(groupId, artifactId);
-		VersionIdentifier versionIdentifier = VersionIdentifier.of(artifactIdentifier, version, Optional.empty(), Optional.of(classifier), packaging);
+		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
+		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, version, Optional.empty(), Optional.of(classifier), packaging);
 		return new ReleaseLocation(repositoryName, versionIdentifier, hashMethod);
 	}
 

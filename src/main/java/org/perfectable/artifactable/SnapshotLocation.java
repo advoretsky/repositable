@@ -39,8 +39,8 @@ public final class SnapshotLocation {
 		String classifier = matcher.group(7);
 		String packaging = matcher.group(8);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(9));
-		ArtifactIdentifier artifactIdentifier = ArtifactIdentifier.of(groupId, artifactId);
-		VersionIdentifier versionIdentifier = VersionIdentifier.of(artifactIdentifier, versionBare, Optional.of("SNAPSHOT"), Optional.ofNullable(classifier), packaging);
+		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
+		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, versionBare, Optional.of("SNAPSHOT"), Optional.ofNullable(classifier), packaging);
 		SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.of(versionIdentifier, timestamp, buildId);
 		return new SnapshotLocation(repositoryName, snapshotIdentifier, hashMethod);
 	}
