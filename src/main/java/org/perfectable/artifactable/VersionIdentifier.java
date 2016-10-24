@@ -100,7 +100,7 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 	}
 
 	public void addSnapshotVersion(Metadata metadata, LocalDateTime timestamp, int buildId) {
-		String version = versionBare + "-" + timestamp.format(SnapshotIdentifier.TIMESTAMP_FORMATTER) + "-" + buildId;
+		String version = versionBare + "-" + timestamp.format(TIMESTAMP_FORMATTER) + "-" + buildId;
 		metadata.addSnapshotVersion(classifier.orElse(""), packaging, version, buildId, timestamp);
 	}
 

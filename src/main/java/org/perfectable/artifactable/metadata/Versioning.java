@@ -9,8 +9,6 @@ import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
-import static com.sun.corba.se.spi.activation.IIOP_CLEAR_TEXT.value;
-
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Versioning",
 		propOrder = {"latest", "release", "snapshot", "versions", "lastUpdated", "snapshotVersions"})
