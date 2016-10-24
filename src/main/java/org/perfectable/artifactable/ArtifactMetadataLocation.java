@@ -2,7 +2,6 @@ package org.perfectable.artifactable;
 
 import org.perfectable.artifactable.metadata.Metadata;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,12 +43,7 @@ public class ArtifactMetadataLocation {
 		return MetadataHttpResponse.of(metadata, hashMethod);
 	}
 
-	public Optional<Metadata> find(List<Repository> repositories) {
-		Optional<Repository> selectedRepositoryOption = Repository.selectByName(repositories, repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return Optional.empty();
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		return selectedRepository.findMetadata(artifactIdentifier);
+	public Optional<Metadata> find(Repositories repositories) {
+		return repositories.findMetadata(repositoryName, artifactIdentifier);
 	}
 }

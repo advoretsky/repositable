@@ -1,6 +1,5 @@
 package org.perfectable.artifactable.configuration;
 
-import org.perfectable.artifactable.Repository;
 import org.perfectable.artifactable.Server;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -21,8 +20,7 @@ public class ServerConfiguration {
 	public Server build() {
 		Server server = Server.create(port);
 		for (RepositoryConfiguration repositoryConfiguration : repositories) {
-			Repository repository = repositoryConfiguration.build();
-			server = server.withRepository(repository);
+			server = repositoryConfiguration.appendTo(server);
 		}
 		return server;
 

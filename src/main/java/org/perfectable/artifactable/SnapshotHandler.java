@@ -8,14 +8,14 @@ import org.perfectable.webable.handler.RequestHandler;
 import java.util.Optional;
 
 public final class SnapshotHandler implements RequestHandler {
-	private final Server server;
+	private final Repositories repositories;
 
-	public static SnapshotHandler of(Server server) {
-		return new SnapshotHandler(server);
+	public static SnapshotHandler of(Repositories repositories) {
+		return new SnapshotHandler(repositories);
 	}
 
-	private SnapshotHandler(Server server) {
-		this.server = server;
+	private SnapshotHandler(Repositories repositories) {
+		this.repositories = repositories;
 	}
 
 	@Override
@@ -24,15 +24,13 @@ public final class SnapshotHandler implements RequestHandler {
 		SnapshotLocation location = SnapshotLocation.fromPath(path);
 		switch(request.method()) {
 			case GET:
-				Optional<Artifact> artifact = server.find(location);
+				Optional<Artifact> artifact = location.find(repositories);
 				if(!artifact.isPresent()) {
 					return HttpResponse.NOT_FOUND;
 				}
 				return location.createResponse(artifact.get());
 			case PUT:
-				if(location.allowsAdding()) {
-					server.add(location, request.contentSource());
-				}
+				location.add(repositories, request.contentSource());
 				return HttpResponse.status(HttpStatus.OK);
 			default:
 				return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);

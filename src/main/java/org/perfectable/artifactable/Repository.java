@@ -19,7 +19,6 @@ public class Repository {
 	private final Path location;
 
 	public Repository(String name, Path location) {
-
 		this.name = name;
 		this.location = location;
 	}
@@ -40,7 +39,7 @@ public class Repository {
 			}
 		}
 		catch (NoSuchFileException e) { // NOPMD
-			// just dont add versions
+			// just dont addSnapshot versions
 		}
 		catch (IOException e) {
 			throw new AssertionError(e);
@@ -59,7 +58,7 @@ public class Repository {
 			}
 		}
 		catch (NoSuchFileException e) { // NOPMD
-			// just dont add versions
+			// just dont addSnapshot versions
 		}
 		catch (IOException e) {
 			throw new AssertionError(e);

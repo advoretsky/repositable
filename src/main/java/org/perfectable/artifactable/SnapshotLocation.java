@@ -4,7 +4,6 @@ import com.google.common.io.ByteSource;
 import org.perfectable.webable.handler.HttpResponse;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,11 +26,6 @@ public final class SnapshotLocation {
 		this.hashMethod = hashMethod;
 	}
 
-	public static boolean matchesPath(String path)
-	{
-		return PATH_PATTERN.matcher(path).matches();
-	}
-
 	public static SnapshotLocation fromPath(String path) {
 		Matcher matcher = PATH_PATTERN.matcher(path);
 		checkState(matcher.matches());
@@ -51,30 +45,18 @@ public final class SnapshotLocation {
 		return new SnapshotLocation(repositoryName, snapshotIdentifier, hashMethod);
 	}
 
-	public Optional<Artifact> find(List<Repository> repositories) {
-		Optional<Repository> selectedRepositoryOption = Repository.selectByName(repositories, repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return Optional.empty();
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		return selectedRepository.findArtifact(snapshotIdentifier);
+	public Optional<Artifact> find(Repositories repositories) {
+		return repositories.findArtifact(repositoryName, snapshotIdentifier);
 	}
 
-	public void add(List<Repository> repositories, ByteSource source) {
-		Optional<Repository> selectedRepositoryOption = Repository.selectByName(repositories, repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return; // MARK return not found
+	public void add(Repositories repositories, ByteSource source) {
+		if(hashMethod != HashMethod.NONE) {
+			return;
 		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		Artifact artifact = Artifact.of(snapshotIdentifier, source);
-		selectedRepository.put(artifact);
+		repositories.addSnapshot(repositoryName, snapshotIdentifier, source);
 	}
 
 	public HttpResponse createResponse(Artifact artifact) {
 		return ArtifactHttpResponse.of(artifact, hashMethod);
-	}
-
-	public boolean allowsAdding() {
-		return HashMethod.NONE == hashMethod;
 	}
 }

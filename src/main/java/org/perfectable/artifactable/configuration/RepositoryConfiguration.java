@@ -1,6 +1,7 @@
 package org.perfectable.artifactable.configuration;
 
 import org.perfectable.artifactable.Repository;
+import org.perfectable.artifactable.Server;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -18,7 +19,8 @@ public class RepositoryConfiguration {
 	@XmlElement(name = "location")
 	private Path location;
 
-	public Repository build() {
-		return Repository.create(name, location);
+	public Server appendTo(Server server) {
+		Repository repository = Repository.create(name, location);
+		return server.withRepository(name, repository);
 	}
 }

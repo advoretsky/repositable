@@ -9,14 +9,14 @@ import org.perfectable.webable.handler.RequestHandler;
 import java.util.Optional;
 
 public final class VersionMetadataHandler implements RequestHandler {
-	private final Server server;
+	private final Repositories repositories;
 
-	public static VersionMetadataHandler of(Server server) {
-		return new VersionMetadataHandler(server);
+	public static VersionMetadataHandler of(Repositories repositories) {
+		return new VersionMetadataHandler(repositories);
 	}
 
-	private VersionMetadataHandler(Server server) {
-		this.server = server;
+	private VersionMetadataHandler(Repositories repositories) {
+		this.repositories = repositories;
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public final class VersionMetadataHandler implements RequestHandler {
 		VersionMetadataLocation location = VersionMetadataLocation.fromPath(path);
 		switch(request.method()) {
 			case GET:
-				Optional<Metadata> metadata = server.find(location);
+				Optional<Metadata> metadata = location.find(repositories);
 				if (!metadata.isPresent()) {
 					return HttpResponse.NOT_FOUND;
 				}

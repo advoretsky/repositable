@@ -9,14 +9,14 @@ import org.perfectable.webable.handler.RequestHandler;
 import java.util.Optional;
 
 public final class ArtifactMetadataHandler implements RequestHandler {
-	private final Server server;
+	private final Repositories repositories;
 
-	public static ArtifactMetadataHandler of(Server server) {
-		return new ArtifactMetadataHandler(server);
+	public static ArtifactMetadataHandler of(Repositories repositories) {
+		return new ArtifactMetadataHandler(repositories);
 	}
 
-	private ArtifactMetadataHandler(Server server) {
-		this.server = server;
+	private ArtifactMetadataHandler(Repositories repositories) {
+		this.repositories = repositories;
 	}
 
 	@Override
@@ -25,7 +25,7 @@ public final class ArtifactMetadataHandler implements RequestHandler {
 		ArtifactMetadataLocation location = ArtifactMetadataLocation.fromPath(path);
 		switch(request.method()) {
 			case GET:
-				Optional<Metadata> metadata = server.find(location);
+				Optional<Metadata> metadata = location.find(repositories);
 				if (!metadata.isPresent()) {
 					return HttpResponse.NOT_FOUND;
 				}

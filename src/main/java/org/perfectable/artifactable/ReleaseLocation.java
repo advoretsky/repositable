@@ -3,7 +3,6 @@ package org.perfectable.artifactable;
 import com.google.common.io.ByteSource;
 import org.perfectable.webable.handler.HttpResponse;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,24 +45,12 @@ public final class ReleaseLocation {
 		return new ReleaseLocation(repositoryName, versionIdentifier, hashMethod);
 	}
 
-	public Optional<Artifact> find(List<Repository> repositories) {
-		Optional<Repository> selectedRepositoryOption = Repository.selectByName(repositories, repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return Optional.empty();
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		return selectedRepository.findArtifact(versionIdentifier);
+	public Optional<Artifact> find(Repositories repositories) {
+		return repositories.findArtifact(repositoryName, versionIdentifier);
 	}
 
-	public void add(List<Repository> repositories, ByteSource source) {
-		Optional<Repository> selectedRepositoryOption = Repository.selectByName(repositories, repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return; // MARK return not found
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		Artifact artifact = Artifact.of(versionIdentifier, source);
-		selectedRepository.put(artifact);
-
+	public void add(Repositories repositories, ByteSource source) {
+		repositories.addRelease(repositoryName, versionIdentifier, source);
 	}
 
 	public HttpResponse createResponse(Artifact artifact) {

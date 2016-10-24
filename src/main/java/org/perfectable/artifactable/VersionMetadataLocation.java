@@ -3,7 +3,6 @@ package org.perfectable.artifactable;
 import org.perfectable.artifactable.metadata.Metadata;
 import org.perfectable.webable.handler.HttpResponse;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,13 +43,8 @@ public class VersionMetadataLocation {
 		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(artifactIdentifier, versionBare, Optional.ofNullable(versionModifier), null, "pom"), hashMethod);
 	}
 
-	public Optional<Metadata> find(List<Repository> repositories) {
-		Optional<Repository> selectedRepositoryOption = Repository.selectByName(repositories, repositoryName);
-		if(!selectedRepositoryOption.isPresent()) {
-			return Optional.empty();
-		}
-		Repository selectedRepository = selectedRepositoryOption.get();
-		return selectedRepository.findMetadata(versionIdentifier);
+	public Optional<Metadata> find(Repositories repositories) {
+		return repositories.findMetadata(repositoryName, versionIdentifier);
 	}
 
 	public HttpResponse createResponse(Metadata metadata) {

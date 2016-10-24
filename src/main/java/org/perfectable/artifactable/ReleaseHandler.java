@@ -8,14 +8,14 @@ import org.perfectable.webable.handler.RequestHandler;
 import java.util.Optional;
 
 public final class ReleaseHandler implements RequestHandler {
-	private final Server server;
+	private final Repositories repositories;
 
-	public static ReleaseHandler of(Server server) {
-		return new ReleaseHandler(server);
+	public static ReleaseHandler of(Repositories repositories) {
+		return new ReleaseHandler(repositories);
 	}
 
-	private ReleaseHandler(Server server) {
-		this.server = server;
+	private ReleaseHandler(Repositories repositories) {
+		this.repositories = repositories;
 	}
 
 	@Override
@@ -24,15 +24,13 @@ public final class ReleaseHandler implements RequestHandler {
 		ReleaseLocation location = ReleaseLocation.fromPath(path);
 		switch(request.method()) {
 			case GET:
-				Optional<Artifact> artifact = server.find(location);
+				Optional<Artifact> artifact = location.find(repositories);
 				if(!artifact.isPresent()) {
 					return HttpResponse.NOT_FOUND;
 				}
 				return location.createResponse(artifact.get());
 			case PUT:
-				if(location.allowsAdding()) {
-					server.add(location, request.contentSource());
-				}
+				location.add(repositories, request.contentSource());
 				return HttpResponse.status(HttpStatus.OK);
 			default:
 				return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);
