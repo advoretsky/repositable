@@ -9,9 +9,9 @@ public interface MetadataIdentifier {
 
 	Path asBasePath();
 
-	Entry createEntry(Path versionPath);
+	VersionEntry createVersionEntry(Path versionPath);
 
-	interface Entry {
+	interface VersionEntry {
 		void appendVersion(Metadata metadata);
 	}
 }

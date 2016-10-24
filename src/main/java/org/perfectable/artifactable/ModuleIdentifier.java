@@ -25,7 +25,7 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 	}
 
 	@Override
-	public Entry createEntry(Path versionPath) {
+	public VersionEntry createVersionEntry(Path versionPath) {
 		return VersionIdentifier.ofEntry(this, versionPath);
 	}
 

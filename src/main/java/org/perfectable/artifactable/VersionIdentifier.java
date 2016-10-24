@@ -10,7 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.perfectable.artifactable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
 
 
-public final class VersionIdentifier implements ArtifactIdentifier, MetadataIdentifier, MetadataIdentifier.Entry {
+public final class VersionIdentifier implements ArtifactIdentifier, MetadataIdentifier, MetadataIdentifier.VersionEntry {
 	private final ModuleIdentifier moduleIdentifier;
 	private final String versionBare;
 	private final Optional<String> versionModifier;
@@ -44,7 +44,7 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 	}
 
 	@Override
-	public Entry createEntry(Path versionPath) {
+	public VersionEntry createVersionEntry(Path versionPath) {
 		return SnapshotIdentifier.ofEntry(this, versionPath);
 	}
 

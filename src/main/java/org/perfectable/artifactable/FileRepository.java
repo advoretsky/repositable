@@ -31,8 +31,8 @@ public class FileRepository implements Repository {
 		Path absolutePath = location.resolve(artifactPath);
 		try (DirectoryStream<Path> versionStream = newDirectoryStream(absolutePath)) {
 			for (Path versionPath : versionStream) {
-				MetadataIdentifier.Entry entry = metadataIdentifier.createEntry(versionPath);
-				entry.appendVersion(metadata);
+				MetadataIdentifier.VersionEntry versionEntry = metadataIdentifier.createVersionEntry(versionPath);
+				versionEntry.appendVersion(metadata);
 			}
 		}
 		catch (NoSuchFileException e) { // NOPMD
