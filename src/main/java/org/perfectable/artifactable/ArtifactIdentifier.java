@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-public final class ArtifactIdentifier {
+public final class ArtifactIdentifier implements MetadataIdentifier {
 	private final String groupId;
 	private final String artifactId;
 
@@ -24,6 +24,11 @@ public final class ArtifactIdentifier {
 		return Paths.get(groupPath, artifactId);
 	}
 
+	@Override
+	public Entry createEntry(Path versionPath) {
+		return VersionIdentifier.ofEntry(this, versionPath);
+	}
+
 	public String asFileBaseName(String versionBare) {
 		return artifactId + "-" + versionBare;
 	}
@@ -34,15 +39,15 @@ public final class ArtifactIdentifier {
 		return fileName;
 	}
 
+	public String asSnapshotFilename(String fullVersionWithExtension) {
+		String filePath = artifactId + "-" + fullVersionWithExtension;
+		return filePath;
+	}
+
 	public Metadata createEmptyMetadata() {
 		Metadata metadata = new Metadata();
 		metadata.setArtifactId(artifactId);
 		metadata.setGroupId(groupId);
 		return metadata;
-	}
-
-	public String asSnapshotFilename(String fullVersionWithExtension) {
-		String filePath = artifactId + "-" + fullVersionWithExtension;
-		return filePath;
 	}
 }

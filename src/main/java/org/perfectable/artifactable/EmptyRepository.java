@@ -8,27 +8,17 @@ public final class EmptyRepository implements Repository {
 	public static final EmptyRepository INSTANCE = new EmptyRepository();
 
 	@Override
-	public Optional<Metadata> findMetadata(ArtifactIdentifier artifactIdentifier) {
+	public Optional<Metadata> findMetadata(MetadataIdentifier metadataIdentifier) {
 		return Optional.empty();
 	}
 
 	@Override
-	public Optional<Metadata> findMetadata(VersionIdentifier versionIdentifier) {
+	public Optional<Artifact> findArtifact(FileIdentifier fileIdentifier) {
 		return Optional.empty();
 	}
 
 	@Override
-	public Optional<Artifact> findArtifact(SnapshotIdentifier snapshotIdentifier) {
-		return Optional.empty();
-	}
-
-	@Override
-	public Optional<Artifact> findArtifact(VersionIdentifier releaseIdentifier) {
-		return Optional.empty();
-	}
-
-	@Override
-	public void put(Artifact artifact) {
+	public void put(FileIdentifier fileIdentifier, Artifact artifact) {
 		// MARK disable uploading
 	}
 

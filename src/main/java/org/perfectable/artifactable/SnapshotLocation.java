@@ -53,10 +53,10 @@ public final class SnapshotLocation {
 		if(hashMethod != HashMethod.NONE) {
 			return;
 		}
-		repositories.addSnapshot(repositoryName, snapshotIdentifier, source);
+		repositories.add(repositoryName, snapshotIdentifier, source);
 	}
 
 	public HttpResponse createResponse(Artifact artifact) {
-		return ArtifactHttpResponse.of(artifact, hashMethod);
+		return HashedHttpResponse.of(artifact, hashMethod);
 	}
 }

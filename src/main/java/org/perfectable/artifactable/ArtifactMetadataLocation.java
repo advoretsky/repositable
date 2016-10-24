@@ -24,10 +24,6 @@ public class ArtifactMetadataLocation {
 		this.hashMethod = hashMethod;
 	}
 
-	public static boolean matchesPath(String path) {
-		return PATH_PATTERN.matcher(path).matches();
-	}
-
 	public static ArtifactMetadataLocation fromPath(String path) {
 		Matcher matcher = PATH_PATTERN.matcher(path);
 		checkState(matcher.matches());
@@ -39,11 +35,11 @@ public class ArtifactMetadataLocation {
 		return new ArtifactMetadataLocation(repositoryName, artifactIdentifier, hashMethod);
 	}
 
-	public MetadataHttpResponse createResponse(Metadata metadata) {
-		return MetadataHttpResponse.of(metadata, hashMethod);
-	}
-
 	public Optional<Metadata> find(Repositories repositories) {
 		return repositories.findMetadata(repositoryName, artifactIdentifier);
+	}
+
+	public MetadataHttpResponse createResponse(Metadata metadata) {
+		return MetadataHttpResponse.of(metadata, hashMethod);
 	}
 }

@@ -10,7 +10,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 import static org.perfectable.artifactable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
 
 
-public final class VersionIdentifier implements FileIdentifier {
+public final class VersionIdentifier implements FileIdentifier, MetadataIdentifier, MetadataIdentifier.Entry {
 	private final ArtifactIdentifier artifactIdentifier;
 	private final String versionBare;
 	private final Optional<String> versionModifier;
@@ -44,6 +44,11 @@ public final class VersionIdentifier implements FileIdentifier {
 	}
 
 	@Override
+	public Entry createEntry(Path versionPath) {
+		return SnapshotIdentifier.ofEntry(this, versionPath);
+	}
+
+	@Override
 	public Path asFilePath() {
 		Path versionPath = asBasePath();
 		String version = completeVersion();
@@ -69,7 +74,7 @@ public final class VersionIdentifier implements FileIdentifier {
 		return of(artifactIdentifier, versionBare, versionModifier, null, "pom");
 	}
 
-	public String completeVersion() {
+	private String completeVersion() {
 		return versionModifier.isPresent() ? (versionBare + "-" + versionModifier.get()) : versionBare;
 	}
 
@@ -96,5 +101,11 @@ public final class VersionIdentifier implements FileIdentifier {
 	public void addSnapshotVersion(Metadata metadata, LocalDateTime timestamp, String buildId) {
 		String version = versionBare + "-" + timestamp.format(TIMESTAMP_FORMATTER) + "-" + buildId;
 		metadata.addSnapshotVersion(packaging, version, timestamp);
+	}
+
+	@Override
+	public void appendVersion(Metadata metadata) {
+		String version = versionModifier.isPresent() ? (versionBare + "-" + versionModifier.get()) : versionBare;
+		metadata.addVersion(version);
 	}
 }

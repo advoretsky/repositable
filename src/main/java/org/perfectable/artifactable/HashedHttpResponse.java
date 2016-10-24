@@ -6,18 +6,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public final class ArtifactHttpResponse implements HttpResponse {
+public final class HashedHttpResponse implements HttpResponse {
 
 	private final Artifact artifact;
 	private final HashMethod hashMethod;
 
-	private ArtifactHttpResponse(Artifact artifact, HashMethod hashMethod) {
+	private HashedHttpResponse(Artifact artifact, HashMethod hashMethod) {
 		this.artifact = artifact;
 		this.hashMethod = hashMethod;
 	}
 
 	public static HttpResponse of(Artifact artifact, HashMethod hashMethod) {
-		return new ArtifactHttpResponse(artifact, hashMethod);
+		return new HashedHttpResponse(artifact, hashMethod);
 	}
 
 	@Override

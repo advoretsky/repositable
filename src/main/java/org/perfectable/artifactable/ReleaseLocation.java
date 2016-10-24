@@ -25,11 +25,6 @@ public final class ReleaseLocation {
 		this.hashMethod = hashMethod;
 	}
 
-	public static boolean matchesPath(String path)
-	{
-		return PATH_PATTERN.matcher(path).matches();
-	}
-
 	public static ReleaseLocation fromPath(String path) {
 		Matcher matcher = PATH_PATTERN.matcher(path);
 		checkState(matcher.matches());
@@ -50,14 +45,13 @@ public final class ReleaseLocation {
 	}
 
 	public void add(Repositories repositories, ByteSource source) {
-		repositories.addRelease(repositoryName, versionIdentifier, source);
+		if(hashMethod != HashMethod.NONE) {
+			return;
+		}
+		repositories.add(repositoryName, versionIdentifier, source);
 	}
 
 	public HttpResponse createResponse(Artifact artifact) {
-		return ArtifactHttpResponse.of(artifact, hashMethod);
-	}
-
-	public boolean allowsAdding() {
-		return hashMethod == HashMethod.NONE;
+		return HashedHttpResponse.of(artifact, hashMethod);
 	}
 }

@@ -25,15 +25,14 @@ public class FileRepository implements Repository {
 	}
 
 	@Override
-	public Optional<Metadata> findMetadata(ArtifactIdentifier artifactIdentifier) {
-		Metadata metadata = artifactIdentifier.createEmptyMetadata();
-		Path artifactPath = artifactIdentifier.asBasePath();
+	public Optional<Metadata> findMetadata(MetadataIdentifier metadataIdentifier) {
+		Metadata metadata = metadataIdentifier.createEmptyMetadata();
+		Path artifactPath = metadataIdentifier.asBasePath();
 		Path absolutePath = location.resolve(artifactPath);
 		try (DirectoryStream<Path> versionStream = newDirectoryStream(absolutePath)) {
 			for (Path versionPath : versionStream) {
-				VersionIdentifier versionIdentifier = VersionIdentifier.ofEntry(artifactIdentifier, versionPath);
-				String version = versionIdentifier.completeVersion();
-				metadata.addVersion(version);
+				MetadataIdentifier.Entry entry = metadataIdentifier.createEntry(versionPath);
+				entry.appendVersion(metadata);
 			}
 		}
 		catch (NoSuchFileException e) { // NOPMD
@@ -46,56 +45,24 @@ public class FileRepository implements Repository {
 	}
 
 	@Override
-	public Optional<Metadata> findMetadata(VersionIdentifier versionIdentifier) {
-		Metadata metadata = versionIdentifier.createEmptyMetadata();
-		Path artifactPath = versionIdentifier.asBasePath();
-		Path absolutePath = location.resolve(artifactPath);
-		try (DirectoryStream<Path> versionEntryStream = newDirectoryStream(absolutePath)) {
-			for (Path versionEntryPath : versionEntryStream) {
-				SnapshotIdentifier target = SnapshotIdentifier.ofEntry(versionIdentifier, versionEntryPath);
-				target.appendVersion(metadata);
-			}
-		}
-		catch (NoSuchFileException e) { // NOPMD
-			// just dont addSnapshot versions
-		}
-		catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		return Optional.of(metadata);
-	}
-
-	@Override
-	public Optional<Artifact> findArtifact(SnapshotIdentifier snapshotIdentifier) {
-		Path artifactPath = snapshotIdentifier.asFilePath();
-		Path absolutePath = location.resolve(artifactPath);
-		if(!absolutePath.toFile().exists()) {
-			return Optional.empty();
-		}
-		ByteSource byteSource = Files.asByteSource(absolutePath.toFile());
-		return Optional.of(Artifact.of(snapshotIdentifier, byteSource));
-	}
-
-
-	@Override
-	public Optional<Artifact> findArtifact(VersionIdentifier releaseIdentifier) {
+	public Optional<Artifact> findArtifact(FileIdentifier releaseIdentifier) {
 		Path artifactPath = releaseIdentifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
 		if(!absolutePath.toFile().exists()) {
 			return Optional.empty();
 		}
 		ByteSource byteSource = Files.asByteSource(absolutePath.toFile());
-		return Optional.of(Artifact.of(releaseIdentifier, byteSource));
+		return Optional.of(Artifact.of(byteSource));
 	}
 
 	@Override
-	public void put(Artifact artifact) {
-		Path artifactPath = artifact.asPath();
+	public void put(FileIdentifier identifier, Artifact artifact) {
+		Path artifactPath = identifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
 		Path parent = absolutePath.resolveSibling(".");
 		createDirectoryIfNeeded(parent);
-		InputStream source = artifact.openStream();
 		try {
+			InputStream source = artifact.openStream();
 			Files.asByteSink(absolutePath.toFile()).writeFrom(source);
 		}
 		catch (IOException e) {

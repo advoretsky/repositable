@@ -5,18 +5,15 @@ import com.google.common.io.ByteSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.nio.file.Path;
 
 public class Artifact {
-	private final FileIdentifier fileIdentifier;
 	private final ByteSource byteSource;
 
-	public static Artifact of(FileIdentifier fileIdentifier, ByteSource byteSource) {
-		return new Artifact(fileIdentifier, byteSource);
+	public static Artifact of(ByteSource byteSource) {
+		return new Artifact(byteSource);
 	}
 
-	public Artifact(FileIdentifier fileIdentifier, ByteSource byteSource) {
-		this.fileIdentifier = fileIdentifier;
+	public Artifact(ByteSource byteSource) {
 		this.byteSource = byteSource;
 	}
 
@@ -27,10 +24,6 @@ public class Artifact {
 		catch (IOException e) {
 			throw new AssertionError(e);
 		}
-	}
-
-	public Path asPath() {
-		return fileIdentifier.asFilePath();
 	}
 
 	public InputStream openStream() {

@@ -25,36 +25,19 @@ public final class Repositories {
 		return new Repositories(newRepositoryByName);
 	}
 
-	public Optional<Metadata> findMetadata(String repositoryName, ArtifactIdentifier artifactIdentifier) {
+	public Optional<Metadata> findMetadata(String repositoryName, MetadataIdentifier artifactIdentifier) {
 		Repository selectedRepository = selectByName(repositoryName);
 		return selectedRepository.findMetadata(artifactIdentifier);
 	}
 
-	public Optional<Metadata> findMetadata(String repositoryName, VersionIdentifier versionIdentifier) {
-		Repository selectedRepository = selectByName(repositoryName);
-		return selectedRepository.findMetadata(versionIdentifier);
-	}
-
-	public Optional<Artifact> findArtifact(String repositoryName, VersionIdentifier versionIdentifier) {
+	public Optional<Artifact> findArtifact(String repositoryName, FileIdentifier versionIdentifier) {
 		Repository selectedRepository = selectByName(repositoryName);
 		return selectedRepository.findArtifact(versionIdentifier);
 	}
 
-	public Optional<Artifact> findArtifact(String repositoryName, SnapshotIdentifier snapshotIdentifier) {
+	public void add(String repositoryName, FileIdentifier fileIdentifier, ByteSource source) {
 		Repository selectedRepository = selectByName(repositoryName);
-		return selectedRepository.findArtifact(snapshotIdentifier);
-	}
-
-	public void addSnapshot(String repositoryName, SnapshotIdentifier snapshotIdentifier, ByteSource source) {
-		Repository selectedRepository = selectByName(repositoryName);
-		Artifact artifact = Artifact.of(snapshotIdentifier, source);
-		selectedRepository.put(artifact);
-	}
-
-	public void addRelease(String repositoryName, VersionIdentifier versionIdentifier, ByteSource source) {
-		Repository selectedRepository = selectByName(repositoryName);
-		Artifact artifact = Artifact.of(versionIdentifier, source);
-		selectedRepository.put(artifact);
+		selectedRepository.put(fileIdentifier, Artifact.of(source));
 	}
 
 	private Repository selectByName(String repositoryName) {
