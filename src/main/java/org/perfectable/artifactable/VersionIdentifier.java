@@ -92,7 +92,7 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 	public Path asSnapshotPath(LocalDateTime timestamp, int buildId) {
 		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
 		Path artifactPath = asBasePath();
-		String classifierSuffix = classifier.isPresent() ? "-" + classifier : "";
+		String classifierSuffix = classifier.isPresent() ? "-" + classifier.get() : "";
 		String fullVersion = versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
 		String fileName = moduleIdentifier.asSnapshotFilename(fullVersion);
 		return artifactPath.resolve(fileName);
