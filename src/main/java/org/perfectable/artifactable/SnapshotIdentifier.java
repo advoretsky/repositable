@@ -8,6 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 public class SnapshotIdentifier implements FileIdentifier {
@@ -33,7 +34,8 @@ public class SnapshotIdentifier implements FileIdentifier {
 	public static SnapshotIdentifier ofEntry(VersionIdentifier versionIdentifier, Path nested) {
 		Path entryPath = nested.subpath(1,nested.getNameCount());
 		entryPath = versionIdentifier.asFilePath().relativize(entryPath);
-		String fileName = entryPath.getFileName().toString();
+		Path filePath = checkNotNull(entryPath.getFileName());
+		String fileName = filePath.toString();
 		String baseName = versionIdentifier.fileBaseName();
 		checkState(fileName.startsWith(baseName));
 		String suffix = fileName.substring(baseName.length() + 1);

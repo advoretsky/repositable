@@ -1,4 +1,4 @@
-package org.perfectable.artifactable;
+package org.perfectable.artifactable.configuration;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.nio.file.Path;

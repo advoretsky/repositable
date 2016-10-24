@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static org.perfectable.artifactable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
 
 
@@ -53,7 +54,8 @@ public final class VersionIdentifier implements FileIdentifier {
 	public static VersionIdentifier ofEntry(ArtifactIdentifier artifactIdentifier, Path versionPath) {
 		Path entryPath = versionPath.subpath(1,versionPath.getNameCount());
 		entryPath = artifactIdentifier.asBasePath().relativize(entryPath);
-		String fileName = entryPath.getFileName().toString();
+		Path filePath = checkNotNull(entryPath.getFileName());
+		String fileName = filePath.toString();
 		String versionBare;
 		Optional<String> versionModifier;
 		if(fileName.endsWith("-SNAPSHOT")) {

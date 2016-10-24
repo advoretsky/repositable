@@ -4,11 +4,6 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.perfectable.artifactable.metadata.Metadata;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.DirectoryStream;
@@ -19,15 +14,19 @@ import java.util.Optional;
 
 import static java.nio.file.Files.newDirectoryStream;
 
-@XmlAccessorType(XmlAccessType.NONE)
 public class Repository {
+	private final String name;
+	private final Path location;
 
-	@XmlAttribute(name = "name")
-	private String name;
+	public Repository(String name, Path location) {
 
-	@XmlJavaTypeAdapter(value = XmlPathAdapter.class)
-	@XmlElement(name = "location")
-	private Path location;
+		this.name = name;
+		this.location = location;
+	}
+
+	public static Repository create(String name, Path location) {
+		return new Repository(name, location);
+	}
 
 	public Optional<Metadata> findMetadata(ArtifactIdentifier artifactIdentifier) {
 		Metadata metadata = artifactIdentifier.createEmptyMetadata();
@@ -78,6 +77,7 @@ public class Repository {
 		return Optional.of(Artifact.of(snapshotIdentifier, byteSource));
 	}
 
+
 	public Optional<Artifact> findArtifact(VersionIdentifier releaseIdentifier) {
 		Path artifactPath = releaseIdentifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
@@ -87,7 +87,6 @@ public class Repository {
 		ByteSource byteSource = Files.asByteSource(absolutePath.toFile());
 		return Optional.of(Artifact.of(releaseIdentifier, byteSource));
 	}
-
 
 	public void put(Artifact artifact) {
 		Path artifactPath = artifact.asPath();
@@ -103,10 +102,10 @@ public class Repository {
 		}
 	}
 
+
 	private void createDirectoryIfNeeded(Path parent) {
 		parent.toFile().mkdirs();
 	}
-
 
 	public static Optional<Repository> selectByName(List<Repository> repositories, String repositoryName) {
 		return repositories.stream()
