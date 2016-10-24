@@ -23,7 +23,7 @@ public final class Server {
 		return new Server(port, Repositories.create());
 	}
 
-	public Server withRepository(String name, Repository additionalRepository) {
+	public Server withRepository(String name, FileRepository additionalRepository) {
 		Repositories newRepositories = repositories.withAdditional(name, additionalRepository);
 		return new Server(port, newRepositories);
 	}

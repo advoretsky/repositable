@@ -2,9 +2,10 @@
     <BugInstance instanceOccurrenceNum='0' instanceHash='6ba00f07f3203cc86cd7b496954aa35f' cweid='253' rank='16'
                  abbrev='RV' category='BAD_PRACTICE' priority='2' type='RV_RETURN_VALUE_IGNORED_BAD_PRACTICE'
                  instanceOccurrenceMax='0'>
-        <LongMessage>Exceptional return value of java.io.File.mkdirs() ignored in org.perfectable.artifactable.Repository.createDirectoryIfNeeded(Path)</LongMessage>
-        <Class classname='org.perfectable.artifactable.Repository' primary='true' />
-        <Method classname='org.perfectable.artifactable.Repository' name='createDirectoryIfNeeded'
+        <LongMessage>Exceptional return value of java.io.File.mkdirs() ignored in
+            org.perfectable.artifactable.FileRepository.createDirectoryIfNeeded(Path)</LongMessage>
+        <Class classname='org.perfectable.artifactable.FileRepository' primary='true' />
+        <Method classname='org.perfectable.artifactable.FileRepository' name='createDirectoryIfNeeded'
                 signature='(Ljava/nio/file/Path;)V'
                 isStatic='false' primary='true' />
         <Method classname='java.io.File' name='mkdirs'

@@ -1,7 +1,7 @@
 package org.perfectable.artifactable.configuration;
 
-import org.perfectable.artifactable.Repository;
 import org.perfectable.artifactable.Server;
+import org.perfectable.artifactable.FileRepository;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,7 +20,7 @@ public class RepositoryConfiguration {
 	private Path location;
 
 	public Server appendTo(Server server) {
-		Repository repository = Repository.create(name, location);
+		FileRepository repository = FileRepository.create(location);
 		return server.withRepository(name, repository);
 	}
 }
