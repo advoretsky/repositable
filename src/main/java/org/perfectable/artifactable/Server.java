@@ -1,5 +1,6 @@
 package org.perfectable.artifactable;
 
+import org.perfectable.webable.handler.HandlerServerConfigurationExtension;
 import org.perfectable.artifactable.configuration.ServerConfiguration;
 import org.perfectable.webable.WebApplication;
 import org.perfectable.webable.handler.HttpResponse;
@@ -31,6 +32,7 @@ public final class Server {
 	public void serve() {
 		WebApplication.begin()
 				.withPort(port)
+				.extend(HandlerServerConfigurationExtension.create())
 				.withHandler(VersionMetadataLocation.PATH_PATTERN, VersionMetadataHandler.of(repositories))
 				.withHandler(ModuleMetadataLocation.PATH_PATTERN, ModuleMetadataHandler.of(repositories))
 				.withHandler(ReleaseLocation.PATH_PATTERN, ReleaseHandler.of(repositories))
