@@ -3,6 +3,7 @@ package org.perfectable.artifactable;
 import org.perfectable.webable.handler.HandlerServerConfigurationExtension;
 import org.perfectable.artifactable.configuration.ServerConfiguration;
 import org.perfectable.webable.WebApplication;
+import org.perfectable.webable.handler.authorization.BasicAuthenticationRequestChannel;
 import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.RequestHandler;
 
@@ -14,25 +15,34 @@ import java.io.File;
 public final class Server {
 	private final int port;
 	private final Repositories repositories;
+	private final Group users;
 
-	private Server(int port, Repositories repositories) {
+	private Server(int port, Repositories repositories, Group users) {
 		this.port = port;
 		this.repositories = repositories;
+		this.users = users;
 	}
 
 	public static Server create(int port) {
-		return new Server(port, Repositories.create());
+		return new Server(port, Repositories.create(), Group.create());
 	}
 
 	public Server withRepository(String name, FileRepository additionalRepository) {
 		Repositories newRepositories = repositories.withAdditional(name, additionalRepository);
-		return new Server(port, newRepositories);
+		return new Server(port, newRepositories, users);
+	}
+
+	public Server withUser(User user) {
+		Group newUsers = users.join(user);
+		return new Server(port, repositories, newUsers);
 	}
 
 	public void serve() {
+		StoringRequestAuthenticator requestAuthenticator = StoringRequestAuthenticator.allowing(users);
 		WebApplication.begin()
 				.withPort(port)
 				.extend(HandlerServerConfigurationExtension.create())
+				.withGlobalChannel(BasicAuthenticationRequestChannel.of(requestAuthenticator))
 				.withHandler(VersionMetadataLocation.PATH_PATTERN, VersionMetadataHandler.of(repositories))
 				.withHandler(ModuleMetadataLocation.PATH_PATTERN, ModuleMetadataHandler.of(repositories))
 				.withHandler(ReleaseLocation.PATH_PATTERN, ReleaseHandler.of(repositories))
@@ -56,4 +66,5 @@ public final class Server {
 		Server server = serverConfiguration.build();
 		server.serve();
 	}
+
 }

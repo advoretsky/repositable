@@ -44,11 +44,11 @@ public final class ReleaseLocation {
 		return repositories.findArtifact(repositoryName, versionIdentifier);
 	}
 
-	public void add(Repositories repositories, ByteSource source) {
+	public void add(Repositories repositories, ByteSource source, User uploader) throws UnauthorizedUserException {
 		if(hashMethod != HashMethod.NONE) {
 			return;
 		}
-		repositories.add(repositoryName, versionIdentifier, source);
+		repositories.add(repositoryName, versionIdentifier, source, uploader);
 	}
 
 	public HttpResponse createResponse(Artifact artifact) {

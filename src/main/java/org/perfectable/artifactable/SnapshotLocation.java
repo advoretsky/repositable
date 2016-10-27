@@ -49,11 +49,12 @@ public final class SnapshotLocation {
 		return repositories.findArtifact(repositoryName, snapshotIdentifier);
 	}
 
-	public void add(Repositories repositories, ByteSource source) {
+	public void add(Repositories repositories, ByteSource source, User uploader)
+			throws UnauthorizedUserException {
 		if(hashMethod != HashMethod.NONE) {
 			return;
 		}
-		repositories.add(repositoryName, snapshotIdentifier, source);
+		repositories.add(repositoryName, snapshotIdentifier, source, uploader);
 	}
 
 	public HttpResponse createResponse(Artifact artifact) {

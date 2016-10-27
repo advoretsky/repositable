@@ -30,7 +30,20 @@ public final class ReleaseHandler implements RequestHandler {
 				}
 				return location.createResponse(artifact.get());
 			case PUT:
-				location.add(repositories, request.contentSource());
+				Authentication authentication = request.select(Authentication.ATTRIBUTE).get();
+				User uploader;
+				try {
+					uploader = authentication.requireUser();
+				}
+				catch (UnauthenticatedUserException e) {
+					return HttpResponse.status(HttpStatus.UNAUTHORIZED);
+				}
+				try {
+					location.add(repositories, request.contentSource(), uploader);
+				}
+				catch (UnauthorizedUserException e) {
+					return HttpResponse.status(HttpStatus.FORBIDDEN);
+				}
 				return HttpResponse.status(HttpStatus.OK);
 			default:
 				return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);

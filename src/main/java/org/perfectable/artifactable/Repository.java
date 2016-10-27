@@ -9,6 +9,6 @@ public interface Repository {
 
 	Optional<Artifact> findArtifact(ArtifactIdentifier artifactIdentifier);
 
-	void put(ArtifactIdentifier identifier, Artifact content);
+	void put(ArtifactIdentifier identifier, Artifact content, User uploader) throws UnauthorizedUserException;
 
 }

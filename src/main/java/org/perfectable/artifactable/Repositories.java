@@ -35,9 +35,10 @@ public final class Repositories {
 		return selectedRepository.findArtifact(versionIdentifier);
 	}
 
-	public void add(String repositoryName, ArtifactIdentifier artifactIdentifier, ByteSource source) {
+	public void add(String repositoryName, ArtifactIdentifier artifactIdentifier, ByteSource source, User uploader)
+			throws UnauthorizedUserException {
 		Repository selectedRepository = selectByName(repositoryName);
-		selectedRepository.put(artifactIdentifier, Artifact.of(source));
+		selectedRepository.put(artifactIdentifier, Artifact.of(source), uploader);
 	}
 
 	private Repository selectByName(String repositoryName) {

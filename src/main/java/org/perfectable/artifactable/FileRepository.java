@@ -15,13 +15,15 @@ import static java.nio.file.Files.newDirectoryStream;
 
 public class FileRepository implements Repository {
 	private final Path location;
+	private final Group uploaders;
 
-	public FileRepository(Path location) {
+	public FileRepository(Path location, Group uploaders) {
 		this.location = location;
+		this.uploaders = uploaders;
 	}
 
-	public static FileRepository create(Path location) {
-		return new FileRepository(location);
+	public static FileRepository create(Path location, Group uploaders) {
+		return new FileRepository(location, uploaders);
 	}
 
 	@Override
@@ -56,7 +58,10 @@ public class FileRepository implements Repository {
 	}
 
 	@Override
-	public void put(ArtifactIdentifier identifier, Artifact artifact) {
+	public void put(ArtifactIdentifier identifier, Artifact artifact, User uploader) throws UnauthorizedUserException {
+		if(!uploaders.contains(uploader)) {
+			throw new UnauthorizedUserException();
+		}
 		Path artifactPath = identifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
 		Path parent = absolutePath.resolveSibling(".");

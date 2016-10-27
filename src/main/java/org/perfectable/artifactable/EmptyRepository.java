@@ -18,7 +18,7 @@ public final class EmptyRepository implements Repository {
 	}
 
 	@Override
-	public void put(ArtifactIdentifier artifactIdentifier, Artifact artifact) {
+	public void put(ArtifactIdentifier artifactIdentifier, Artifact artifact, User uploader) {
 		// MARK disable uploading
 	}
 
