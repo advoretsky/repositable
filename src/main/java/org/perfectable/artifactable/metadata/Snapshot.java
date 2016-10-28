@@ -6,14 +6,18 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Snapshot",
 		propOrder = {"timestamp", "buildNumber", "localCopy"})
 public class Snapshot {
-	LocalDateTime timestamp;
-	int buildNumber;
-	boolean localCopy;
+	private LocalDateTime timestamp;
+	private int buildNumber;
+	private boolean localCopy;
+
+	public static final Comparator<? super Snapshot> COMPARATOR =
+			Comparator.nullsLast(Comparator.comparing(Snapshot::getTimestamp));
 
 	public static Snapshot of(LocalDateTime timestamp, int buildNumber, boolean localCopy) {
 		Snapshot snapshotVersion = new Snapshot();
@@ -52,5 +56,15 @@ public class Snapshot {
 
 	private void setLocalCopy(boolean localCopy) {
 		this.localCopy = localCopy;
+	}
+
+	public static Snapshot latest(Snapshot first, Snapshot... more) {
+		Snapshot best = first;
+		for(Snapshot candidate : more) {
+			if(COMPARATOR.compare(candidate, best) > 0) {
+				best = candidate;
+			}
+		}
+		return best;
 	}
 }

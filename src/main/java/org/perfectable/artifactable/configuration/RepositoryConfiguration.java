@@ -1,40 +1,50 @@
 package org.perfectable.artifactable.configuration;
 
-import org.perfectable.artifactable.FileRepository;
-import org.perfectable.artifactable.authorization.Group;
-import org.perfectable.artifactable.Server;
-import org.perfectable.artifactable.authorization.User;
+import org.perfectable.artifactable.Repositories;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlID;
+import javax.xml.bind.annotation.XmlIDREF;
+import javax.xml.bind.annotation.XmlSeeAlso;
 import javax.xml.bind.annotation.XmlType;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.nio.file.Path;
-import java.util.Set;
-import java.util.stream.Collectors;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-@XmlType(name = "Repository", propOrder = {"name", "location", "users"})
+@XmlType(name = "Repository", propOrder = {"name"})
 @XmlAccessorType(XmlAccessType.NONE)
-public class RepositoryConfiguration {
+@XmlSeeAlso({FileRepositoryConfiguration.class, VirtualRepositoryConfiguration.class})
+public abstract class RepositoryConfiguration {
+	@XmlID
 	@XmlAttribute(name = "name")
-	private String name;
+	protected String name;
 
-	@XmlJavaTypeAdapter(value = XmlPathAdapter.class)
-	@XmlElement(name = "location")
-	private Path location;
+	public abstract Repositories appendTo(Repositories repositories);
 
-	@XmlJavaTypeAdapter(UserConfiguration.Reference.Adapter.class)
-	@XmlElementWrapper(name = "uploaders")
-	@XmlElement(name = "user")
-	private Set<UserConfiguration> users;
+	@XmlType(name = "RepositoryConfigurationReference", propOrder = {"repository"})
+	public static class Reference {
+		@XmlIDREF
+		@XmlAttribute(name = "ref", required = true)
+		private RepositoryConfiguration repository;
 
-	public Server appendTo(Server server) {
-		Set<User> uploaderSet = users.stream().map(UserConfiguration::build).collect(Collectors.toSet());
-		Group uploaders = Group.of(uploaderSet);
-		FileRepository repository = FileRepository.create(location, uploaders);
-		return server.withRepository(name, repository);
+		private Reference() {
+			// required for jaxb
+		}
+
+		Reference(RepositoryConfiguration repository) {
+			this.repository = repository;
+		}
+
+		public static class Adapter extends XmlAdapter<Reference, RepositoryConfiguration> {
+			@Override
+			public RepositoryConfiguration unmarshal(Reference reference) {
+				return reference.repository;
+			}
+
+			@Override
+			public Reference marshal(RepositoryConfiguration repository) {
+				return new Reference(repository);
+			}
+		}
 	}
 }

@@ -1,5 +1,8 @@
 package org.perfectable.artifactable.metadata;
 
+import com.google.common.collect.Ordering;
+import com.google.common.collect.Sets;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -7,14 +10,15 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
-import java.util.Comparator;
+import java.util.List;
+import java.util.Set;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "SnapshotVersion",
 		propOrder = {"classifier", "extension", "value", "updated"})
 public class SnapshotVersion {
 
-	public static final Comparator<SnapshotVersion> COMPARATOR = Comparator.comparing(SnapshotVersion::getUpdated);
+	public static final Ordering<SnapshotVersion> COMPARATOR = Ordering.natural().onResultOf(SnapshotVersion::getUpdated).nullsLast();
 
 	private String classifier;
 	private String extension;
@@ -86,5 +90,11 @@ public class SnapshotVersion {
 
 	public Snapshot toSnapshot() {
 		return Snapshot.of(updated, buildId, true);
+	}
+
+	public static List<SnapshotVersion> merge(List<SnapshotVersion> first, List<SnapshotVersion> second) {
+		Set<SnapshotVersion> merged = Sets.newHashSet(first);
+		merged.addAll(second);
+		return COMPARATOR.sortedCopy(merged);
 	}
 }

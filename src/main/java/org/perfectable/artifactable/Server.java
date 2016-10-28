@@ -33,8 +33,7 @@ public final class Server {
 		return new Server(port, Repositories.create(), Group.create());
 	}
 
-	public Server withRepository(String name, FileRepository additionalRepository) {
-		Repositories newRepositories = repositories.withAdditional(name, additionalRepository);
+	public Server withRepositories(Repositories newRepositories) {
 		return new Server(port, newRepositories, users);
 	}
 
@@ -74,5 +73,4 @@ public final class Server {
 		Server server = serverConfiguration.build();
 		server.serve();
 	}
-
 }

@@ -6,8 +6,10 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Versioning",
@@ -103,4 +105,15 @@ public class Versioning {
 		setSnapshot(snapshotVersions.get(0).toSnapshot());
 	}
 
+	public Versioning merge(Versioning other) {
+		Versioning result = new Versioning();
+		result.setLatest(Version.latest(other.latest, latest));
+		result.setRelease(Version.latest(other.release, release));
+		result.setSnapshot(Snapshot.latest(other.snapshot, snapshot));
+		result.setVersions(Version.merge(other.versions, versions));
+		LocalDateTime newLastUpdated = Objects.compare(other.lastUpdated, lastUpdated, Comparator.naturalOrder()) > 0 ? other.lastUpdated : lastUpdated;
+		result.setLastUpdated(newLastUpdated);
+		result.setSnapshotVersions(SnapshotVersion.merge(other.snapshotVersions, snapshotVersions));
+		return result;
+	}
 }

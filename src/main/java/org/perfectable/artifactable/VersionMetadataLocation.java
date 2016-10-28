@@ -3,7 +3,6 @@ package org.perfectable.artifactable;
 import org.perfectable.artifactable.metadata.Metadata;
 import org.perfectable.webable.handler.HttpResponse;
 
-import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

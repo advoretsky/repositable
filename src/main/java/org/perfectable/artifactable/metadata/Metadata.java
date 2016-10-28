@@ -7,6 +7,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.time.LocalDateTime;
 
+import static com.google.common.base.Preconditions.checkArgument;
+
 @XmlRootElement(name = "metadata")
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Metadata",
@@ -44,7 +46,28 @@ public class Metadata {
 		versioning.addSnapshotVersion(classifier, extension, version, buildId, timestamp);
 	}
 
+	private void setVersion(Version version) {
+		this.version = version;
+	}
+
 	public void setVersion(String version) {
-		this.version = Version.of(version);
+		setVersion(Version.of(version));
+	}
+
+	private void setVersioning(Versioning versioning) {
+		this.versioning = versioning;
+	}
+
+	public Metadata merge(Metadata other) {
+		Metadata result = new Metadata();
+		checkArgument(other.groupId.equals(groupId));
+		checkArgument(other.artifactId.equals(artifactId));
+		result.setGroupId(groupId);
+		result.setArtifactId(artifactId);
+		Version newVersion = Version.COMPARATOR.compare(other.version, this.version) > 0 ? other.version : version;
+		result.setVersion(newVersion);
+		Versioning newVersioning = versioning.merge(other.versioning);
+		result.setVersioning(newVersioning);
+		return result;
 	}
 }
