@@ -1,5 +1,9 @@
 package org.perfectable.artifactable;
 
+import org.perfectable.artifactable.authorization.Authentication;
+import org.perfectable.artifactable.authorization.Group;
+import org.perfectable.artifactable.authorization.UnauthenticatedUserException;
+import org.perfectable.artifactable.authorization.User;
 import org.perfectable.webable.handler.authorization.AuthenticationException;
 import org.perfectable.webable.handler.authorization.Authenticator;
 import org.perfectable.webable.handler.HttpRequest;

@@ -1,11 +1,13 @@
 package org.perfectable.artifactable;
 
-import org.perfectable.webable.handler.HandlerServerConfigurationExtension;
+import org.perfectable.artifactable.authorization.Group;
+import org.perfectable.artifactable.authorization.User;
 import org.perfectable.artifactable.configuration.ServerConfiguration;
 import org.perfectable.webable.WebApplication;
-import org.perfectable.webable.handler.authorization.BasicAuthenticationRequestChannel;
+import org.perfectable.webable.handler.HandlerServerConfigurationExtension;
 import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.RequestHandler;
+import org.perfectable.webable.handler.authorization.BasicAuthenticationRequestChannel;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;

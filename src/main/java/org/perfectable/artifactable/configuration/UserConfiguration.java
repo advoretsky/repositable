@@ -1,7 +1,7 @@
 package org.perfectable.artifactable.configuration;
 
 import org.perfectable.artifactable.Server;
-import org.perfectable.artifactable.User;
+import org.perfectable.artifactable.authorization.User;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

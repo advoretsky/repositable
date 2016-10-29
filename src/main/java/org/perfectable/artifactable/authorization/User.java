@@ -1,4 +1,4 @@
-package org.perfectable.artifactable;
+package org.perfectable.artifactable.authorization;
 
 public final class User {
 	private final String username;

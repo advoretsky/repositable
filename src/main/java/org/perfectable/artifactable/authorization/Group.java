@@ -1,4 +1,4 @@
-package org.perfectable.artifactable;
+package org.perfectable.artifactable.authorization;
 
 import com.google.common.collect.ImmutableSet;
 

@@ -1,9 +1,9 @@
-package org.perfectable.artifactable;
+package org.perfectable.artifactable.authorization;
 
 import org.perfectable.webable.handler.HttpRequestAttribute;
 
 public interface Authentication {
-	HttpRequestAttribute<Authentication> ATTRIBUTE = HttpRequestAttribute.named("authentication");
+	HttpRequestAttribute<Authentication> ATTRIBUTE = HttpRequestAttribute.named("authorization");
 
 	Authentication EMPTY = () -> { throw new UnauthenticatedUserException(); };
 

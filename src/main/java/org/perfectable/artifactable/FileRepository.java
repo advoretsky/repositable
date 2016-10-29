@@ -2,6 +2,9 @@ package org.perfectable.artifactable;
 
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
+import org.perfectable.artifactable.authorization.Group;
+import org.perfectable.artifactable.authorization.UnauthorizedUserException;
+import org.perfectable.artifactable.authorization.User;
 import org.perfectable.artifactable.metadata.Metadata;
 
 import java.io.IOException;
