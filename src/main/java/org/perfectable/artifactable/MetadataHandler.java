@@ -8,21 +8,27 @@ import org.perfectable.webable.handler.RequestHandler;
 
 import java.util.Optional;
 
-public final class VersionMetadataHandler implements RequestHandler {
+public final class MetadataHandler implements RequestHandler {
 	private final Repositories repositories;
+	private final Locator locator;
 
-	public static VersionMetadataHandler of(Repositories repositories) {
-		return new VersionMetadataHandler(repositories);
+	public static MetadataHandler of(Repositories repositories, Locator locator) {
+		return new MetadataHandler(repositories, locator);
 	}
 
-	private VersionMetadataHandler(Repositories repositories) {
+	private MetadataHandler(Repositories repositories, Locator locator) {
 		this.repositories = repositories;
+		this.locator = locator;
+	}
+
+	interface Locator {
+		MetadataLocation createLocation(String path);
 	}
 
 	@Override
 	public HttpResponse handle(HttpRequest request) {
 		String path = request.completePath();
-		VersionMetadataLocation location = VersionMetadataLocation.fromPath(path);
+		MetadataLocation location = locator.createLocation(path);
 		switch(request.method()) {
 			case GET:
 				Optional<Metadata> metadata = location.find(repositories);

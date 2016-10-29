@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public final class ReleaseLocation {
+public final class ReleaseLocation implements ArtifactLocation {
 
 	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.0/buildable-1.2.0.jar"
 	static final Pattern PATH_PATTERN =
@@ -42,10 +42,12 @@ public final class ReleaseLocation {
 		return new ReleaseLocation(repositoryName, versionIdentifier, hashMethod);
 	}
 
+	@Override
 	public Optional<Artifact> find(Repositories repositories) {
 		return repositories.findArtifact(repositoryName, versionIdentifier);
 	}
 
+	@Override
 	public void add(Repositories repositories, ByteSource source, User uploader) throws UnauthorizedUserException {
 		if(hashMethod != HashMethod.NONE) {
 			return;

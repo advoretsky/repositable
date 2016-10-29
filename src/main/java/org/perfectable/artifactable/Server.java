@@ -49,10 +49,10 @@ public final class Server {
 				.withPort(port)
 				.extend(HandlerServerConfigurationExtension.create())
 				.withGlobalChannel(BasicAuthenticationRequestChannel.of(requestAuthenticator))
-				.withHandler(VersionMetadataLocation.PATH_PATTERN, VersionMetadataHandler.of(repositories))
-				.withHandler(ModuleMetadataLocation.PATH_PATTERN, ModuleMetadataHandler.of(repositories))
-				.withHandler(ReleaseLocation.PATH_PATTERN, ReleaseHandler.of(repositories))
-				.withHandler(SnapshotLocation.PATH_PATTERN, SnapshotHandler.of(repositories))
+				.withHandler(VersionMetadataLocation.PATH_PATTERN, MetadataHandler.of(repositories, VersionMetadataLocation::fromPath))
+				.withHandler(ModuleMetadataLocation.PATH_PATTERN, MetadataHandler.of(repositories, ModuleMetadataLocation::fromPath))
+				.withHandler(ReleaseLocation.PATH_PATTERN, ArtifactHandler.of(repositories, ReleaseLocation::fromPath))
+				.withHandler(SnapshotLocation.PATH_PATTERN, ArtifactHandler.of(repositories, SnapshotLocation::fromPath))
 				.withRootHandler(RequestHandler.constant(HttpResponse.NOT_FOUND))
 				.serveBlocking();
 	}

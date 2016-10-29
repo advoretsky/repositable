@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class ModuleMetadataLocation {
+public class ModuleMetadataLocation implements MetadataLocation {
 	// ex. "/libs-snapshot-local/org/perfectable/webable/maven-metadata.xml" // NOPMD
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]*)\\/([a-zA-Z][\\w-]*)\\/maven-metadata\\.xml(?:\\.(\\w+))?");
@@ -34,10 +34,12 @@ public class ModuleMetadataLocation {
 		return new ModuleMetadataLocation(repositoryName, moduleIdentifier, hashMethod);
 	}
 
+	@Override
 	public Optional<Metadata> find(Repositories repositories) {
 		return repositories.findMetadata(repositoryName, moduleIdentifier);
 	}
 
+	@Override
 	public MetadataHttpResponse createResponse(Metadata metadata) {
 		return MetadataHttpResponse.of(metadata, hashMethod);
 	}

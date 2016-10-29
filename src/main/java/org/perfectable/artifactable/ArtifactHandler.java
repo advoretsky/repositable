@@ -11,21 +11,27 @@ import org.perfectable.webable.handler.RequestHandler;
 
 import java.util.Optional;
 
-public final class ReleaseHandler implements RequestHandler {
+public class ArtifactHandler implements RequestHandler {
 	private final Repositories repositories;
+	private final Locator locator;
 
-	public static ReleaseHandler of(Repositories repositories) {
-		return new ReleaseHandler(repositories);
+	public static ArtifactHandler of(Repositories repositories, Locator locator) {
+		return new ArtifactHandler(repositories, locator);
 	}
 
-	private ReleaseHandler(Repositories repositories) {
+	private ArtifactHandler(Repositories repositories, Locator locator) {
 		this.repositories = repositories;
+		this.locator = locator;
+	}
+
+	interface Locator {
+		ArtifactLocation createLocation(String path);
 	}
 
 	@Override
 	public HttpResponse handle(HttpRequest request) {
 		String path = request.completePath();
-		ReleaseLocation location = ReleaseLocation.fromPath(path);
+		ArtifactLocation location = locator.createLocation(path);
 		switch(request.method()) {
 			case GET:
 				Optional<Artifact> artifact = location.find(repositories);

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class VersionMetadataLocation {
+public class VersionMetadataLocation implements MetadataLocation {
 
 	// ex. "/libs-snapshot-local/org/perfectable/webable/1.1.0-SNAPSHOT/maven-metadata.xml" // NOPMD
 	static final Pattern PATH_PATTERN =
@@ -38,10 +38,12 @@ public class VersionMetadataLocation {
 		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionModifier), Optional.empty(), "pom"), hashMethod);
 	}
 
+	@Override
 	public Optional<Metadata> find(Repositories repositories) {
 		return repositories.findMetadata(repositoryName, versionIdentifier);
 	}
 
+	@Override
 	public HttpResponse createResponse(Metadata metadata) {
 		return MetadataHttpResponse.of(metadata, hashMethod);
 	}

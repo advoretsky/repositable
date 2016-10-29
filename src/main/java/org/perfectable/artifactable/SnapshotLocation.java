@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public final class SnapshotLocation {
+public final class SnapshotLocation implements ArtifactLocation {
 
 	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar" // NOPMD
 	static final Pattern PATH_PATTERN =
@@ -47,10 +47,12 @@ public final class SnapshotLocation {
 		return new SnapshotLocation(repositoryName, snapshotIdentifier, hashMethod);
 	}
 
+	@Override
 	public Optional<Artifact> find(Repositories repositories) {
 		return repositories.findArtifact(repositoryName, snapshotIdentifier);
 	}
 
+	@Override
 	public void add(Repositories repositories, ByteSource source, User uploader)
 			throws UnauthorizedUserException {
 		if(hashMethod != HashMethod.NONE) {
