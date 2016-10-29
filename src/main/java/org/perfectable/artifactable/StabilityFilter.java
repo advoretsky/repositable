@@ -3,7 +3,7 @@ package org.perfectable.artifactable;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public class StabilityFilter implements Filter {
+public final class StabilityFilter implements Filter {
 
 	public static final StabilityFilter RELEASE = new StabilityFilter(false);
 	public static final StabilityFilter SNAPSHOT = new StabilityFilter(true);
