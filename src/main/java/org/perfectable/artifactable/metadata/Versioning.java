@@ -1,20 +1,28 @@
 package org.perfectable.artifactable.metadata;
 
+import com.google.common.collect.Ordering;
+import org.perfectable.artifactable.CompositeFilter;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+import static sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStateMap.Byte1.other;
+
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Versioning",
 		propOrder = {"latest", "release", "snapshot", "versions", "lastUpdated", "snapshotVersions"})
 public class Versioning {
+	private static final Ordering<LocalDateTime> TIMESTAMP_COMPARATOR = Ordering.natural().nullsFirst();
+
 	private Version latest;
 	private Version release;
 	private Snapshot snapshot;
@@ -73,6 +81,7 @@ public class Versioning {
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "lastUpdated")
+	@XmlJavaTypeAdapter(value = TimestampAdapter.class)
 	public LocalDateTime getLastUpdated() {
 		return lastUpdated;
 	}
@@ -103,6 +112,8 @@ public class Versioning {
 		snapshotVersions.add(SnapshotVersion.of(classifier, extension, version, buildId, timestamp));
 		snapshotVersions.sort(SnapshotVersion.COMPARATOR.reversed());
 		setSnapshot(snapshotVersions.get(0).toSnapshot());
+		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(timestamp, lastUpdated) > 0 ? timestamp : lastUpdated;
+		setLastUpdated(newLastUpdated);
 	}
 
 	public Versioning merge(Versioning other) {
@@ -111,7 +122,7 @@ public class Versioning {
 		result.setRelease(Version.latest(other.release, release));
 		result.setSnapshot(Snapshot.latest(other.snapshot, snapshot));
 		result.setVersions(Version.merge(other.versions, versions));
-		LocalDateTime newLastUpdated = Objects.compare(other.lastUpdated, lastUpdated, Comparator.naturalOrder()) > 0 ? other.lastUpdated : lastUpdated;
+		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(other.lastUpdated, lastUpdated) > 0  ? other.lastUpdated : lastUpdated;
 		result.setLastUpdated(newLastUpdated);
 		result.setSnapshotVersions(SnapshotVersion.merge(other.snapshotVersions, snapshotVersions));
 		return result;

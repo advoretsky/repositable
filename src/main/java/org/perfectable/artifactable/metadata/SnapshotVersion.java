@@ -89,7 +89,7 @@ public class SnapshotVersion {
 
 
 	public Snapshot toSnapshot() {
-		return Snapshot.of(updated, buildId, true);
+		return Snapshot.of(updated, buildId);
 	}
 
 	public static List<SnapshotVersion> merge(List<SnapshotVersion> first, List<SnapshotVersion> second) {

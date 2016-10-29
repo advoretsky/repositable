@@ -10,20 +10,18 @@ import java.util.Comparator;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Snapshot",
-		propOrder = {"timestamp", "buildNumber", "localCopy"})
+		propOrder = {"timestamp", "buildNumber"})
 public class Snapshot {
 	private LocalDateTime timestamp;
 	private int buildNumber;
-	private boolean localCopy;
 
 	public static final Comparator<? super Snapshot> COMPARATOR =
-			Comparator.nullsLast(Comparator.comparing(Snapshot::getTimestamp));
+			Comparator.nullsFirst(Comparator.comparing(Snapshot::getTimestamp));
 
-	public static Snapshot of(LocalDateTime timestamp, int buildNumber, boolean localCopy) {
+	public static Snapshot of(LocalDateTime timestamp, int buildNumber) {
 		Snapshot snapshotVersion = new Snapshot();
 		snapshotVersion.setTimestamp(timestamp);
 		snapshotVersion.setBuildNumber(buildNumber);
-		snapshotVersion.setLocalCopy(localCopy);
 		return snapshotVersion;
 	}
 
@@ -46,16 +44,6 @@ public class Snapshot {
 
 	private void setBuildNumber(int buildNumber) {
 		this.buildNumber = buildNumber;
-	}
-
-	@SuppressWarnings("unused")
-	@XmlElement(name = "localCopy")
-	public boolean isLocalCopy() {
-		return localCopy;
-	}
-
-	private void setLocalCopy(boolean localCopy) {
-		this.localCopy = localCopy;
 	}
 
 	public static Snapshot latest(Snapshot first, Snapshot... more) {
