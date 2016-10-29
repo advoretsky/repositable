@@ -1,8 +1,8 @@
 package org.perfectable.artifactable;
 
 import org.perfectable.webable.handler.HttpResponse;
+import org.perfectable.webable.handler.HttpStatus;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 
@@ -21,9 +21,9 @@ public final class HashedHttpResponse implements HttpResponse {
 	}
 
 	@Override
-	public void writeTo(HttpServletResponse resp) throws IOException {
-		resp.setStatus(HttpServletResponse.SC_OK);
-		try(OutputStream hashingStream = hashMethod.wrapOutputStream(resp.getOutputStream())) {
+	public void writeTo(Writer writer) throws IOException {
+		writer.setStatus(HttpStatus.OK);
+		try(OutputStream hashingStream = hashMethod.wrapOutputStream(writer.stream())) {
 			artifact.writeContent(hashingStream);
 		}
 	}

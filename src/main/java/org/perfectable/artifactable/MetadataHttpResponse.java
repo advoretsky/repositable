@@ -3,7 +3,6 @@ package org.perfectable.artifactable;
 import org.perfectable.artifactable.metadata.Metadata;
 import org.perfectable.webable.handler.HttpResponse;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -25,12 +24,12 @@ public final class MetadataHttpResponse implements HttpResponse {
 	}
 
 	@Override
-	public void writeTo(HttpServletResponse resp) throws IOException {
+	public void writeTo(Writer writer) throws IOException {
 		try {
 			JAXBContext context = JAXBContext.newInstance(Metadata.class);
 			Marshaller marshaller = context.createMarshaller();
 			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-			try(OutputStream hashedStream = hashMethod.wrapOutputStream(resp.getOutputStream())) {
+			try(OutputStream hashedStream = hashMethod.wrapOutputStream(writer.stream())) {
 				marshaller.marshal(metadata, hashedStream);
 			}
 		}
