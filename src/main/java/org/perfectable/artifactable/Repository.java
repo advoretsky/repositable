@@ -7,7 +7,7 @@ import org.perfectable.artifactable.metadata.Metadata;
 import java.util.Optional;
 
 public interface Repository {
-	Optional<Metadata> findMetadata(MetadataIdentifier metadataIdentifier);
+	Metadata fetchMetadata(MetadataIdentifier metadataIdentifier);
 
 	Optional<Artifact> findArtifact(ArtifactIdentifier artifactIdentifier);
 

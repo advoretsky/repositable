@@ -30,7 +30,7 @@ public class FileRepository implements Repository {
 	}
 
 	@Override
-	public Optional<Metadata> findMetadata(MetadataIdentifier metadataIdentifier) {
+	public Metadata fetchMetadata(MetadataIdentifier metadataIdentifier) {
 		Metadata metadata = metadataIdentifier.createEmptyMetadata();
 		Path artifactPath = metadataIdentifier.asBasePath();
 		Path absolutePath = location.resolve(artifactPath);
@@ -46,7 +46,7 @@ public class FileRepository implements Repository {
 		catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		return Optional.of(metadata);
+		return metadata;
 	}
 
 	@Override

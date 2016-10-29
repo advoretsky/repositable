@@ -2,7 +2,6 @@ package org.perfectable.artifactable;
 
 import org.perfectable.artifactable.metadata.Metadata;
 
-import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,8 +36,8 @@ public class ModuleMetadataLocation implements MetadataLocation {
 	}
 
 	@Override
-	public Optional<Metadata> find(Repositories repositories) {
-		return repositories.findMetadata(repositoryName, moduleIdentifier);
+	public Metadata fetch(Repositories repositories) {
+		return repositories.fetchMetadata(repositoryName, moduleIdentifier);
 	}
 
 	@Override

@@ -19,18 +19,13 @@ public final class VirtualRepository implements Repository {
 	}
 
 	@Override
-	public Optional<Metadata> findMetadata(MetadataIdentifier metadataIdentifier) {
+	public Metadata fetchMetadata(MetadataIdentifier metadataIdentifier) {
 		Collection<Metadata> sourceMetadataList = sources.listMetadata(metadataIdentifier);
-		Optional<Metadata> resultOption = Optional.empty();
+		Metadata result = metadataIdentifier.createEmptyMetadata();
 		for(Metadata sourceMetadata : sourceMetadataList) {
-			if (!resultOption.isPresent()) {
-				resultOption = Optional.of(sourceMetadata);
-				continue;
-			}
-			Metadata result = resultOption.get();
-			resultOption = Optional.of(result.merge(sourceMetadata));
+			result = result.merge(sourceMetadata);
 		}
-		return resultOption;
+		return result;
 	}
 
 	@Override

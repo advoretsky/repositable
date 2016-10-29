@@ -9,8 +9,8 @@ public final class EmptyRepository implements Repository {
 	public static final EmptyRepository INSTANCE = new EmptyRepository();
 
 	@Override
-	public Optional<Metadata> findMetadata(MetadataIdentifier metadataIdentifier) {
-		return Optional.empty();
+	public Metadata fetchMetadata(MetadataIdentifier metadataIdentifier) {
+		return metadataIdentifier.createEmptyMetadata();
 	}
 
 	@Override

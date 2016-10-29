@@ -8,7 +8,6 @@ import org.perfectable.artifactable.metadata.Metadata;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -32,13 +31,15 @@ public final class Repositories {
 		return new Repositories(newRepositoryByName);
 	}
 
-	public Optional<Metadata> findMetadata(String repositoryName, MetadataIdentifier artifactIdentifier) {
+	public Metadata fetchMetadata(String repositoryName, MetadataIdentifier artifactIdentifier) {
 		Repository selectedRepository = selectByName(repositoryName);
-		return selectedRepository.findMetadata(artifactIdentifier);
+		return selectedRepository.fetchMetadata(artifactIdentifier);
 	}
 
 	public Collection<Metadata> listMetadata(MetadataIdentifier metadataIdentifier) {
-		return collect(repository -> repository.findMetadata(metadataIdentifier));
+		return repositoryByName.values().stream()
+				.map(repository -> repository.fetchMetadata(metadataIdentifier))
+				.collect(Collectors.toSet());
 	}
 
 	public Optional<Artifact> findArtifact(String repositoryName, ArtifactIdentifier artifactIdentifier) {
@@ -47,7 +48,11 @@ public final class Repositories {
 	}
 
 	public Collection<Artifact> listArtifacts(ArtifactIdentifier artifactIdentifier) {
-		return collect(repository -> repository.findArtifact(artifactIdentifier));
+		Function<Repository, Optional<Artifact>> transformation = repository -> repository.findArtifact(artifactIdentifier);
+		return repositoryByName.values().stream()
+				.map(transformation)
+				.flatMap(candidate -> candidate.isPresent() ? Stream.of(candidate.get()) : Stream.empty())
+				.collect(Collectors.toSet());
 	}
 
 	public void add(String repositoryName, ArtifactIdentifier artifactIdentifier, ByteSource source, User uploader)
@@ -62,13 +67,6 @@ public final class Repositories {
 			return EmptyRepository.INSTANCE;
 		}
 		return repository;
-	}
-
-	private <T> Set<T> collect(Function<Repository, Optional<T>> transformation) {
-		return repositoryByName.values().stream()
-				.map(transformation)
-				.flatMap(candidate -> candidate.isPresent() ? Stream.of(candidate.get()) : Stream.empty())
-				.collect(Collectors.toSet());
 	}
 
 }

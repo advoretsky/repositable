@@ -41,8 +41,8 @@ public class VersionMetadataLocation implements MetadataLocation {
 	}
 
 	@Override
-	public Optional<Metadata> find(Repositories repositories) {
-		return repositories.findMetadata(repositoryName, versionIdentifier);
+	public Metadata fetch(Repositories repositories) {
+		return repositories.fetchMetadata(repositoryName, versionIdentifier);
 	}
 
 	@Override
