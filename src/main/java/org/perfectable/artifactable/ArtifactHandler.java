@@ -38,12 +38,19 @@ public class ArtifactHandler implements RequestHandler {
 		ArtifactLocation location = locator.createLocation(path);
 		switch(request.method()) {
 			case GET:
-				Optional<Artifact> artifact = location.find(repositories);
-				if(!artifact.isPresent()) {
+				Optional<Artifact> artifactContent = location.find(repositories);
+				if(!artifactContent.isPresent()) {
 					return HttpResponse.NOT_FOUND;
 				}
-				LOGGER.debug("Requested artifact {}", location);
-				return location.createResponse(artifact.get());
+				LOGGER.debug("Requested artifact content {}", location);
+				return location.createResponse(artifactContent.get());
+			case HEAD:
+				Optional<Artifact> artifactHeaders = location.find(repositories);
+				if(!artifactHeaders.isPresent()) {
+					return HttpResponse.NOT_FOUND;
+				}
+				LOGGER.debug("Requested artifact header {}", location);
+				return HttpResponse.status(HttpStatus.OK);
 			case PUT:
 				Authentication authentication = request.select(Authentication.ATTRIBUTE).get();
 				User uploader;
