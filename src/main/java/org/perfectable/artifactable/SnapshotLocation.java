@@ -17,7 +17,7 @@ public final class SnapshotLocation implements ArtifactLocation {
 
 	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar" // NOPMD
 	static final Pattern PATH_PATTERN =
-			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]+)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)-SNAPSHOT\\/\\3-\\4-([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z]+))?\\.(\\w+)(?:\\.(\\w+))?$");
+			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]+)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)-SNAPSHOT\\/\\3-\\4-([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z-]+))?\\.(\\w+)(?:\\.(\\w+))?$");
 
 	private final String repositoryName;
 	private final SnapshotIdentifier snapshotIdentifier;

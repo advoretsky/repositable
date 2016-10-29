@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class SnapshotIdentifier implements ArtifactIdentifier {
 
-	private static final Pattern SUFFIX_PATTERN = Pattern.compile("([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z]+))?\\.(\\w+)$");
+	private static final Pattern SUFFIX_PATTERN = Pattern.compile("([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z-]+))?\\.(\\w+)$");
 
 	static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd.HHmmss");
 
