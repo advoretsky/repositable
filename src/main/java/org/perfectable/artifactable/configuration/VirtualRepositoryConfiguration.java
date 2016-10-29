@@ -23,7 +23,7 @@ public class VirtualRepositoryConfiguration extends RepositoryConfiguration {
 
 	private transient VirtualRepository built;
 
-	private VirtualRepository build() {
+	protected VirtualRepository build() {
 		if(built == null) {
 			Repositories repositories = Repositories.create();
 			for (RepositoryConfiguration source : sources) {
@@ -34,7 +34,4 @@ public class VirtualRepositoryConfiguration extends RepositoryConfiguration {
 		return built;
 	}
 
-	public Repositories appendTo(Repositories repositories) {
-		return repositories.withAdditional(name, build());
-	}
 }

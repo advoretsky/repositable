@@ -50,7 +50,8 @@ public final class ReleaseLocation implements ArtifactLocation {
 	}
 
 	@Override
-	public void add(Repositories repositories, ByteSource source, User uploader) throws UnauthorizedUserException {
+	public void add(Repositories repositories, ByteSource source, User uploader)
+			throws UnauthorizedUserException, InsertionRejected {
 		if(hashMethod != HashMethod.NONE) {
 			return;
 		}

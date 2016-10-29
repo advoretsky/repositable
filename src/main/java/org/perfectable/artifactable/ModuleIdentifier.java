@@ -70,4 +70,8 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 		metadata.setGroupId(groupId);
 		return metadata;
 	}
+
+	public boolean hasGroupId(String groupId) {
+		return this.groupId.equals(groupId);
+	}
 }

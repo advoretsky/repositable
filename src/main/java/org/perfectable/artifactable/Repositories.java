@@ -56,7 +56,7 @@ public final class Repositories {
 	}
 
 	public void add(String repositoryName, ArtifactIdentifier artifactIdentifier, ByteSource source, User uploader)
-			throws UnauthorizedUserException {
+			throws UnauthorizedUserException, InsertionRejected {
 		Repository selectedRepository = selectByName(repositoryName);
 		selectedRepository.put(artifactIdentifier, Artifact.of(source), uploader);
 	}

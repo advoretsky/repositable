@@ -55,7 +55,7 @@ public final class SnapshotLocation implements ArtifactLocation {
 
 	@Override
 	public void add(Repositories repositories, ByteSource source, User uploader)
-			throws UnauthorizedUserException {
+			throws UnauthorizedUserException, InsertionRejected {
 		if(hashMethod != HashMethod.NONE) {
 			return;
 		}

@@ -14,15 +14,17 @@ import java.util.Optional;
 
 public class FileRepository implements Repository {
 	private final Path location;
+	private final Filter filter;
 	private final Group uploaders;
 
-	public FileRepository(Path location, Group uploaders) {
+	public FileRepository(Path location, Filter filter, Group uploaders) {
 		this.location = location;
+		this.filter = filter;
 		this.uploaders = uploaders;
 	}
 
-	public static FileRepository create(Path location, Group uploaders) {
-		return new FileRepository(location, uploaders);
+	public static FileRepository create(Path location, Filter filter, Group uploaders) {
+		return new FileRepository(location, filter, uploaders);
 	}
 
 	@Override
@@ -31,8 +33,11 @@ public class FileRepository implements Repository {
 	}
 
 	@Override
-	public Optional<Artifact> findArtifact(ArtifactIdentifier releaseIdentifier) {
-		Path artifactPath = releaseIdentifier.asFilePath();
+	public Optional<Artifact> findArtifact(ArtifactIdentifier identifier) {
+		if(!identifier.matches(filter)) {
+			return Optional.empty();
+		}
+		Path artifactPath = identifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
 		if(!absolutePath.toFile().exists()) {
 			return Optional.empty();
@@ -42,7 +47,10 @@ public class FileRepository implements Repository {
 	}
 
 	@Override
-	public void put(ArtifactIdentifier identifier, Artifact artifact, User uploader) throws UnauthorizedUserException {
+	public void put(ArtifactIdentifier identifier, Artifact artifact, User uploader) throws UnauthorizedUserException, InsertionRejected {
+		if(!identifier.matches(filter)) {
+			throw new InsertionRejected();
+		}
 		if(!uploaders.contains(uploader)) {
 			throw new UnauthorizedUserException();
 		}

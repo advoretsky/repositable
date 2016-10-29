@@ -57,6 +57,11 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 		return versionIdentifier.asSnapshotPath(timestamp, buildId);
 	}
 
+	@Override
+	public boolean matches(Filter filter) {
+		return filter.matchesSnapshot(versionIdentifier, timestamp, buildId);
+	}
+
 	public void appendVersion(Metadata metadata) {
 		versionIdentifier.addSnapshotVersion(metadata, timestamp, buildId);
 	}

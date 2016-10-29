@@ -1,6 +1,7 @@
 package org.perfectable.artifactable.configuration;
 
 import org.perfectable.artifactable.Repositories;
+import org.perfectable.artifactable.Repository;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -19,7 +20,12 @@ public abstract class RepositoryConfiguration {
 	@XmlAttribute(name = "name")
 	protected String name;
 
-	public abstract Repositories appendTo(Repositories repositories);
+	protected abstract Repository build();
+
+	public final Repositories appendTo(Repositories repositories) {
+		Repository repository = build();
+		return repositories.withAdditional(name, repository);
+	}
 
 	@XmlType(name = "RepositoryConfigurationReference", propOrder = {"repository"})
 	public static class Reference {

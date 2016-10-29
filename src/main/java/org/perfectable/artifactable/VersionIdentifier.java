@@ -127,4 +127,13 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 		String version = versionModifier.isPresent() ? (versionBare + "-" + versionModifier.get()) : versionBare;
 		metadata.addVersion(version);
 	}
+
+	@Override
+	public boolean matches(Filter filter) {
+		return filter.matchesVersion(moduleIdentifier, versionBare, versionModifier, classifier, packaging);
+	}
+
+	public boolean hasGroupId(String groupId) {
+		return moduleIdentifier.hasGroupId(groupId);
+	}
 }

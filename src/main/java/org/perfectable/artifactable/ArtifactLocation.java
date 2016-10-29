@@ -13,5 +13,5 @@ public interface ArtifactLocation {
 	HttpResponse createResponse(Artifact artifact);
 
 	void add(Repositories repositories, ByteSource source, User uploader)
-			throws UnauthorizedUserException;
+			throws UnauthorizedUserException, InsertionRejected;
 }

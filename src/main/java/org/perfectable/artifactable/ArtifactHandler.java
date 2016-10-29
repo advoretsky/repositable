@@ -61,6 +61,10 @@ public class ArtifactHandler implements RequestHandler {
 					LOGGER.info("Not allowed user {} tried to upload {}", uploader, location);
 					return HttpResponse.status(HttpStatus.FORBIDDEN);
 				}
+				catch (InsertionRejected insertionRejected) {
+					LOGGER.info("User {} tried to upload {} to filtered repository", uploader, location);
+					return HttpResponse.status(HttpStatus.FORBIDDEN);
+				}
 				LOGGER.info("User {} uploaded {}", uploader, location);
 				return HttpResponse.status(HttpStatus.OK);
 			default:
