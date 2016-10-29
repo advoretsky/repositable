@@ -2,9 +2,14 @@ package org.perfectable.artifactable;
 
 import org.perfectable.artifactable.metadata.Metadata;
 
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
+
+import static java.nio.file.Files.newDirectoryStream;
 
 public final class ModuleIdentifier implements MetadataIdentifier {
 	private final String groupId;
@@ -25,8 +30,23 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 	}
 
 	@Override
-	public VersionEntry createVersionEntry(Path versionPath) {
-		return VersionIdentifier.ofEntry(this, versionPath);
+	public Metadata createMetadata(Path location) {
+		Metadata metadata = createEmptyMetadata();
+		Path artifactPath = asBasePath();
+		Path absolutePath = location.resolve(artifactPath);
+		try (DirectoryStream<Path> versionStream = newDirectoryStream(absolutePath)) {
+			for (Path versionPath : versionStream) {
+				VersionIdentifier versionIdentifier = VersionIdentifier.ofEntry(this, versionPath);
+				versionIdentifier.appendVersion(metadata);
+			}
+		}
+		catch (NoSuchFileException e) { // NOPMD
+			// just dont addSnapshot versions
+		}
+		catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		return metadata;
 	}
 
 	public String asFileBaseName(String versionBare) {

@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
-public class SnapshotIdentifier implements ArtifactIdentifier, MetadataIdentifier.VersionEntry {
+public class SnapshotIdentifier implements ArtifactIdentifier {
 
 	private static final Pattern SUFFIX_PATTERN = Pattern.compile("([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z]+))?\\.(\\w+)$");
 
@@ -57,7 +57,6 @@ public class SnapshotIdentifier implements ArtifactIdentifier, MetadataIdentifie
 		return versionIdentifier.asSnapshotPath(timestamp, buildId);
 	}
 
-	@Override
 	public void appendVersion(Metadata metadata) {
 		versionIdentifier.addSnapshotVersion(metadata, timestamp, buildId);
 	}

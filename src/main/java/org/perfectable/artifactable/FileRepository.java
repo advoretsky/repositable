@@ -9,12 +9,8 @@ import org.perfectable.artifactable.metadata.Metadata;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.DirectoryStream;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.util.Optional;
-
-import static java.nio.file.Files.newDirectoryStream;
 
 public class FileRepository implements Repository {
 	private final Path location;
@@ -31,22 +27,7 @@ public class FileRepository implements Repository {
 
 	@Override
 	public Metadata fetchMetadata(MetadataIdentifier metadataIdentifier) {
-		Metadata metadata = metadataIdentifier.createEmptyMetadata();
-		Path artifactPath = metadataIdentifier.asBasePath();
-		Path absolutePath = location.resolve(artifactPath);
-		try (DirectoryStream<Path> versionStream = newDirectoryStream(absolutePath)) {
-			for (Path versionPath : versionStream) {
-				MetadataIdentifier.VersionEntry versionEntry = metadataIdentifier.createVersionEntry(versionPath);
-				versionEntry.appendVersion(metadata);
-			}
-		}
-		catch (NoSuchFileException e) { // NOPMD
-			// just dont addSnapshot versions
-		}
-		catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		return metadata;
+		return metadataIdentifier.createMetadata(location);
 	}
 
 	@Override

@@ -2,15 +2,19 @@ package org.perfectable.artifactable;
 
 import org.perfectable.artifactable.metadata.Metadata;
 
+import java.io.IOException;
+import java.nio.file.DirectoryStream;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.nio.file.Files.newDirectoryStream;
 import static org.perfectable.artifactable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
 
 
-public final class VersionIdentifier implements ArtifactIdentifier, MetadataIdentifier, MetadataIdentifier.VersionEntry {
+public final class VersionIdentifier implements ArtifactIdentifier, MetadataIdentifier {
 	private final ModuleIdentifier moduleIdentifier;
 	private final String versionBare;
 	private final Optional<String> versionModifier;
@@ -41,11 +45,6 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 		Path artifactPath = moduleIdentifier.asBasePath();
 		String version = completeVersion();
 		return artifactPath.resolve(version);
-	}
-
-	@Override
-	public VersionEntry createVersionEntry(Path versionPath) {
-		return SnapshotIdentifier.ofEntry(this, versionPath);
 	}
 
 	@Override
@@ -89,6 +88,26 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 		return metadata;
 	}
 
+	@Override
+	public Metadata createMetadata(Path location) {
+		Metadata metadata = createEmptyMetadata();
+		Path artifactPath = asBasePath();
+		Path absolutePath = location.resolve(artifactPath);
+		try (DirectoryStream<Path> versionStream = newDirectoryStream(absolutePath)) {
+			for (Path versionPath : versionStream) {
+				SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.ofEntry(this, versionPath);
+				snapshotIdentifier.appendVersion(metadata);
+			}
+		}
+		catch (NoSuchFileException e) { // NOPMD
+			// just dont addSnapshot versions
+		}
+		catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		return metadata;
+	}
+
 	public Path asSnapshotPath(LocalDateTime timestamp, int buildId) {
 		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
 		Path artifactPath = asBasePath();
@@ -104,7 +123,6 @@ public final class VersionIdentifier implements ArtifactIdentifier, MetadataIden
 		metadata.addSnapshotVersion(classifier.orElse(""), packaging, version, buildId, timestamp);
 	}
 
-	@Override
 	public void appendVersion(Metadata metadata) {
 		String version = versionModifier.isPresent() ? (versionBare + "-" + versionModifier.get()) : versionBare;
 		metadata.addVersion(version);
