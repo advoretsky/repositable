@@ -29,7 +29,9 @@ public class FileRepositoryConfiguration extends RepositoryConfiguration {
 
 	@XmlElementWrapper(name = "filters")
 	@XmlElements({
-			@XmlElement(name = "group", type = GroupFilterConfiguration.class)
+			@XmlElement(name = "group", type = GroupFilterConfiguration.class),
+			@XmlElement(name = "snapshots", type = SnapshotFilterConfiguration.class),
+			@XmlElement(name = "releases", type = ReleaseFilterConfiguration.class)
 	})
 	protected List<FilterConfiguration> filters;
 

@@ -11,7 +11,6 @@ import javax.xml.bind.annotation.XmlValue;
 
 @XmlType(name = "GroupFilter", propOrder = {"groupId"})
 @XmlAccessorType(XmlAccessType.NONE)
-@XmlSeeAlso({GroupFilterConfiguration.class})
 public class GroupFilterConfiguration implements FilterConfiguration {
 	@XmlValue
 	private String groupId;
