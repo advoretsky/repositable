@@ -1,6 +1,8 @@
 package org.perfectable.artifactable.authorization;
 
 public final class User {
+	private static final String REPRESENTATION_FORMAT = "User(%s)";
+
 	private final String username;
 	private final String password;
 
@@ -17,5 +19,10 @@ public final class User {
 		if (!username.equals(this.username) || !password.equals(this.password)) {
 			throw new UnauthenticatedUserException();
 		}
+	}
+
+	@Override
+	public String toString() {
+		return String.format(REPRESENTATION_FORMAT, username);
 	}
 }

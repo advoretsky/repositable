@@ -8,10 +8,14 @@ import org.perfectable.webable.handler.HttpRequest;
 import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.HttpStatus;
 import org.perfectable.webable.handler.RequestHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 public class ArtifactHandler implements RequestHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactHandler.class);
+
 	private final Repositories repositories;
 	private final Locator locator;
 
@@ -38,6 +42,7 @@ public class ArtifactHandler implements RequestHandler {
 				if(!artifact.isPresent()) {
 					return HttpResponse.NOT_FOUND;
 				}
+				LOGGER.debug("Requested artifact {}", location);
 				return location.createResponse(artifact.get());
 			case PUT:
 				Authentication authentication = request.select(Authentication.ATTRIBUTE).get();
@@ -46,14 +51,17 @@ public class ArtifactHandler implements RequestHandler {
 					uploader = authentication.requireUser();
 				}
 				catch (UnauthenticatedUserException e) {
+					LOGGER.info("Unauthenticated user tried to upload {}", location);
 					return HttpResponse.status(HttpStatus.UNAUTHORIZED);
 				}
 				try {
 					location.add(repositories, request.contentSource(), uploader);
 				}
 				catch (UnauthorizedUserException e) {
+					LOGGER.info("Not allowed user {} tried to upload {}", uploader, location);
 					return HttpResponse.status(HttpStatus.FORBIDDEN);
 				}
+				LOGGER.info("User {} uploaded {}", uploader, location);
 				return HttpResponse.status(HttpStatus.OK);
 			default:
 				return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);

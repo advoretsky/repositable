@@ -3,6 +3,7 @@ package org.perfectable.artifactable;
 import org.perfectable.artifactable.metadata.Metadata;
 import org.perfectable.webable.handler.HttpResponse;
 
+import java.util.Locale;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -14,6 +15,8 @@ public class VersionMetadataLocation implements MetadataLocation {
 	// ex. "/libs-snapshot-local/org/perfectable/webable/1.1.0-SNAPSHOT/maven-metadata.xml" // NOPMD
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]*)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)(?:-(SNAPSHOT))?\\/maven-metadata\\.xml(?:\\.(\\w+))?");
+
+	private static final String REPRESENTATION_FORMAT = "VersionMetadataLocation(%s, %s, %s)";
 
 	private final String repositoryName;
 	private final VersionIdentifier versionIdentifier;
@@ -47,4 +50,10 @@ public class VersionMetadataLocation implements MetadataLocation {
 	public HttpResponse createResponse(Metadata metadata) {
 		return MetadataHttpResponse.of(metadata, hashMethod);
 	}
+
+	@Override
+	public String toString() {
+		return String.format(REPRESENTATION_FORMAT, repositoryName, versionIdentifier.asBasePath(), hashMethod);
+	}
+
 }

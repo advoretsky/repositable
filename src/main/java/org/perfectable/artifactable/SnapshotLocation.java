@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 import static com.google.common.base.Preconditions.checkState;
 
 public final class SnapshotLocation implements ArtifactLocation {
+	private static final String REPRESENTATION_FORMAT = "SnapshotLocation(%s, %s, %s)";
 
 	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar" // NOPMD
 	static final Pattern PATH_PATTERN =
@@ -63,5 +64,10 @@ public final class SnapshotLocation implements ArtifactLocation {
 
 	public HttpResponse createResponse(Artifact artifact) {
 		return HashedHttpResponse.of(artifact, hashMethod);
+	}
+
+	@Override
+	public String toString() {
+		return String.format(REPRESENTATION_FORMAT, repositoryName, snapshotIdentifier.asFilePath(), hashMethod);
 	}
 }

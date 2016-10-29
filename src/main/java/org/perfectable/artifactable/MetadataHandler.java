@@ -5,10 +5,14 @@ import org.perfectable.webable.handler.HttpRequest;
 import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.HttpStatus;
 import org.perfectable.webable.handler.RequestHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
 public final class MetadataHandler implements RequestHandler {
+	private static final Logger LOGGER = LoggerFactory.getLogger(MetadataHandler.class);
+
 	private final Repositories repositories;
 	private final Locator locator;
 
@@ -35,8 +39,10 @@ public final class MetadataHandler implements RequestHandler {
 				if (!metadata.isPresent()) {
 					return HttpResponse.NOT_FOUND;
 				}
+				LOGGER.debug("Requested metadata {}", location);
 				return location.createResponse(metadata.get());
 			case PUT:
+				LOGGER.debug("Ignored upload of metadata {}", location);
 				// MARK metadata upload is ignored
 				return HttpResponse.status(HttpStatus.OK);
 			default:

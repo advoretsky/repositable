@@ -17,6 +17,8 @@ public final class ReleaseLocation implements ArtifactLocation {
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]+)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)\\/\\3-\\4(?:-([a-z])+)?\\.(\\w+)(?:\\.(\\w+))?$");
 
+	private static final String REPRESENTATION_FORMAT = "ReleaseLocation(%s, %s, %s)";
+
 	private final String repositoryName;
 	private final VersionIdentifier versionIdentifier;
 	private final HashMethod hashMethod;
@@ -57,5 +59,10 @@ public final class ReleaseLocation implements ArtifactLocation {
 
 	public HttpResponse createResponse(Artifact artifact) {
 		return HashedHttpResponse.of(artifact, hashMethod);
+	}
+
+	@Override
+	public String toString() {
+		return String.format(REPRESENTATION_FORMAT, repositoryName, versionIdentifier.asFilePath(), hashMethod);
 	}
 }

@@ -13,6 +13,8 @@ public class ModuleMetadataLocation implements MetadataLocation {
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]*)\\/([a-zA-Z][\\w-]*)\\/maven-metadata\\.xml(?:\\.(\\w+))?");
 
+	private static final String REPRESENTATION_FORMAT = "ModuleMetadataLocation(%s, %s, %s)";
+
 	private final String repositoryName;
 	private final ModuleIdentifier moduleIdentifier;
 	private final HashMethod hashMethod;
@@ -42,5 +44,10 @@ public class ModuleMetadataLocation implements MetadataLocation {
 	@Override
 	public MetadataHttpResponse createResponse(Metadata metadata) {
 		return MetadataHttpResponse.of(metadata, hashMethod);
+	}
+
+	@Override
+	public String toString() {
+		return String.format(REPRESENTATION_FORMAT, repositoryName, moduleIdentifier.asBasePath(), hashMethod);
 	}
 }
