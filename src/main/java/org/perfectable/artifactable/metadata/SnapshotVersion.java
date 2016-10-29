@@ -67,7 +67,7 @@ public class SnapshotVersion {
 	}
 
 	@SuppressWarnings("unused")
-	@XmlJavaTypeAdapter(TimestampAdapter.class)
+	@XmlJavaTypeAdapter(TimestampAdapter.WithoutSeparator.class)
 	@XmlElement(name = "updated")
 	public LocalDateTime getUpdated() {
 		return updated;

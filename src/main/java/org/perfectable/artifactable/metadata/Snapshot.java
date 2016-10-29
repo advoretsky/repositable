@@ -27,7 +27,7 @@ public class Snapshot {
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "timestamp")
-	@XmlJavaTypeAdapter(TimestampAdapter.class)
+	@XmlJavaTypeAdapter(TimestampAdapter.WithSeparator.class)
 	public LocalDateTime getTimestamp() {
 		return timestamp;
 	}

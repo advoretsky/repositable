@@ -1,7 +1,6 @@
 package org.perfectable.artifactable.metadata;
 
 import com.google.common.collect.Ordering;
-import org.perfectable.artifactable.CompositeFilter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,12 +9,8 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
-
-import static sun.management.snmp.jvminstr.JvmThreadInstanceEntryImpl.ThreadStateMap.Byte1.other;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Versioning",
@@ -81,7 +76,7 @@ public class Versioning {
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "lastUpdated")
-	@XmlJavaTypeAdapter(value = TimestampAdapter.class)
+	@XmlJavaTypeAdapter(value = TimestampAdapter.WithoutSeparator.class)
 	public LocalDateTime getLastUpdated() {
 		return lastUpdated;
 	}
