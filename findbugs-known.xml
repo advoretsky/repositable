@@ -1,26 +1,28 @@
 <BugCollection version='3.0.1'>
     <BugInstance abbrev='RV' category='BAD_PRACTICE' priority='2' type='RV_RETURN_VALUE_IGNORED_BAD_PRACTICE'>
-        <LongMessage>Exceptional return value of java.io.File.mkdirs() ignored in org.perfectable.artifactable.FileRepository.createDirectoryIfNeeded(Path)</LongMessage>
-        <Class classname='org.perfectable.artifactable.FileRepository' primary='true' />
-        <Method classname='org.perfectable.artifactable.FileRepository' name='createDirectoryIfNeeded'
-                signature='(Ljava/nio/file/Path;)V'
-                isStatic='false' primary='true' />
+        <LongMessage>Exceptional return value of java.io.File.mkdirs() ignored in
+			org.perfectable.repositable.FileRepository.createDirectoryIfNeeded(Path)</LongMessage>
+        <Class classname='org.perfectable.repositable.FileRepository' primary='true' />
+        <Method classname='org.perfectable.repositable.FileRepository' name='createDirectoryIfNeeded'
+				signature='(Ljava/nio/file/Path;)V'
+				isStatic='false' primary='true' />
         <Method classname='java.io.File' name='mkdirs'
                 signature='()Z'
                 isStatic='false' role='METHOD_CALLED' />
     </BugInstance>
     <BugInstance abbrev='UPM' category='PERFORMANCE' priority='3' type='UPM_UNCALLED_PRIVATE_METHOD'>
-        <LongMessage>Private method org.perfectable.artifactable.metadata.Versioning.setLastUpdated(LocalDateTime) is never called</LongMessage>
-        <Class classname='org.perfectable.artifactable.metadata.Versioning' primary='true' />
-        <Method classname='org.perfectable.artifactable.metadata.Versioning' name='setLastUpdated'
-                signature='(Ljava/time/LocalDateTime;)V'
-                isStatic='false'  primary='true' />
+        <LongMessage>Private method org.perfectable.repositable.metadata.Versioning.setLastUpdated(LocalDateTime) is
+			never called</LongMessage>
+        <Class classname='org.perfectable.repositable.metadata.Versioning' primary='true' />
+        <Method classname='org.perfectable.repositable.metadata.Versioning' name='setLastUpdated'
+				signature='(Ljava/time/LocalDateTime;)V'
+				isStatic='false' primary='true' />
     </BugInstance>
     <BugInstance abbrev='UPM' category='PERFORMANCE' priority='3' type='UPM_UNCALLED_PRIVATE_METHOD'>
-        <LongMessage>Private method org.perfectable.artifactable.metadata.Versioning.setRelease(Version) is never called</LongMessage>
-        <Class classname='org.perfectable.artifactable.metadata.Versioning' primary='true' />
-        <Method classname='org.perfectable.artifactable.metadata.Versioning' name='setRelease'
-                signature='(Lorg/perfectable/artifactable/metadata/Version;)V'
-                isStatic='false' primary='true' />
+        <LongMessage>Private method org.perfectable.repositable.metadata.Versioning.setRelease(Version) is never called</LongMessage>
+        <Class classname='org.perfectable.repositable.metadata.Versioning' primary='true' />
+        <Method classname='org.perfectable.repositable.metadata.Versioning' name='setRelease'
+				signature='(Lorg/perfectable/repositable/metadata/Version;)V'
+				isStatic='false' primary='true' />
     </BugInstance>
 </BugCollection>
