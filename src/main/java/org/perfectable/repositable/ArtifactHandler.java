@@ -38,44 +38,56 @@ public class ArtifactHandler implements RequestHandler {
 		ArtifactLocation location = locator.createLocation(path);
 		switch(request.method()) {
 			case GET:
-				Optional<Artifact> artifactContent = location.find(repositories);
-				if(!artifactContent.isPresent()) {
-					return HttpResponse.NOT_FOUND;
-				}
-				LOGGER.debug("Requested artifact content {}", location);
-				return location.createResponse(artifactContent.get());
+				return handleRetrieval(location);
 			case HEAD:
-				Optional<Artifact> artifactHeaders = location.find(repositories);
-				if(!artifactHeaders.isPresent()) {
-					return HttpResponse.NOT_FOUND;
-				}
-				LOGGER.debug("Requested artifact header {}", location);
-				return HttpResponse.status(HttpStatus.OK);
+				return handleProbe(location);
 			case PUT:
-				Authentication authentication = request.select(Authentication.ATTRIBUTE).get();
-				User uploader;
-				try {
-					uploader = authentication.requireUser();
-				}
-				catch (UnauthenticatedUserException e) {
-					LOGGER.info("Unauthenticated user tried to upload {}", location);
-					return HttpResponse.status(HttpStatus.UNAUTHORIZED);
-				}
-				try {
-					location.add(repositories, request.contentSource(), uploader);
-				}
-				catch (UnauthorizedUserException e) {
-					LOGGER.info("Not allowed user {} tried to upload {}", uploader, location);
-					return HttpResponse.status(HttpStatus.FORBIDDEN);
-				}
-				catch (InsertionRejected insertionRejected) {
-					LOGGER.info("User {} tried to upload {} to filtered repository", uploader, location);
-					return HttpResponse.status(HttpStatus.FORBIDDEN);
-				}
-				LOGGER.info("User {} uploaded {}", uploader, location);
-				return HttpResponse.status(HttpStatus.OK);
+				return handleUpload(request, location);
 			default:
 				return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);
 		}
+	}
+
+	private HttpResponse handleRetrieval(ArtifactLocation location) {
+		Optional<Artifact> artifactContent = location.find(repositories);
+		if(!artifactContent.isPresent()) {
+			return HttpResponse.NOT_FOUND;
+		}
+		LOGGER.debug("Requested artifact content {}", location);
+		return location.createResponse(artifactContent.get());
+	}
+
+	private HttpResponse handleProbe(ArtifactLocation location) {
+		Optional<Artifact> artifactHeaders = location.find(repositories);
+		if(!artifactHeaders.isPresent()) {
+			return HttpResponse.NOT_FOUND;
+		}
+		LOGGER.debug("Requested artifact header {}", location);
+		return HttpResponse.status(HttpStatus.OK);
+	}
+
+	private HttpResponse handleUpload(HttpRequest request, ArtifactLocation location) {
+		Authentication authentication = request.select(Authentication.ATTRIBUTE).get();
+		User uploader;
+		try {
+			uploader = authentication.requireUser();
+		}
+		catch (UnauthenticatedUserException e) {
+			LOGGER.info("Unauthenticated user tried to upload {}", location);
+			return HttpResponse.status(HttpStatus.UNAUTHORIZED);
+		}
+		try {
+			location.add(repositories, request.contentSource(), uploader);
+		}
+		catch (UnauthorizedUserException e) {
+			LOGGER.info("Not allowed user {} tried to upload {}", uploader, location);
+			return HttpResponse.status(HttpStatus.FORBIDDEN);
+		}
+		catch (InsertionRejected insertionRejected) {
+			LOGGER.info("User {} tried to upload {} to filtered repository", uploader, location);
+			return HttpResponse.status(HttpStatus.FORBIDDEN);
+		}
+		LOGGER.info("User {} uploaded {}", uploader, location);
+		return HttpResponse.status(HttpStatus.OK);
 	}
 }

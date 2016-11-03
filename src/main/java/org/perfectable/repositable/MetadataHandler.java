@@ -33,15 +33,23 @@ public final class MetadataHandler implements RequestHandler {
 		MetadataLocation location = locator.createLocation(path);
 		switch(request.method()) {
 			case GET:
-				Metadata metadata = location.fetch(repositories);
-				LOGGER.debug("Requested metadata {}", location);
-				return location.createResponse(metadata);
+				return handleRetrieval(location);
 			case PUT:
-				LOGGER.debug("Ignored upload of metadata {}", location);
-				// MARK metadata upload is ignored
-				return HttpResponse.status(HttpStatus.OK);
+				return handleUpload(location);
 			default:
 				return HttpResponse.status(HttpStatus.METHOD_NOT_ALLOWED);
 		}
+	}
+
+	private HttpResponse handleRetrieval(MetadataLocation location) {
+		Metadata metadata = location.fetch(repositories);
+		LOGGER.debug("Requested metadata {}", location);
+		return location.createResponse(metadata);
+	}
+
+	private HttpResponse handleUpload(MetadataLocation location) {
+		LOGGER.debug("Ignored upload of metadata {}", location);
+		// MARK metadata upload is ignored
+		return HttpResponse.status(HttpStatus.OK);
 	}
 }
