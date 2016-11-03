@@ -11,10 +11,10 @@ import org.perfectable.webable.handler.authorization.BasicAuthenticationRequestC
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 public final class Server {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
@@ -58,7 +58,7 @@ public final class Server {
 
 	private static final int REQUIRED_ARGUMENTS_COUNT = 1;
 
-	public static void main(String[] args) throws JAXBException {
+	public static void main(String[] args) {
 		LOGGER.info("Starting server; Working directory is {}", System.getProperty("user.dir"));
 		if(args.length < REQUIRED_ARGUMENTS_COUNT) {
 			System.out.println("Usage: repositable <configuration>"); // NOPMD actual use of system out
@@ -67,9 +67,19 @@ public final class Server {
 		String configurationLocation = args[0];
 		LOGGER.info("Reading configuration from {}", configurationLocation);
 		File configurationFile = new File(configurationLocation);
-		JAXBContext jaxbContext = JAXBContext.newInstance(ServerConfiguration.class);
-		Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-		ServerConfiguration serverConfiguration = (ServerConfiguration) jaxbUnmarshaller.unmarshal(configurationFile);
+		ServerConfiguration serverConfiguration;
+		try(FileInputStream configurationStream = new FileInputStream(configurationFile)) {
+			serverConfiguration = ServerConfiguration.parse(configurationStream);
+		}
+		catch (FileNotFoundException e) {
+			System.out.println("No such file: " + configurationFile); // NOPMD actual use of system out
+			return;
+		}
+		catch (IOException e) {
+			System.out.println("Error reading file : " + configurationFile); // NOPMD actual use of system out
+			e.printStackTrace(); // NOPMD actual use of system out
+			return;
+		}
 		Server server = serverConfiguration.build();
 		server.serve();
 	}

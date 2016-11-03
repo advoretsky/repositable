@@ -3,6 +3,9 @@ package org.perfectable.repositable.configuration;
 import org.perfectable.repositable.Repositories;
 import org.perfectable.repositable.Server;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -10,6 +13,7 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.InputStream;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.NONE)
@@ -40,6 +44,18 @@ public class ServerConfiguration {
 		}
 		server = server.withRepositories(repositories);
 		return server;
+
+	}
+
+	public static ServerConfiguration parse(InputStream configurationStream) {
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(ServerConfiguration.class);
+			Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+			return (ServerConfiguration) jaxbUnmarshaller.unmarshal(configurationStream);
+		}
+		catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
 
 	}
 }
