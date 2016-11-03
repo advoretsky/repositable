@@ -1,6 +1,5 @@
 package org.perfectable.repositable;
 
-import org.perfectable.repositable.authorization.UnauthorizedUserException;
 import org.perfectable.repositable.authorization.User;
 import org.perfectable.repositable.metadata.Metadata;
 
@@ -38,7 +37,7 @@ public final class VirtualRepository implements Repository {
 	}
 
 	@Override
-	public void put(ArtifactIdentifier identifier, Artifact content, User uploader) throws UnauthorizedUserException {
-		// MARK throw exception
+	public void put(ArtifactIdentifier identifier, Artifact content, User uploader) throws InsertionRejected {
+		throw new InsertionRejected();
 	}
 }
