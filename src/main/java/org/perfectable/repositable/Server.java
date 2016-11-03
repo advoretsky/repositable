@@ -59,30 +59,31 @@ public final class Server {
 
 	private static final int REQUIRED_ARGUMENTS_COUNT = 1;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		String workingDirectory = StandardSystemProperty.USER_DIR.value();
 		LOGGER.info("Starting server; Working directory is {}", workingDirectory);
 		if(args.length < REQUIRED_ARGUMENTS_COUNT) {
-			System.out.println("Usage: repositable <configuration>"); // NOPMD actual use of system out
+			LOGGER.error("No configuration file provided");
 			return;
 		}
-		String configurationLocation = args[0];
-		LOGGER.info("Reading configuration from {}", configurationLocation);
-		File configurationFile = new File(configurationLocation);
-		ServerConfiguration serverConfiguration;
-		try(FileInputStream configurationStream = new FileInputStream(configurationFile)) {
-			serverConfiguration = ServerConfiguration.parse(configurationStream);
-		}
-		catch (FileNotFoundException e) {
-			System.out.println("No such file: " + configurationFile); // NOPMD actual use of system out
-			return;
-		}
-		catch (IOException e) {
-			System.out.println("Error reading file : " + configurationFile); // NOPMD actual use of system out
-			e.printStackTrace(); // NOPMD actual use of system out
-			return;
-		}
+		ServerConfiguration serverConfiguration = parseConfiguration(args[0]);
 		Server server = serverConfiguration.build();
 		server.serve();
+	}
+
+	public static ServerConfiguration parseConfiguration(String configurationLocation) throws IOException {
+		LOGGER.info("Reading configuration from {}", configurationLocation);
+		File configurationFile = new File(configurationLocation);
+		try(FileInputStream configurationStream = new FileInputStream(configurationFile)) {
+			return ServerConfiguration.parse(configurationStream);
+		}
+		catch (FileNotFoundException e) {
+			LOGGER.error("No such file: {}", configurationFile, e); // NOPMD pmd counts 2 arguments needed
+			throw e;
+		}
+		catch (IOException e) {
+			LOGGER.error("Error reading file: {}", configurationFile, e); // NOPMD pmd counts 2 arguments needed
+			throw e;
+		}
 	}
 }
