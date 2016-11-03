@@ -1,5 +1,6 @@
 package org.perfectable.repositable;
 
+import com.google.common.base.StandardSystemProperty;
 import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.authorization.User;
 import org.perfectable.repositable.configuration.ServerConfiguration;
@@ -59,7 +60,8 @@ public final class Server {
 	private static final int REQUIRED_ARGUMENTS_COUNT = 1;
 
 	public static void main(String[] args) {
-		LOGGER.info("Starting server; Working directory is {}", System.getProperty("user.dir"));
+		String workingDirectory = StandardSystemProperty.USER_DIR.value();
+		LOGGER.info("Starting server; Working directory is {}", workingDirectory);
 		if(args.length < REQUIRED_ARGUMENTS_COUNT) {
 			System.out.println("Usage: repositable <configuration>"); // NOPMD actual use of system out
 			return;
