@@ -2,9 +2,9 @@ package org.perfectable.repositable;
 
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
-import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.authorization.UnauthorizedUserException;
 import org.perfectable.repositable.authorization.User;
+import org.perfectable.repositable.authorization.UserSet;
 import org.perfectable.repositable.metadata.Metadata;
 
 import java.io.IOException;
@@ -15,15 +15,15 @@ import java.util.Optional;
 public class FileRepository implements Repository {
 	private final Path location;
 	private final Filter filter;
-	private final Group uploaders;
+	private final UserSet uploaders;
 
-	public FileRepository(Path location, Filter filter, Group uploaders) {
+	public FileRepository(Path location, Filter filter, UserSet uploaders) {
 		this.location = location;
 		this.filter = filter;
 		this.uploaders = uploaders;
 	}
 
-	public static FileRepository create(Path location, Filter filter, Group uploaders) {
+	public static FileRepository create(Path location, Filter filter, UserSet uploaders) {
 		return new FileRepository(location, filter, uploaders);
 	}
 
