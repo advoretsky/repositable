@@ -19,6 +19,11 @@ public final class StabilityFilter implements Filter {
 	}
 
 	@Override
+	public boolean matchesModule(String groupId, String artifactId) {
+		return !allowSnapshots;
+	}
+
+	@Override
 	public boolean matchesSnapshot(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId) {
 		return allowSnapshots;
 	}

@@ -36,6 +36,16 @@ public abstract class CompositeFilter implements Filter {
 		}
 
 		@Override
+		public boolean matchesModule(String groupId, String artifactId) {
+			for (Filter component : components) {
+				if(!component.matchesModule(groupId, artifactId)) {
+					return false;
+				}
+			}
+			return true;
+		}
+
+		@Override
 		public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionModifier, Optional<String> classifier, String packaging) {
 			for (Filter component : components) {
 				if(!component.matchesVersion(moduleIdentifier, versionBare, versionModifier, classifier, packaging)) {

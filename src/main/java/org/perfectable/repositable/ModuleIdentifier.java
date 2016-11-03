@@ -49,6 +49,11 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 		return metadata;
 	}
 
+	@Override
+	public boolean matches(Filter filter) {
+		return filter.matchesModule(groupId, artifactId);
+	}
+
 	public String asFileBaseName(String versionBare) {
 		return artifactId + "-" + versionBare;
 	}

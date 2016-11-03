@@ -26,6 +26,9 @@ public class FileRepository implements Repository {
 
 	@Override
 	public Metadata fetchMetadata(MetadataIdentifier metadataIdentifier) {
+		if(!metadataIdentifier.matches(filter)) {
+			return metadataIdentifier.createEmptyMetadata();
+		}
 		return metadataIdentifier.createMetadata(location);
 	}
 

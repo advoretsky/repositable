@@ -10,4 +10,6 @@ public interface MetadataIdentifier {
 	Path asBasePath();
 
 	Metadata createMetadata(Path location);
+
+	boolean matches(Filter filter);
 }

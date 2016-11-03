@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public interface Filter {
-	boolean matchesSnapshot(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId);
+	boolean matchesModule(String groupId, String artifactId);
 	boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionModifier, Optional<String> classifier, String packaging);
+	boolean matchesSnapshot(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId);
 }

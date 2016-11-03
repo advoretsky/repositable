@@ -19,6 +19,11 @@ public final class GroupFilter implements Filter {
 	}
 
 	@Override
+	public boolean matchesModule(String groupId, String artifactId) {
+		return groupId.equals(this.groupId);
+	}
+
+	@Override
 	public boolean matchesSnapshot(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId) {
 		return versionIdentifier.hasGroupId(groupId);
 	}
