@@ -9,7 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public final class Repositories implements RepositorySelector {
+public final class Repositories implements RepositorySelector, RepositorySet {
 	private final ImmutableMap<String, Repository> repositoryByName;
 
 	public static Repositories create() {
@@ -37,12 +37,14 @@ public final class Repositories implements RepositorySelector {
 		return repository;
 	}
 
+	@Override
 	public Collection<Metadata> listMetadata(MetadataIdentifier metadataIdentifier) {
 		return repositoryByName.values().stream()
 				.map(repository -> repository.fetchMetadata(metadataIdentifier))
 				.collect(Collectors.toSet());
 	}
 
+	@Override
 	public Collection<Artifact> listArtifacts(ArtifactIdentifier artifactIdentifier) {
 		Function<Repository, Optional<Artifact>> transformation = repository -> repository.findArtifact(artifactIdentifier);
 		return repositoryByName.values().stream()

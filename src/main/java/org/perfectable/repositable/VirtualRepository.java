@@ -7,13 +7,13 @@ import java.util.Collection;
 import java.util.Optional;
 
 public final class VirtualRepository implements Repository {
-	private final Repositories sources;
+	private final RepositorySet sources;
 
-	private VirtualRepository(Repositories sources) {
+	private VirtualRepository(RepositorySet sources) {
 		this.sources = sources;
 	}
 
-	public static VirtualRepository create(Repositories sources) {
+	public static VirtualRepository create(RepositorySet sources) {
 		return new VirtualRepository(sources);
 	}
 
