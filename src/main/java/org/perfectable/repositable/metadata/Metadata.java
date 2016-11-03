@@ -1,10 +1,14 @@
 package org.perfectable.repositable.metadata;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
+import java.io.OutputStream;
 import java.time.LocalDateTime;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -69,5 +73,17 @@ public class Metadata {
 		Versioning newVersioning = versioning.merge(other.versioning);
 		result.setVersioning(newVersioning);
 		return result;
+	}
+
+	public void writeInto(OutputStream targetStream) {
+		try {
+			JAXBContext context = JAXBContext.newInstance(Metadata.class);
+			Marshaller marshaller = context.createMarshaller();
+			marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+			marshaller.marshal(this, targetStream);
+		}
+		catch (JAXBException e) {
+			throw new AssertionError(e);
+		}
 	}
 }
