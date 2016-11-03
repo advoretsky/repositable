@@ -37,8 +37,9 @@ public class ModuleMetadataLocation implements MetadataLocation {
 	}
 
 	@Override
-	public Metadata fetch(Repositories repositories) {
-		return repositories.fetchMetadata(repositoryName, moduleIdentifier);
+	public Metadata fetch(RepositorySelector repositorySelector) {
+		Repository targetRepository = repositorySelector.select(repositoryName);
+		return targetRepository.fetchMetadata(moduleIdentifier);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package org.perfectable.repositable;
 
-import com.google.common.io.ByteSource;
 import org.perfectable.repositable.authorization.UnauthorizedUserException;
 import org.perfectable.repositable.authorization.User;
 import org.perfectable.webable.handler.HttpResponse;
@@ -49,17 +48,19 @@ public final class SnapshotLocation implements ArtifactLocation {
 	}
 
 	@Override
-	public Optional<Artifact> find(Repositories repositories) {
-		return repositories.findArtifact(repositoryName, snapshotIdentifier);
+	public Optional<Artifact> find(RepositorySelector repositorySelector) {
+		Repository repository = repositorySelector.select(repositoryName);
+		return repository.findArtifact(snapshotIdentifier);
 	}
 
 	@Override
-	public void add(Repositories repositories, ByteSource source, User uploader)
+	public void add(RepositorySelector repositories, Artifact artifact, User uploader)
 			throws UnauthorizedUserException, InsertionRejected {
 		if(hashMethod != HashMethod.NONE) {
 			return;
 		}
-		repositories.add(repositoryName, snapshotIdentifier, source, uploader);
+		Repository repository = repositories.select(repositoryName);
+		repository.put(snapshotIdentifier, artifact, uploader);
 	}
 
 	@Override
