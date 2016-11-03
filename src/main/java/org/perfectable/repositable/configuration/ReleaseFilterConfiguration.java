@@ -1,7 +1,7 @@
 package org.perfectable.repositable.configuration;
 
 import org.perfectable.repositable.Filter;
-import org.perfectable.repositable.StabilityFilter;
+import org.perfectable.repositable.filter.StabilityFilter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

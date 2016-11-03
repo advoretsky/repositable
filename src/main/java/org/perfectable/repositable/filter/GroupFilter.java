@@ -1,4 +1,8 @@
-package org.perfectable.repositable;
+package org.perfectable.repositable.filter;
+
+import org.perfectable.repositable.Filter;
+import org.perfectable.repositable.ModuleIdentifier;
+import org.perfectable.repositable.VersionIdentifier;
 
 import java.time.LocalDateTime;
 import java.util.Optional;

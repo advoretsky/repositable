@@ -1,6 +1,6 @@
 package org.perfectable.repositable.configuration;
 
-import org.perfectable.repositable.CompositeFilter;
+import org.perfectable.repositable.filter.CompositeFilter;
 import org.perfectable.repositable.FileRepository;
 import org.perfectable.repositable.Filter;
 import org.perfectable.repositable.authorization.Group;
