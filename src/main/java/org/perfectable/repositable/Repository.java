@@ -17,4 +17,8 @@ public interface Repository {
 	default Repository restrictUploaders(UserSet uploaders) {
 		return AuthorizedRepository.of(this, uploaders);
 	}
+
+	default Repository filtered(Filter filter) {
+		return FilteredRepository.of(this, filter);
+	}
 }

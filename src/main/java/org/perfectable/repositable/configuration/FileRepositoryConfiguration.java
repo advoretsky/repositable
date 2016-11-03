@@ -5,7 +5,7 @@ import org.perfectable.repositable.Filter;
 import org.perfectable.repositable.Repository;
 import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.authorization.User;
-import org.perfectable.repositable.filter.CompositeFilter;
+import org.perfectable.repositable.filter.ConjunctionFilter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -46,10 +46,10 @@ public class FileRepositoryConfiguration extends RepositoryConfiguration {
 	protected Repository build() {
 		if(built == null) {
 			Set<Filter> filterSet = filters.stream().map(FilterConfiguration::build).collect(Collectors.toSet());
-			Filter filter = CompositeFilter.conjunction(filterSet);
+			Filter filter = ConjunctionFilter.of(filterSet);
 			Set<User> uploaderSet = users.stream().map(UserConfiguration::build).collect(Collectors.toSet());
 			Group uploaders = Group.of(uploaderSet);
-			built = FileRepository.create(location, filter).restrictUploaders(uploaders);
+			built = FileRepository.create(location).filtered(filter).restrictUploaders(uploaders);
 		}
 		return built;
 	}

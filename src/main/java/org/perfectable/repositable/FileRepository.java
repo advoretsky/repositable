@@ -13,30 +13,22 @@ import java.util.Optional;
 
 public class FileRepository implements Repository {
 	private final Path location;
-	private final Filter filter;
 
-	public FileRepository(Path location, Filter filter) {
+	public FileRepository(Path location) {
 		this.location = location;
-		this.filter = filter;
 	}
 
-	public static FileRepository create(Path location, Filter filter) {
-		return new FileRepository(location, filter);
+	public static FileRepository create(Path location) {
+		return new FileRepository(location);
 	}
 
 	@Override
 	public Metadata fetchMetadata(MetadataIdentifier metadataIdentifier) {
-		if(!metadataIdentifier.matches(filter)) {
-			return metadataIdentifier.createEmptyMetadata();
-		}
 		return metadataIdentifier.createMetadata(location);
 	}
 
 	@Override
 	public Optional<Artifact> findArtifact(ArtifactIdentifier identifier) {
-		if(!identifier.matches(filter)) {
-			return Optional.empty();
-		}
 		Path artifactPath = identifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
 		if(!absolutePath.toFile().exists()) {
@@ -48,9 +40,6 @@ public class FileRepository implements Repository {
 
 	@Override
 	public void put(ArtifactIdentifier identifier, Artifact artifact, User uploader) throws UnauthorizedUserException, InsertionRejected {
-		if(!identifier.matches(filter)) {
-			throw new InsertionRejected();
-		}
 		Path artifactPath = identifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
 		Path parent = absolutePath.resolveSibling(".");
