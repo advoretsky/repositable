@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface ArtifactLocation {
 	Optional<Artifact> find(Repositories repositories);
 
-	HttpResponse createResponse(Artifact artifact);
+	HttpResponse transformResponse(HttpResponse response);
 
 	void add(Repositories repositories, ByteSource source, User uploader)
 			throws UnauthorizedUserException, InsertionRejected;

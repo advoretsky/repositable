@@ -7,23 +7,23 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
-public enum HashMethod {
+public enum HashMethod implements OutputStreamTransformer {
 	NONE {
 		@Override
-		public OutputStream wrapOutputStream(OutputStream rawStream) {
+		public OutputStream transform(OutputStream rawStream) {
 			return rawStream;
 		}
 	},
 	SHA1 {
 		@Override
-		public OutputStream wrapOutputStream(OutputStream rawStream) {
+		public OutputStream transform(OutputStream rawStream) {
 			Hasher hasher = Hashing.sha1().newHasher();
 			return new HashingOutputStream(hasher, rawStream);
 		}
 	},
 	MD5 {
 		@Override
-		public OutputStream wrapOutputStream(OutputStream rawStream) {
+		public OutputStream transform(OutputStream rawStream) {
 			Hasher hasher = Hashing.md5().newHasher();
 			return new HashingOutputStream(hasher, rawStream);
 		}
@@ -45,7 +45,8 @@ public enum HashMethod {
 		}
 	}
 
-	public abstract OutputStream wrapOutputStream(OutputStream rawStream);
+	@Override
+	public abstract OutputStream transform(OutputStream raw);
 
 	private static class HashingOutputStream extends OutputStream {
 		private final Hasher hasher;

@@ -8,6 +8,8 @@ import org.perfectable.webable.handler.RequestHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+
 public final class MetadataHandler implements RequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MetadataHandler.class);
 
@@ -44,12 +46,30 @@ public final class MetadataHandler implements RequestHandler {
 	private HttpResponse handleRetrieval(MetadataLocation location) {
 		Metadata metadata = location.fetch(repositories);
 		LOGGER.debug("Requested metadata {}", location);
-		return location.createResponse(metadata);
+		HttpResponse response = MetadataHttpResponse.of(metadata);
+		return location.transformResponse(response);
 	}
 
 	private HttpResponse handleUpload(MetadataLocation location) {
 		LOGGER.debug("Ignored upload of metadata {}", location);
 		// MARK metadata upload is ignored
 		return HttpResponse.status(HttpStatus.OK);
+	}
+
+	private static final class MetadataHttpResponse implements HttpResponse {
+		private final Metadata metadata;
+
+		public static MetadataHttpResponse of(Metadata metadata) {
+			return new MetadataHttpResponse(metadata);
+		}
+
+		private MetadataHttpResponse(Metadata metadata) {
+			this.metadata = metadata;
+		}
+
+		@Override
+		public void writeTo(Writer writer) throws IOException {
+			metadata.writeInto(writer.stream());
+		}
 	}
 }

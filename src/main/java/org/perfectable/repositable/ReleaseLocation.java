@@ -58,8 +58,9 @@ public final class ReleaseLocation implements ArtifactLocation {
 		repositories.add(repositoryName, versionIdentifier, source, uploader);
 	}
 
-	public HttpResponse createResponse(Artifact artifact) {
-		return HashedHttpResponse.of(artifact, hashMethod);
+	@Override
+	public HttpResponse transformResponse(HttpResponse response) {
+		return TransformedHttpResponse.of(response, hashMethod);
 	}
 
 	@Override

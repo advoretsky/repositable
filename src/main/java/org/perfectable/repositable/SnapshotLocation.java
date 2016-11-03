@@ -62,8 +62,9 @@ public final class SnapshotLocation implements ArtifactLocation {
 		repositories.add(repositoryName, snapshotIdentifier, source, uploader);
 	}
 
-	public HttpResponse createResponse(Artifact artifact) {
-		return HashedHttpResponse.of(artifact, hashMethod);
+	@Override
+	public HttpResponse transformResponse(HttpResponse response) {
+		return TransformedHttpResponse.of(response, hashMethod);
 	}
 
 	@Override

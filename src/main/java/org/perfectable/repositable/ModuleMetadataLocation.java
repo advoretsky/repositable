@@ -1,6 +1,7 @@
 package org.perfectable.repositable;
 
 import org.perfectable.repositable.metadata.Metadata;
+import org.perfectable.webable.handler.HttpResponse;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,8 +42,8 @@ public class ModuleMetadataLocation implements MetadataLocation {
 	}
 
 	@Override
-	public MetadataHttpResponse createResponse(Metadata metadata) {
-		return MetadataHttpResponse.of(metadata, hashMethod);
+	public HttpResponse transformResponse(HttpResponse response) {
+		return TransformedHttpResponse.of(response, hashMethod);
 	}
 
 	@Override

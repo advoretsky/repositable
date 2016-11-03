@@ -46,8 +46,8 @@ public class VersionMetadataLocation implements MetadataLocation {
 	}
 
 	@Override
-	public HttpResponse createResponse(Metadata metadata) {
-		return MetadataHttpResponse.of(metadata, hashMethod);
+	public HttpResponse transformResponse(HttpResponse response) {
+		return TransformedHttpResponse.of(response, hashMethod);
 	}
 
 	@Override
