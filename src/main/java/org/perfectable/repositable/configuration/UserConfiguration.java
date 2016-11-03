@@ -1,6 +1,6 @@
 package org.perfectable.repositable.configuration;
 
-import org.perfectable.repositable.Server;
+import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.authorization.User;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -37,8 +37,8 @@ public class UserConfiguration {
 		return builtUser;
 	}
 
-	public Server appendTo(Server server) {
-		return server.withUser(build());
+	public Group appendTo(Group group) {
+		return group.join(build());
 	}
 
 	@XmlType(name = "UserConfigurationReference", propOrder = {"user"})

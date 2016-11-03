@@ -2,6 +2,7 @@ package org.perfectable.repositable.configuration;
 
 import org.perfectable.repositable.Repositories;
 import org.perfectable.repositable.Server;
+import org.perfectable.repositable.authorization.Group;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -35,9 +36,11 @@ public class ServerConfiguration {
 
 	public Server build() {
 		Server server = Server.create(port);
+		Group loggableUsers = Group.create();
 		for (UserConfiguration user : users) {
-			server = user.appendTo(server);
+			loggableUsers = user.appendTo(loggableUsers);
 		}
+		server = server.withLoggableUser(loggableUsers);
 		Repositories repositories = Repositories.create();
 		for (RepositoryConfiguration repositoryConfiguration : this.repositories) {
 			repositories = repositoryConfiguration.appendTo(repositories);

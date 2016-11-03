@@ -2,7 +2,6 @@ package org.perfectable.repositable;
 
 import com.google.common.base.StandardSystemProperty;
 import org.perfectable.repositable.authorization.Group;
-import org.perfectable.repositable.authorization.User;
 import org.perfectable.repositable.configuration.ServerConfiguration;
 import org.perfectable.webable.WebApplication;
 import org.perfectable.webable.handler.HandlerServerConfigurationExtension;
@@ -22,12 +21,12 @@ public final class Server {
 
 	private final int port;
 	private final Repositories repositories;
-	private final Group users;
+	private final Group loggableUsers;
 
-	private Server(int port, Repositories repositories, Group users) {
+	private Server(int port, Repositories repositories, Group loggableUsers) {
 		this.port = port;
 		this.repositories = repositories;
-		this.users = users;
+		this.loggableUsers = loggableUsers;
 	}
 
 	public static Server create(int port) {
@@ -35,16 +34,15 @@ public final class Server {
 	}
 
 	public Server withRepositories(Repositories newRepositories) {
-		return new Server(port, newRepositories, users);
+		return new Server(port, newRepositories, loggableUsers);
 	}
 
-	public Server withUser(User user) {
-		Group newUsers = users.join(user);
-		return new Server(port, repositories, newUsers);
+	public Server withLoggableUser(Group newLoggableUsers) {
+		return new Server(port, repositories, newLoggableUsers);
 	}
 
 	public void serve() {
-		StoringRequestAuthenticator requestAuthenticator = StoringRequestAuthenticator.allowing(users);
+		StoringRequestAuthenticator requestAuthenticator = StoringRequestAuthenticator.allowing(loggableUsers);
 		WebApplication.begin()
 				.withPort(port)
 				.extend(HandlerServerConfigurationExtension.create())
