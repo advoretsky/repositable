@@ -38,5 +38,8 @@ public final class AuthorizedRepository implements Repository {
 		wrapped.put(identifier, content, uploader);
 	}
 
-	// MARK override restrict uploaders
+	@Override
+	public Repository restrictUploaders(UserSet uploaders) {
+		return new AuthorizedRepository(wrapped, this.uploaders.intersection(uploaders));
+	}
 }
