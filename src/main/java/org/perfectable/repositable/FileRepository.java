@@ -4,7 +4,6 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.perfectable.repositable.authorization.UnauthorizedUserException;
 import org.perfectable.repositable.authorization.User;
-import org.perfectable.repositable.authorization.UserSet;
 import org.perfectable.repositable.metadata.Metadata;
 
 import java.io.IOException;
@@ -15,16 +14,14 @@ import java.util.Optional;
 public class FileRepository implements Repository {
 	private final Path location;
 	private final Filter filter;
-	private final UserSet uploaders;
 
-	public FileRepository(Path location, Filter filter, UserSet uploaders) {
+	public FileRepository(Path location, Filter filter) {
 		this.location = location;
 		this.filter = filter;
-		this.uploaders = uploaders;
 	}
 
-	public static FileRepository create(Path location, Filter filter, UserSet uploaders) {
-		return new FileRepository(location, filter, uploaders);
+	public static FileRepository create(Path location, Filter filter) {
+		return new FileRepository(location, filter);
 	}
 
 	@Override
@@ -50,9 +47,6 @@ public class FileRepository implements Repository {
 	public void put(ArtifactIdentifier identifier, Artifact artifact, User uploader) throws UnauthorizedUserException, InsertionRejected {
 		if(!identifier.matches(filter)) {
 			throw new InsertionRejected();
-		}
-		if(!uploaders.contains(uploader)) {
-			throw new UnauthorizedUserException();
 		}
 		Path artifactPath = identifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);

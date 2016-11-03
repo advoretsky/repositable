@@ -1,10 +1,11 @@
 package org.perfectable.repositable.configuration;
 
-import org.perfectable.repositable.filter.CompositeFilter;
 import org.perfectable.repositable.FileRepository;
 import org.perfectable.repositable.Filter;
+import org.perfectable.repositable.Repository;
 import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.authorization.User;
+import org.perfectable.repositable.filter.CompositeFilter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -40,15 +41,15 @@ public class FileRepositoryConfiguration extends RepositoryConfiguration {
 	@XmlElement(name = "user")
 	private Set<UserConfiguration> users;
 
-	private transient FileRepository built;
+	private transient Repository built;
 
-	protected FileRepository build() {
+	protected Repository build() {
 		if(built == null) {
 			Set<Filter> filterSet = filters.stream().map(FilterConfiguration::build).collect(Collectors.toSet());
 			Filter filter = CompositeFilter.conjunction(filterSet);
 			Set<User> uploaderSet = users.stream().map(UserConfiguration::build).collect(Collectors.toSet());
 			Group uploaders = Group.of(uploaderSet);
-			built = FileRepository.create(location, filter, uploaders);
+			built = FileRepository.create(location, filter).restrictUploaders(uploaders);
 		}
 		return built;
 	}
