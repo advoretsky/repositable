@@ -21,6 +21,8 @@ import java.io.IOException;
 public final class Server {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
+	private static final int DEFAULT_PORT = 8080;
+
 	private final int port;
 	private final Repositories repositories;
 	private final Group loggableUsers;
@@ -31,8 +33,12 @@ public final class Server {
 		this.loggableUsers = loggableUsers;
 	}
 
-	public static Server create(int port) {
-		return new Server(port, Repositories.create(), Group.create());
+	public static Server create() {
+		return new Server(DEFAULT_PORT, Repositories.create(), Group.create());
+	}
+
+	public Server withPort(int newPort) {
+		return new Server(newPort, repositories, loggableUsers);
 	}
 
 	public Server withRepositories(Repositories newRepositories) {

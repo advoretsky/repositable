@@ -35,7 +35,8 @@ public class ServerConfiguration {
 	private List<RepositoryConfiguration> repositories;
 
 	public Server build() {
-		Server server = Server.create(port);
+		Server server = Server.create()
+			.withPort(port);
 		Group loggableUsers = Group.create();
 		for (UserConfiguration user : users) {
 			loggableUsers = user.appendTo(loggableUsers);
