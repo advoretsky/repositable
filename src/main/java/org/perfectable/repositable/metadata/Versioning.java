@@ -111,6 +111,15 @@ public class Versioning {
 		setLastUpdated(newLastUpdated);
 	}
 
+	public boolean isEmpty() {
+		return latest == null &&
+				release == null &&
+				snapshot == null &&
+				versions.isEmpty() &&
+				lastUpdated == null &&
+				snapshotVersions.isEmpty();
+	}
+
 	public Versioning merge(Versioning other) {
 		Versioning result = new Versioning();
 		result.setLatest(Version.latest(other.latest, latest));

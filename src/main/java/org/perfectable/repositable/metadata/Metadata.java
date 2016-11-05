@@ -62,6 +62,10 @@ public class Metadata {
 		this.versioning = versioning;
 	}
 
+	public boolean isEmpty() {
+		return versioning.isEmpty();
+	}
+
 	public Metadata merge(Metadata other) {
 		Metadata result = new Metadata();
 		checkArgument(other.groupId.equals(groupId));

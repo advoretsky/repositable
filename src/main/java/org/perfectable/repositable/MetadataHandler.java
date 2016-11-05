@@ -46,6 +46,9 @@ public final class MetadataHandler implements RequestHandler {
 	private HttpResponse handleRetrieval(MetadataLocation location) {
 		Metadata metadata = location.fetch(repositories);
 		LOGGER.debug("Requested metadata {}", location);
+		if(metadata.isEmpty()) {
+			return HttpResponse.NOT_FOUND;
+		}
 		HttpResponse response = MetadataHttpResponse.of(metadata);
 		return location.transformResponse(response);
 	}
