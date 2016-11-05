@@ -1,5 +1,7 @@
 package org.perfectable.repositable;
 
+import com.google.common.net.HttpHeaders;
+import com.google.common.net.MediaType;
 import org.perfectable.webable.handler.HttpRequest;
 
 import java.io.InputStream;
@@ -24,5 +26,12 @@ public final class PublishedArtifact implements Artifact {
 	@Override
 	public InputStream openStream() {
 		return request.contentStream();
+	}
+
+	@Override
+	public MediaType mediaType() {
+		return request.header(HttpHeaders.CONTENT_TYPE)
+				.map(MediaType::parse)
+				.orElse(MediaType.OCTET_STREAM);
 	}
 }

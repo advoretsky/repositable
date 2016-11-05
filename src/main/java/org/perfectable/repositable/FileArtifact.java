@@ -1,12 +1,14 @@
 package org.perfectable.repositable;
 
 import com.google.common.io.ByteStreams;
+import com.google.common.net.MediaType;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 public final class FileArtifact implements Artifact {
@@ -38,5 +40,20 @@ public final class FileArtifact implements Artifact {
 		catch (FileNotFoundException e) {
 			throw new AssertionError(e);
 		}
+	}
+
+	@Override
+	public MediaType mediaType() {
+		String mediaTypeString;
+		try {
+			mediaTypeString = Files.probeContentType(sourceFile);
+		}
+		catch (IOException e) {
+			throw new AssertionError(e);
+		}
+		if(mediaTypeString == null) {
+			return MediaType.OCTET_STREAM;
+		}
+		return MediaType.parse(mediaTypeString);
 	}
 }

@@ -107,6 +107,7 @@ public class ArtifactHandler implements RequestHandler {
 
 		@Override
 		public void writeTo(Writer writer) throws IOException {
+			writer.setContentType(artifact.mediaType());
 			artifact.writeContent(writer.stream());
 		}
 	}
