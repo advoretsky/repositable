@@ -1,6 +1,5 @@
 package org.perfectable.repositable;
 
-import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.perfectable.repositable.authorization.UnauthorizedUserException;
 import org.perfectable.repositable.authorization.User;
@@ -34,8 +33,7 @@ public class FileRepository implements Repository {
 		if(!absolutePath.toFile().exists()) {
 			return Optional.empty();
 		}
-		ByteSource byteSource = Files.asByteSource(absolutePath.toFile());
-		return Optional.of(Artifact.of(byteSource));
+		return Optional.of(FileArtifact.of(absolutePath));
 	}
 
 	@Override

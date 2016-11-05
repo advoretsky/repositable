@@ -80,7 +80,7 @@ public class ArtifactHandler implements RequestHandler {
 			return HttpResponse.status(HttpStatus.UNAUTHORIZED);
 		}
 		try {
-			location.add(repositories, Artifact.of(request.contentSource()), uploader);
+			location.add(repositories, PublishedArtifact.of(request), uploader);
 		}
 		catch (UnauthorizedUserException e) {
 			LOGGER.info("Not allowed user {} tried to upload {}", uploader, location);
