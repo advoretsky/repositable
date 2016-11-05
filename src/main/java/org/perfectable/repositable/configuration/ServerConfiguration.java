@@ -15,28 +15,33 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import java.io.InputStream;
+import java.util.LinkedList;
 import java.util.List;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Server", propOrder = {"port", "users", "repositories"})
 @XmlRootElement(name = "server")
 public class ServerConfiguration {
-	@XmlElement(name = "port", required = true)
-	private int port;
+	private static final int NOT_CONFIGURED = -1;
+
+	@XmlElement(name = "port")
+	private int port = NOT_CONFIGURED; // NOPMD cannot be final, injected by JAXB
 
 	@XmlElementWrapper(name = "users")
 	@XmlElement(name = "user")
-	private List<UserConfiguration> users;
+	private List<UserConfiguration> users = new LinkedList<>(); // NOPMD cannot be final, injected by JAXB
 
 	@XmlElements({
 			@XmlElement(name="repository", type=FileRepositoryConfiguration.class),
 			@XmlElement(name="virtual", type= VirtualRepositoryConfiguration.class)
 	})
-	private List<RepositoryConfiguration> repositories;
+	private List<RepositoryConfiguration> repositories = new LinkedList<>(); // NOPMD cannot be final, injected by JAXB
 
 	public Server build() {
-		Server server = Server.create()
-			.withPort(port);
+		Server server = Server.create();
+		if(port != NOT_CONFIGURED) {
+			server = server.withPort(port);
+		}
 		Group loggableUsers = Group.create();
 		for (UserConfiguration user : users) {
 			loggableUsers = user.appendTo(loggableUsers);
