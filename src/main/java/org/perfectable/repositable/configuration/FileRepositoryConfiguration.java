@@ -16,6 +16,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -25,7 +27,7 @@ import java.util.stream.Collectors;
 @XmlAccessorType(XmlAccessType.NONE)
 public class FileRepositoryConfiguration extends RepositoryConfiguration {
 	@XmlJavaTypeAdapter(value = XmlPathAdapter.class)
-	@XmlElement(name = "location")
+	@XmlElement(name = "location", required = true)
 	private Path location;
 
 	@XmlElementWrapper(name = "filters")
@@ -34,12 +36,12 @@ public class FileRepositoryConfiguration extends RepositoryConfiguration {
 			@XmlElement(name = "snapshots", type = SnapshotFilterConfiguration.class),
 			@XmlElement(name = "releases", type = ReleaseFilterConfiguration.class)
 	})
-	protected List<FilterConfiguration> filters;
+	private List<FilterConfiguration> filters = new LinkedList<>(); // NOPMD cant be final, injected by jaxb
 
 	@XmlJavaTypeAdapter(UserConfiguration.Reference.Adapter.class)
 	@XmlElementWrapper(name = "uploaders")
 	@XmlElement(name = "user")
-	private Set<UserConfiguration> users;
+	private Set<UserConfiguration> users = new HashSet<>(); // NOPMD cant be final, injected by jaxb
 
 	private transient Repository built;
 

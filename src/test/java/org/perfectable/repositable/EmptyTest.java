@@ -1,37 +1,16 @@
 package org.perfectable.repositable;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.perfectable.webable.PortHelper;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import javax.servlet.http.HttpServletResponse;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 
-public class EmptyTest {
-	@Rule
-	public final TemporaryFolder folder = new TemporaryFolder();
+public class EmptyTest extends AbstractServerTest {
 
-	private int port;
-	private Server.Monitor monitor;
-
-	@Before
-	public void createServer() {
-		port = PortHelper.determineAvailablePort(20000, 30000);
-		Server server = Server.create()
-				.withPort(port);
-		monitor = server.serve();
-	}
-
-	@After
-	public void closeServer() {
-		monitor.close();
+	@Override
+	protected Server createBaseConfiguration() {
+		return Server.create();
 	}
 
 	@Test
@@ -166,12 +145,4 @@ public class EmptyTest {
 				.returnedStatus(HttpServletResponse.SC_UNAUTHORIZED);
 	}
 
-	private URL createUrl(String path) {
-		try {
-			return new URL("http://localhost:" + port + path);
-		}
-		catch (MalformedURLException e) {
-			throw new AssertionError(e);
-		}
-	}
 }
