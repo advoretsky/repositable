@@ -5,7 +5,10 @@ import org.junit.Test;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Paths;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 
@@ -37,6 +40,14 @@ public class FileRepositoryTest extends AbstractServerTest {
 	public void testArtifactReleaseMissing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar"))
 				.isNotFound();
+	}
+
+	@Test
+	public void testArtifactReleasePresent() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar"))
+				.hasContent(artifactContent);
 	}
 
 	@Test
