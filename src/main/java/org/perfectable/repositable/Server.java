@@ -3,6 +3,8 @@ package org.perfectable.repositable;
 import com.google.common.base.StandardSystemProperty;
 import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.configuration.ServerConfiguration;
+import org.perfectable.webable.ServerConfigurator;
+import org.perfectable.webable.ServerMonitor;
 import org.perfectable.webable.WebApplication;
 import org.perfectable.webable.handler.HandlerServerConfigurationExtension;
 import org.perfectable.webable.handler.HttpResponse;
@@ -41,9 +43,9 @@ public final class Server {
 		return new Server(port, repositories, newLoggableUsers);
 	}
 
-	public void serve() {
+	private ServerConfigurator<?> createServerConfiguration() {
 		StoringRequestAuthenticator requestAuthenticator = StoringRequestAuthenticator.allowing(loggableUsers);
-		WebApplication.begin()
+		return WebApplication.begin()
 				.withPort(port)
 				.extend(HandlerServerConfigurationExtension.create())
 				.withGlobalChannel(BasicAuthenticationRequestChannel.of(requestAuthenticator))
@@ -51,7 +53,17 @@ public final class Server {
 				.withHandler(ModuleMetadataLocation.PATH_PATTERN, MetadataHandler.of(repositories, ModuleMetadataLocation::fromPath))
 				.withHandler(ReleaseLocation.PATH_PATTERN, ArtifactHandler.of(repositories, ReleaseLocation::fromPath))
 				.withHandler(SnapshotLocation.PATH_PATTERN, ArtifactHandler.of(repositories, SnapshotLocation::fromPath))
-				.withRootHandler(RequestHandler.constant(HttpResponse.NOT_FOUND))
+				.withRootHandler(RequestHandler.constant(HttpResponse.NOT_FOUND));
+	}
+
+	public Monitor serve() {
+		ServerMonitor serverMonitor = createServerConfiguration()
+				.serve();
+		return new MonitorWrapper(serverMonitor);
+	}
+
+	public void serveBlocking() {
+		createServerConfiguration()
 				.serveBlocking();
 	}
 
@@ -66,7 +78,7 @@ public final class Server {
 		}
 		ServerConfiguration serverConfiguration = parseConfiguration(args[0]);
 		Server server = serverConfiguration.build();
-		server.serve();
+		server.serveBlocking();
 	}
 
 	public static ServerConfiguration parseConfiguration(String configurationLocation) throws IOException {
@@ -82,6 +94,24 @@ public final class Server {
 		catch (IOException e) {
 			LOGGER.error("Error reading file: {}", configurationFile, e); // NOPMD pmd counts 2 arguments needed
 			throw e;
+		}
+	}
+
+	interface Monitor extends AutoCloseable {
+		@Override
+		void close();
+	}
+
+	private static class MonitorWrapper implements Monitor {
+		private final ServerMonitor serverMonitor;
+
+		public MonitorWrapper(ServerMonitor serverMonitor) {
+			this.serverMonitor = serverMonitor;
+		}
+
+		@Override
+		public void close() {
+			serverMonitor.close();
 		}
 	}
 }
