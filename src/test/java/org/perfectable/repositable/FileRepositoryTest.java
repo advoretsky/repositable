@@ -148,6 +148,95 @@ public class FileRepositoryTest extends AbstractServerTest {
 				.hasContentText(calculatedHash);
 	}
 
+
+	@Test
+	public void testArtifactLatestSnapshotMissing() {
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
+				.isNotFound();
+	}
+
+	@Test
+	public void testArtifactLatestSnapshotPresent() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("application", "x-java-archive"))
+				.hasContent(artifactContent);
+	}
+
+	@Test
+	public void testArtifactLatestSnapshotDouble() throws IOException {
+		byte[] artifactContent1 = {2,5,2,100};
+		byte[] artifactContent2 = {2,5,2,120};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent1);
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.102020-2.jar", artifactContent2);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("application", "x-java-archive"))
+				.hasContent(artifactContent2);
+	}
+
+	@Test
+	public void testArtifactLatestSnapshotMd5Missing() {
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.md5"))
+				.isNotFound();
+	}
+
+	@Test
+	public void testArtifactLatestSnapshotMd5Present() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		String calculatedHash = Hashing.md5().hashBytes(artifactContent).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.md5"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
+	@Test
+	public void testArtifactLatestSnapshotMd5Double() throws IOException {
+		byte[] artifactContent1 = {2,5,2,100};
+		byte[] artifactContent2 = {2,5,2,120};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent1);
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.102020-2.jar", artifactContent2);
+		String calculatedHash = Hashing.md5().hashBytes(artifactContent2).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.md5"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
+	@Test
+	public void testArtifactLatestSnapshotSha1Missing() {
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.sha1"))
+				.isNotFound();
+	}
+
+	@Test
+	public void testArtifactLatestSnapshotSha1Present() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		String calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.sha1"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
+	@Test
+	public void testArtifactLatestSnapshotSha1Double() throws IOException {
+		byte[] artifactContent1 = {2,5,2,100};
+		byte[] artifactContent2 = {2,5,2,120};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent1);
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.102020-2.jar", artifactContent2);
+		String calculatedHash = Hashing.sha1().hashBytes(artifactContent2).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.sha1"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
 	@Test
 	public void testMetadataReleaseMissing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml"))

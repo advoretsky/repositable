@@ -57,7 +57,11 @@ public abstract class AbstractServerTest {
 		List<String> pathParts = Splitter.on("/").splitToList(path);
 		List<String> directoryPath = pathParts.subList(0, pathParts.size() - 1);
 		String fileName = pathParts.get(pathParts.size() -1);
-		File baseDirectory = folder.newFolder(directoryPath.toArray(new String[directoryPath.size()]));
+		File baseDirectory = folder.getRoot();
+		for (String folderName : directoryPath) {
+			baseDirectory = new File(baseDirectory, folderName);
+			baseDirectory.mkdir();
+		}
 		File file = Paths.get(baseDirectory.getAbsolutePath(), fileName).toFile();
 		try(OutputStream stream = new FileOutputStream(file)) {
 			stream.write(content);
