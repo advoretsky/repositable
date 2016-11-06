@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Optional;
 
 public class ArtifactHandler implements RequestHandler {
@@ -108,7 +109,9 @@ public class ArtifactHandler implements RequestHandler {
 		@Override
 		public void writeTo(Writer writer) throws IOException {
 			writer.setContentType(artifact.mediaType());
-			artifact.writeContent(writer.stream());
+			try(OutputStream stream = writer.stream()) {
+				artifact.writeContent(stream);
+			}
 		}
 	}
 }

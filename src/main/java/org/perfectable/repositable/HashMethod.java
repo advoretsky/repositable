@@ -78,6 +78,7 @@ public enum HashMethod implements OutputStreamTransformer {
 			byte[] hashBytes = hashText.getBytes(StandardCharsets.US_ASCII);
 			rawStream.write(hashBytes);
 			rawStream.flush();
+			rawStream.close();
 		}
 	}
 }
