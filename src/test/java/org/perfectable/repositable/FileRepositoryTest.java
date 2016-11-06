@@ -1,5 +1,6 @@
 package org.perfectable.repositable;
 
+import com.google.common.hash.Hashing;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
@@ -54,6 +56,15 @@ public class FileRepositoryTest extends AbstractServerTest {
 	public void testArtifactReleaseMd5Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.md5"))
 				.isNotFound();
+	}
+
+	@Test
+	public void testArtifactReleaseMd5Present() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
+		byte[] calculatedHash = Hashing.md5().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.md5"))
+				.hasContent(calculatedHash);
 	}
 
 	@Test
