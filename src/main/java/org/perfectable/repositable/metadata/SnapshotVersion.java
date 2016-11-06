@@ -1,7 +1,6 @@
 package org.perfectable.repositable.metadata;
 
 import com.google.common.collect.Ordering;
-import com.google.common.collect.Sets;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -10,15 +9,17 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Set;
+import java.util.Collection;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "SnapshotVersion",
 		propOrder = {"classifier", "extension", "value", "updated"})
 public class SnapshotVersion {
 
-	public static final Ordering<SnapshotVersion> COMPARATOR = Ordering.natural().onResultOf(SnapshotVersion::getUpdated).nullsLast();
+	public static final Ordering<SnapshotVersion> COMPARATOR =
+			Ordering.natural().onResultOf(SnapshotVersion::getUpdated).nullsFirst();
 
 	private String classifier;
 	private String extension;
@@ -92,9 +93,10 @@ public class SnapshotVersion {
 		return Snapshot.of(updated, buildId);
 	}
 
-	public static List<SnapshotVersion> merge(List<SnapshotVersion> first, List<SnapshotVersion> second) {
-		Set<SnapshotVersion> merged = Sets.newHashSet(first);
+	public static SortedSet<SnapshotVersion> merge(Collection<SnapshotVersion> first, Collection<SnapshotVersion> second) {
+		SortedSet<SnapshotVersion> merged = new TreeSet<>(COMPARATOR.reversed());
+		merged.addAll(first);
 		merged.addAll(second);
-		return COMPARATOR.sortedCopy(merged);
+		return merged;
 	}
 }

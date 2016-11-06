@@ -9,8 +9,9 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.LocalDateTime;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Versioning",
@@ -21,14 +22,14 @@ public class Versioning {
 	private Version latest;
 	private Version release;
 	private Snapshot snapshot;
-	private List<Version> versions;
+	private SortedSet<Version> versions;
 	private LocalDateTime lastUpdated;
-	private List<SnapshotVersion> snapshotVersions;
+	private SortedSet<SnapshotVersion> snapshotVersions;
 
 	public static Versioning create() {
 		Versioning versioning = new Versioning();
-		versioning.setVersions(new LinkedList<>());
-		versioning.setSnapshotVersions(new LinkedList<>());
+		versioning.setVersions(new TreeSet<>(Version.COMPARATOR.reversed()));
+		versioning.setSnapshotVersions(new TreeSet<>(SnapshotVersion.COMPARATOR.reversed()));
 		return versioning;
 	}
 
@@ -66,11 +67,11 @@ public class Versioning {
 	@SuppressWarnings("unused")
 	@XmlElementWrapper(name = "versions")
 	@XmlElement(name = "version")
-	public List<Version> getVersions() {
+	public Set<Version> getVersions() {
 		return versions;
 	}
 
-	private void setVersions(List<Version> versions) {
+	private void setVersions(SortedSet<Version> versions) {
 		this.versions = versions;
 	}
 
@@ -89,24 +90,22 @@ public class Versioning {
 	@SuppressWarnings("unused")
 	@XmlElementWrapper(name = "snapshotVersions")
 	@XmlElement(name = "snapshotVersion")
-	public List<SnapshotVersion> getSnapshotVersions() {
+	public Set<SnapshotVersion> getSnapshotVersions() {
 		return snapshotVersions;
 	}
 
-	private void setSnapshotVersions(List<SnapshotVersion> snapshotVersions) {
+	private void setSnapshotVersions(SortedSet<SnapshotVersion> snapshotVersions) {
 		this.snapshotVersions = snapshotVersions;
 	}
 
 	public void addVersion(String version) {
 		versions.add(Version.of(version));
-		versions.sort(Version.COMPARATOR.reversed());
-		setLatest(versions.get(0));
+		setLatest(versions.first());
 	}
 
 	public void addSnapshotVersion(String classifier, String extension, String version, int buildId, LocalDateTime timestamp) {
 		snapshotVersions.add(SnapshotVersion.of(classifier, extension, version, buildId, timestamp));
-		snapshotVersions.sort(SnapshotVersion.COMPARATOR.reversed());
-		setSnapshot(snapshotVersions.get(0).toSnapshot());
+		setSnapshot(snapshotVersions.first().toSnapshot());
 		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(timestamp, lastUpdated) > 0 ? timestamp : lastUpdated;
 		setLastUpdated(newLastUpdated);
 	}
