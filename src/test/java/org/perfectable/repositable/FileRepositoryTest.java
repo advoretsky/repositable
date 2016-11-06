@@ -93,15 +93,47 @@ public class FileRepositoryTest extends AbstractServerTest {
 	}
 
 	@Test
+	public void testArtifactSnapshotPresent() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("application", "x-java-archive"))
+				.hasContent(artifactContent);
+	}
+
+	@Test
 	public void testArtifactSnapshotMd5Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar.md5"))
 				.isNotFound();
 	}
 
 	@Test
+	public void testArtifactSnapshotMd5Present() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		byte[] calculatedHash = Hashing.md5().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar.md5"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContent(calculatedHash);
+	}
+
+	@Test
 	public void testArtifactSnapshotSha1Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar.sha1"))
 				.isNotFound();
+	}
+
+	@Test
+	public void testArtifactSnapshotSha1Present() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		byte[] calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar.sha1"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContent(calculatedHash);
 	}
 
 	@Test
