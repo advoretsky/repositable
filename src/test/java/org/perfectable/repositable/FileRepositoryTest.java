@@ -63,6 +63,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
 		byte[] calculatedHash = Hashing.md5().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.md5"))
+				.returnedStatus(HttpServletResponse.SC_OK)
 				.hasContentType(MediaType.create("text", "plain"))
 				.hasContent(calculatedHash);
 	}
@@ -80,6 +81,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
 		byte[] calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.sha1"))
+				.returnedStatus(HttpServletResponse.SC_OK)
 				.hasContentType(MediaType.create("text", "plain"))
 				.hasContent(calculatedHash);
 	}
