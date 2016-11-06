@@ -13,8 +13,10 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Base64;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -77,4 +79,11 @@ public abstract class AbstractServerTest {
 		assertThat(file)
 				.doesNotExist();
 	}
+
+	protected static String calculateBase64(String raw) {
+		byte[] rawBytes = raw.getBytes(StandardCharsets.UTF_8);
+		byte[] encodedBytes = Base64.getEncoder().encode(rawBytes);
+		return new String(encodedBytes, StandardCharsets.UTF_8);
+	}
+
 }

@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 
@@ -547,12 +546,6 @@ public class FileRepositoryTest extends AbstractServerTest {
 				.withContent(uploadedContent)
 				.returnedStatus(HttpServletResponse.SC_OK);
 		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar");
-	}
-
-	private static String calculateBase64(String raw) {
-		byte[] rawBytes = raw.getBytes(StandardCharsets.UTF_8);
-		byte[] encodedBytes = Base64.getEncoder().encode(rawBytes);
-		return new String(encodedBytes, StandardCharsets.UTF_8);
 	}
 
 }

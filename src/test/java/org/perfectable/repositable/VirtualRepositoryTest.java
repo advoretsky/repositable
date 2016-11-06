@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 
@@ -489,6 +488,7 @@ public class VirtualRepositoryTest extends AbstractServerTest {
 					"        </snapshotVersions>\n" +
 					"    </versioning>\n" +
 					"</metadata>\n";
+
 	@Test
 	public void testMetadataSnapshotPresentIn1() throws IOException {
 		byte[] artifactContent = {2,5,2,100};
@@ -885,12 +885,6 @@ public class VirtualRepositoryTest extends AbstractServerTest {
 				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
 		assertNoFile("test-1/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar");
 		assertNoFile("test-2/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar");
-	}
-
-	private static String calculateBase64(String raw) {
-		byte[] rawBytes = raw.getBytes(StandardCharsets.UTF_8);
-		byte[] encodedBytes = Base64.getEncoder().encode(rawBytes);
-		return new String(encodedBytes, StandardCharsets.UTF_8);
 	}
 
 }
