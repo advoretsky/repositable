@@ -19,7 +19,8 @@ public final class EmptyRepository implements Repository {
 	}
 
 	@Override
-	public void put(ArtifactIdentifier artifactIdentifier, Artifact artifact, User uploader) throws InsertionRejected {
+	public void put(ArtifactIdentifier artifactIdentifier, Artifact artifact, User uploader, HashMethod hashMethod)
+			throws InsertionRejected {
 		throw new InsertionRejected();
 	}
 

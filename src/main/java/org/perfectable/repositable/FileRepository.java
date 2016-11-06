@@ -37,7 +37,11 @@ public class FileRepository implements Repository {
 	}
 
 	@Override
-	public void put(ArtifactIdentifier identifier, Artifact artifact, User uploader) throws UnauthorizedUserException, InsertionRejected {
+	public void put(ArtifactIdentifier identifier, Artifact artifact, User uploader, HashMethod hashMethod)
+			throws UnauthorizedUserException, InsertionRejected {
+		if(hashMethod != HashMethod.NONE) {
+			return; // dont put hashes into repository
+		}
 		Path artifactPath = identifier.asFilePath();
 		Path absolutePath = location.resolve(artifactPath);
 		Path parent = absolutePath.resolveSibling(".");

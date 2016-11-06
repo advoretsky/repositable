@@ -56,11 +56,8 @@ public final class SnapshotLocation implements ArtifactLocation {
 	@Override
 	public void add(RepositorySelector repositories, Artifact artifact, User uploader)
 			throws UnauthorizedUserException, InsertionRejected {
-		if(hashMethod != HashMethod.NONE) {
-			return;
-		}
 		Repository repository = repositories.select(repositoryName);
-		repository.put(snapshotIdentifier, artifact, uploader);
+		repository.put(snapshotIdentifier, artifact, uploader, hashMethod);
 	}
 
 	@Override

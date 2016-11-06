@@ -37,7 +37,8 @@ public final class VirtualRepository implements Repository {
 	}
 
 	@Override
-	public void put(ArtifactIdentifier identifier, Artifact content, User uploader) throws InsertionRejected {
+	public void put(ArtifactIdentifier identifier, Artifact content, User uploader, HashMethod hashMethod)
+			throws InsertionRejected {
 		throw new InsertionRejected();
 	}
 }

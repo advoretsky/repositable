@@ -36,11 +36,12 @@ public final class FilteredRepository implements Repository {
 	}
 
 	@Override
-	public void put(ArtifactIdentifier identifier, Artifact content, User uploader) throws UnauthorizedUserException, InsertionRejected {
+	public void put(ArtifactIdentifier identifier, Artifact content, User uploader, HashMethod hashMethod)
+			throws UnauthorizedUserException, InsertionRejected {
 		if(!identifier.matches(filter)) {
 			throw new InsertionRejected();
 		}
-		wrapped.put(identifier, content, uploader);
+		wrapped.put(identifier, content, uploader, hashMethod);
 	}
 
 	@Override

@@ -52,11 +52,8 @@ public final class ReleaseLocation implements ArtifactLocation {
 	@Override
 	public void add(RepositorySelector repositorySelector, Artifact artifact, User uploader)
 			throws UnauthorizedUserException, InsertionRejected {
-		if(hashMethod != HashMethod.NONE) {
-			return;
-		}
 		Repository repository = repositorySelector.select(repositoryName);
-		repository.put(versionIdentifier, artifact, uploader);
+		repository.put(versionIdentifier, artifact, uploader, hashMethod);
 	}
 
 	@Override

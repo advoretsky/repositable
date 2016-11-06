@@ -12,7 +12,8 @@ public interface Repository {
 
 	Optional<Artifact> findArtifact(ArtifactIdentifier artifactIdentifier);
 
-	void put(ArtifactIdentifier identifier, Artifact content, User uploader) throws UnauthorizedUserException, InsertionRejected;
+	void put(ArtifactIdentifier identifier, Artifact content, User uploader, HashMethod hashMethod)
+			throws UnauthorizedUserException, InsertionRejected;
 
 	default Repository restrictUploaders(UserSet uploaders) {
 		return AuthorizedRepository.of(this, uploaders);
