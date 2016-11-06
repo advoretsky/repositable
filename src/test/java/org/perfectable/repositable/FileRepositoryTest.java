@@ -3,13 +3,11 @@ package org.perfectable.repositable;
 import com.google.common.hash.Hashing;
 import com.google.common.net.MediaType;
 import org.junit.Test;
-import org.perfectable.repositable.metadata.Metadata;
 
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
@@ -63,11 +61,11 @@ public class FileRepositoryTest extends AbstractServerTest {
 	public void testArtifactReleaseMd5Present() throws IOException {
 		byte[] artifactContent = {2,5,2,100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
-		byte[] calculatedHash = Hashing.md5().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
+		String calculatedHash = Hashing.md5().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.md5"))
 				.returnedStatus(HttpServletResponse.SC_OK)
 				.hasContentType(MediaType.create("text", "plain"))
-				.hasContent(calculatedHash);
+				.hasContentText(calculatedHash);
 	}
 
 	@Test
@@ -81,11 +79,11 @@ public class FileRepositoryTest extends AbstractServerTest {
 	public void testArtifactReleaseSha1Present() throws IOException {
 		byte[] artifactContent = {2,5,2,100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
-		byte[] calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
+		String calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.sha1"))
 				.returnedStatus(HttpServletResponse.SC_OK)
 				.hasContentType(MediaType.create("text", "plain"))
-				.hasContent(calculatedHash);
+				.hasContentText(calculatedHash);
 	}
 
 	@Test
@@ -114,11 +112,11 @@ public class FileRepositoryTest extends AbstractServerTest {
 	public void testArtifactSnapshotMd5Present() throws IOException {
 		byte[] artifactContent = {2,5,2,100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
-		byte[] calculatedHash = Hashing.md5().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
+		String calculatedHash = Hashing.md5().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar.md5"))
 				.returnedStatus(HttpServletResponse.SC_OK)
 				.hasContentType(MediaType.create("text", "plain"))
-				.hasContent(calculatedHash);
+				.hasContentText(calculatedHash);
 	}
 
 	@Test
@@ -131,11 +129,11 @@ public class FileRepositoryTest extends AbstractServerTest {
 	public void testArtifactSnapshotSha1Present() throws IOException {
 		byte[] artifactContent = {2,5,2,100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
-		byte[] calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
+		String calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar.sha1"))
 				.returnedStatus(HttpServletResponse.SC_OK)
 				.hasContentType(MediaType.create("text", "plain"))
-				.hasContent(calculatedHash);
+				.hasContentText(calculatedHash);
 	}
 
 	@Test
@@ -145,18 +143,18 @@ public class FileRepositoryTest extends AbstractServerTest {
 	}
 
 	private static final String METADATA_RELASE =
-			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-			"<metadata>\n" +
-			"    <groupId>org.perfectable.test</groupId>\n" +
-			"    <artifactId>test-artifact</artifactId>\n" +
-			"    <versioning>\n" +
-			"        <latest>1.2.1</latest>\n" +
-			"        <versions>\n" +
-			"            <version>1.2.1</version>\n" +
-			"        </versions>\n" +
-			"        <snapshotVersions/>\n" +
-			"    </versioning>\n" +
-			"</metadata>";
+			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+					"<metadata>\n" +
+					"    <groupId>org.perfectable.test</groupId>\n" +
+					"    <artifactId>test-artifact</artifactId>\n" +
+					"    <versioning>\n" +
+					"        <latest>1.2.1</latest>\n" +
+					"        <versions>\n" +
+					"            <version>1.2.1</version>\n" +
+					"        </versions>\n" +
+					"        <snapshotVersions/>\n" +
+					"    </versioning>\n" +
+					"</metadata>\n";
 
 	@Test
 	public void testMetadataReleasePresent() throws IOException {
@@ -175,9 +173,31 @@ public class FileRepositoryTest extends AbstractServerTest {
 	}
 
 	@Test
+	public void testMetadataReleasePresentMd5() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
+		String calculatedHash = Hashing.md5().hashString(METADATA_RELASE, StandardCharsets.UTF_8).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.md5"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
+	@Test
 	public void testMetadataReleaseSha1Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.sha1"))
 				.isNotFound();
+	}
+
+	@Test
+	public void testMetadataReleasePresentSha1() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
+		String calculatedHash = Hashing.sha1().hashString(METADATA_RELASE, StandardCharsets.UTF_8).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.sha1"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
 	}
 
 	@Test
@@ -187,7 +207,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 	}
 
 	private static final String METADATA_SNAPSHOT =
-			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
 					"<metadata>\n" +
 					"    <groupId>org.perfectable.test</groupId>\n" +
 					"    <artifactId>test-artifact</artifactId>\n" +
@@ -201,14 +221,14 @@ public class FileRepositoryTest extends AbstractServerTest {
 					"        <lastUpdated>20161001101010</lastUpdated>\n" +
 					"        <snapshotVersions>\n" +
 					"            <snapshotVersion>\n" +
-					"                <classifier/>\n" +
+					"                <classifier></classifier>\n" +
 					"                <extension>jar</extension>\n" +
 					"                <value>1.0.1-20161001.101010-1</value>\n" +
 					"                <updated>20161001101010</updated>\n" +
 					"            </snapshotVersion>\n" +
 					"        </snapshotVersions>\n" +
 					"    </versioning>\n" +
-					"</metadata>";
+					"</metadata>\n";
 
 	@Test
 	public void testMetadataSnapshotPresent() throws IOException {
@@ -227,9 +247,31 @@ public class FileRepositoryTest extends AbstractServerTest {
 	}
 
 	@Test
+	public void testMetadataSnapshotMd5Present() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		String calculatedHash = Hashing.md5().hashString(METADATA_SNAPSHOT, StandardCharsets.UTF_8).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml.md5"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
+	@Test
 	public void testMetadataSnapshotSha1Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml.sha1"))
 				.isNotFound();
+	}
+
+	@Test
+	public void testMetadataSnapshotSha1Present() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		String calculatedHash = Hashing.sha1().hashString(METADATA_SNAPSHOT, StandardCharsets.UTF_8).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml.sha1"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
 	}
 
 	@Test
