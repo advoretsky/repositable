@@ -1,8 +1,11 @@
 package org.perfectable.repositable;
 
+import com.google.common.net.MediaType;
+
 import java.io.OutputStream;
 
-@FunctionalInterface
 public interface OutputStreamTransformer {
-	OutputStream transform(OutputStream raw);
+	MediaType transformMediaType(MediaType original);
+
+	OutputStream transformStream(OutputStream raw);
 }

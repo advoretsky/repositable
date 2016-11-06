@@ -1,16 +1,14 @@
 package org.perfectable.repositable;
 
 import com.google.common.hash.Hashing;
+import com.google.common.net.MediaType;
 import org.junit.Test;
 
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Paths;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 
@@ -49,6 +47,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 		byte[] artifactContent = {2,5,2,100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar"))
+				.hasContentType(MediaType.create("application", "x-java-archive"))
 				.hasContent(artifactContent);
 	}
 
@@ -64,6 +63,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
 		byte[] calculatedHash = Hashing.md5().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.md5"))
+				.hasContentType(MediaType.create("text", "plain"))
 				.hasContent(calculatedHash);
 	}
 
@@ -71,6 +71,17 @@ public class FileRepositoryTest extends AbstractServerTest {
 	public void testArtifactReleaseSha1Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.sha1"))
 				.isNotFound();
+	}
+
+
+	@Test
+	public void testArtifactReleaseSha1Present() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
+		byte[] calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString().getBytes(StandardCharsets.UTF_8);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.sha1"))
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContent(calculatedHash);
 	}
 
 	@Test

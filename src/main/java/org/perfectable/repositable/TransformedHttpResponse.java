@@ -39,12 +39,13 @@ public final class TransformedHttpResponse implements HttpResponse {
 
 		@Override
 		public void setContentType(MediaType mediaType) {
-			wrapped.setContentType(mediaType);
+			MediaType transformedMediaType = transformer.transformMediaType(mediaType);
+			wrapped.setContentType(transformedMediaType);
 		}
 
 		@Override
 		public OutputStream stream() throws IOException {
-			return transformer.transform(wrapped.stream());
+			return transformer.transformStream(wrapped.stream());
 		}
 	}
 }

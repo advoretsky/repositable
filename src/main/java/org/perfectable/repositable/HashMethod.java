@@ -2,6 +2,7 @@ package org.perfectable.repositable;
 
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
+import com.google.common.net.MediaType;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -10,20 +11,35 @@ import java.nio.charset.StandardCharsets;
 public enum HashMethod implements OutputStreamTransformer {
 	NONE {
 		@Override
-		public OutputStream transform(OutputStream rawStream) {
+		public MediaType transformMediaType(MediaType original) {
+			return original;
+		}
+
+		@Override
+		public OutputStream transformStream(OutputStream rawStream) {
 			return rawStream;
 		}
 	},
 	SHA1 {
 		@Override
-		public OutputStream transform(OutputStream rawStream) {
+		public MediaType transformMediaType(MediaType original) {
+			return HashingOutputStream.MEDIA_TYPE;
+		}
+
+		@Override
+		public OutputStream transformStream(OutputStream rawStream) {
 			Hasher hasher = Hashing.sha1().newHasher();
 			return new HashingOutputStream(hasher, rawStream);
 		}
 	},
 	MD5 {
 		@Override
-		public OutputStream transform(OutputStream rawStream) {
+		public MediaType transformMediaType(MediaType original) {
+			return HashingOutputStream.MEDIA_TYPE;
+		}
+
+		@Override
+		public OutputStream transformStream(OutputStream rawStream) {
 			Hasher hasher = Hashing.md5().newHasher();
 			return new HashingOutputStream(hasher, rawStream);
 		}
@@ -46,9 +62,10 @@ public enum HashMethod implements OutputStreamTransformer {
 	}
 
 	@Override
-	public abstract OutputStream transform(OutputStream raw);
+	public abstract OutputStream transformStream(OutputStream raw);
 
 	private static class HashingOutputStream extends OutputStream {
+		public static final MediaType MEDIA_TYPE = MediaType.create("text", "plain");
 		private final Hasher hasher;
 		private final OutputStream rawStream;
 
