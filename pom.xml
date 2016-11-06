@@ -219,7 +219,6 @@
                             <usedDependencies>
                                 <usedDependency>org.perfectable:webable-undertow</usedDependency>
                                 <usedDependency>ch.qos.logback:logback-classic</usedDependency>
-                                <usedDependency>org.assertj:assertj-core</usedDependency>
                             </usedDependencies>
                         </configuration>
                     </execution>

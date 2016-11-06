@@ -13,8 +13,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public abstract class AbstractServerTest {
 	@Rule
@@ -59,4 +62,19 @@ public abstract class AbstractServerTest {
 		}
 	}
 
+
+	protected final void assertFile(String path, byte[] expectedContent) {
+		File baseDirectory = folder.getRoot();
+		Path file = Paths.get(baseDirectory.getAbsolutePath(), path);
+		assertThat(file)
+				.exists()
+				.hasBinaryContent(expectedContent);
+	}
+
+	protected final void assertNoFile(String path) {
+		File baseDirectory = folder.getRoot();
+		Path file = Paths.get(baseDirectory.getAbsolutePath(), path);
+		assertThat(file)
+				.doesNotExist();
+	}
 }
