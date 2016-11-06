@@ -1,5 +1,6 @@
 package org.perfectable.repositable;
 
+import com.google.common.net.MediaType;
 import org.perfectable.repositable.metadata.Metadata;
 import org.perfectable.webable.handler.HttpRequest;
 import org.perfectable.webable.handler.HttpResponse;
@@ -9,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 public final class MetadataHandler implements RequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MetadataHandler.class);
@@ -72,7 +74,10 @@ public final class MetadataHandler implements RequestHandler {
 
 		@Override
 		public void writeTo(Writer writer) throws IOException {
-			metadata.writeInto(writer.stream());
+			writer.setContentType(MediaType.XML_UTF_8);
+			try(OutputStream stream = writer.stream()) {
+				metadata.writeInto(stream);
+			}
 		}
 	}
 }

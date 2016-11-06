@@ -3,11 +3,13 @@ package org.perfectable.repositable;
 import com.google.common.hash.Hashing;
 import com.google.common.net.MediaType;
 import org.junit.Test;
+import org.perfectable.repositable.metadata.Metadata;
 
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
@@ -142,6 +144,30 @@ public class FileRepositoryTest extends AbstractServerTest {
 				.isNotFound();
 	}
 
+	private static final String METADATA_RELASE =
+			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+			"<metadata>\n" +
+			"    <groupId>org.perfectable.test</groupId>\n" +
+			"    <artifactId>test-artifact</artifactId>\n" +
+			"    <versioning>\n" +
+			"        <latest>1.2.1</latest>\n" +
+			"        <versions>\n" +
+			"            <version>1.2.1</version>\n" +
+			"        </versions>\n" +
+			"        <snapshotVersions/>\n" +
+			"    </versioning>\n" +
+			"</metadata>";
+
+	@Test
+	public void testMetadataReleasePresent() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.XML_UTF_8)
+				.hasContentXml(METADATA_RELASE);
+	}
+
 	@Test
 	public void testMetadataReleaseMd5Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.md5"))
@@ -158,6 +184,40 @@ public class FileRepositoryTest extends AbstractServerTest {
 	public void testMetadataSnapshotMissing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml"))
 				.isNotFound();
+	}
+
+	private static final String METADATA_SNAPSHOT =
+			"<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+					"<metadata>\n" +
+					"    <groupId>org.perfectable.test</groupId>\n" +
+					"    <artifactId>test-artifact</artifactId>\n" +
+					"    <version>1.0.1-SNAPSHOT</version>\n" +
+					"    <versioning>\n" +
+					"        <snapshot>\n" +
+					"            <timestamp>20161001.101010</timestamp>\n" +
+					"            <buildNumber>1</buildNumber>\n" +
+					"        </snapshot>\n" +
+					"        <versions/>\n" +
+					"        <lastUpdated>20161001101010</lastUpdated>\n" +
+					"        <snapshotVersions>\n" +
+					"            <snapshotVersion>\n" +
+					"                <classifier/>\n" +
+					"                <extension>jar</extension>\n" +
+					"                <value>1.0.1-20161001.101010-1</value>\n" +
+					"                <updated>20161001101010</updated>\n" +
+					"            </snapshotVersion>\n" +
+					"        </snapshotVersions>\n" +
+					"    </versioning>\n" +
+					"</metadata>";
+
+	@Test
+	public void testMetadataSnapshotPresent() throws IOException {
+		byte[] artifactContent = {2,5,2,100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.XML_UTF_8)
+				.hasContentXml(METADATA_SNAPSHOT);
 	}
 
 	@Test
