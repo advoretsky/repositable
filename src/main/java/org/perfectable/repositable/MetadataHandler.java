@@ -74,6 +74,7 @@ public final class MetadataHandler implements RequestHandler {
 
 		@Override
 		public void writeTo(Writer writer) throws IOException {
+			writer.setStatus(HttpStatus.OK);
 			writer.setContentType(MediaType.XML_UTF_8);
 			try(OutputStream stream = writer.stream()) {
 				metadata.writeInto(stream);
