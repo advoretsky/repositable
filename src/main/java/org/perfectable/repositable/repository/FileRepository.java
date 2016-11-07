@@ -3,6 +3,7 @@ package org.perfectable.repositable.repository;
 import com.google.common.io.Files;
 import org.perfectable.repositable.Artifact;
 import org.perfectable.repositable.ArtifactIdentifier;
+import org.perfectable.repositable.EntryLister;
 import org.perfectable.repositable.FileArtifact;
 import org.perfectable.repositable.HashMethod;
 import org.perfectable.repositable.InsertionRejected;
@@ -35,18 +36,19 @@ public class FileRepository implements Repository {
 	@Override
 	public Metadata fetchMetadata(MetadataIdentifier metadataIdentifier) {
 		Path absolutePath = location.resolve(metadataIdentifier.asBasePath());
-		MetadataIdentifier.Lister lister = new DirectoryLister(absolutePath);
+		EntryLister lister = new DirectoryLister(absolutePath);
 		return metadataIdentifier.createMetadata(lister);
 	}
 
 	@Override
 	public Optional<Artifact> findArtifact(ArtifactIdentifier identifier) {
-		Path artifactPath = identifier.asFilePath();
-		Path absolutePath = location.resolve(artifactPath);
-		if(!absolutePath.toFile().exists()) {
+		Path absolutePath = location.resolve(identifier.asBasePath());
+		EntryLister lister = new DirectoryLister(absolutePath);
+		Path artifactPath = location.resolve(identifier.asFetchPath(lister));
+		if(!artifactPath.toFile().exists()) {
 			return Optional.empty();
 		}
-		return Optional.of(FileArtifact.of(absolutePath));
+		return Optional.of(FileArtifact.of(artifactPath));
 	}
 
 	@Override
@@ -55,7 +57,7 @@ public class FileRepository implements Repository {
 		if(hashMethod != HashMethod.NONE) {
 			return; // dont put hashes into repository
 		}
-		Path artifactPath = identifier.asFilePath();
+		Path artifactPath = identifier.asUploadPath();
 		Path absolutePath = location.resolve(artifactPath);
 		Path parent = absolutePath.resolveSibling(".");
 		createDirectoryIfNeeded(parent);
@@ -72,7 +74,7 @@ public class FileRepository implements Repository {
 		parent.toFile().mkdirs();
 	}
 
-	private static class DirectoryLister implements MetadataIdentifier.Lister {
+	private static class DirectoryLister implements EntryLister {
 		private final Path basePath;
 
 		public DirectoryLister(Path basePath) {

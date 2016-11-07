@@ -1,10 +1,12 @@
 package org.perfectable.repositable;
 
+import com.google.common.collect.Ordering;
 import org.perfectable.repositable.metadata.Metadata;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -46,7 +48,17 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 	}
 
 	@Override
-	public Path asFilePath() {
+	public Path asBasePath() {
+		return packageIdentifier.asBasePath();
+	}
+
+	@Override
+	public Path asFetchPath(EntryLister lister) {
+		return asUploadPath();
+	}
+
+	@Override
+	public Path asUploadPath() {
 		return packageIdentifier.asSnapshotPath(timestamp, buildId);
 	}
 
@@ -57,5 +69,9 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 
 	public void appendVersion(Metadata metadata) {
 		packageIdentifier.addSnapshotVersion(metadata, timestamp, buildId);
+	}
+
+	public static SnapshotIdentifier newest(List<SnapshotIdentifier> candidates) {
+		return Ordering.natural().<SnapshotIdentifier>onResultOf(candidate -> candidate.timestamp).max(candidates);
 	}
 }

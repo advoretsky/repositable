@@ -4,6 +4,8 @@ import org.perfectable.repositable.metadata.Metadata;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.perfectable.repositable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
@@ -61,7 +63,7 @@ public final class VersionIdentifier implements MetadataIdentifier {
 	}
 
 	@Override
-	public Metadata createMetadata(Lister lister) {
+	public Metadata createMetadata(EntryLister lister) {
 		Metadata metadata = createEmptyMetadata();
 		lister.list(element -> {
 			SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.ofEntry(this, element);
@@ -70,11 +72,36 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		return metadata;
 	}
 
-	public Path asPackagePath(Optional<String> classifier, String packaging) {
+
+	public Path asUploadPath(Optional<String> classifier, String packaging) {
+		if(isSnapshot()) {
+			PackageIdentifier packageIdentifier = PackageIdentifier.of(this, classifier, packaging);
+			return packageIdentifier.asSnapshotPath(LocalDateTime.now(), 1);
+		}
 		Path versionPath = asBasePath();
 		String version = completeVersion();
 		String fileName = moduleIdentifier.asFileName(version, classifier, packaging);
 		return versionPath.resolve(fileName);
+	}
+
+	public Path asFetchPath(EntryLister lister, Optional<String> classifier, String packaging) {
+		if(isSnapshot()) {
+			List<SnapshotIdentifier> candidates = new LinkedList<>();
+			lister.list(element -> {
+				SnapshotIdentifier candidate = SnapshotIdentifier.ofEntry(this, element);
+				candidates.add(candidate);
+			});
+			if(candidates.isEmpty()) {
+				return asUploadPath(classifier, packaging);
+			}
+			SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.newest(candidates);
+			return snapshotIdentifier.asUploadPath();
+		}
+		return asUploadPath(classifier, packaging);
+	}
+
+	private boolean isSnapshot() {
+		return versionQualifier.isPresent() && versionQualifier.get().equals("SNAPSHOT");
 	}
 
 	public Path asSnapshotPath(Optional<String> classifier, String packaging, LocalDateTime timestamp, int buildId) {

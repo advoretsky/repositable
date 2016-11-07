@@ -25,7 +25,7 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 	}
 
 	@Override
-	public Metadata createMetadata(Lister lister) {
+	public Metadata createMetadata(EntryLister lister) {
 		Metadata metadata = createEmptyMetadata();
 		lister.list(element -> {
 			VersionIdentifier versionIdentifier = VersionIdentifier.ofEntry(this, element);

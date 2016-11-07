@@ -66,6 +66,6 @@ public final class PackageLocation implements ArtifactLocation {
 
 	@Override
 	public String toString() {
-		return String.format(REPRESENTATION_FORMAT, repositoryName, packageIdentifier.asFilePath(), hashMethod);
+		return String.format(REPRESENTATION_FORMAT, repositoryName, packageIdentifier.asUploadPath(), hashMethod);
 	}
 }

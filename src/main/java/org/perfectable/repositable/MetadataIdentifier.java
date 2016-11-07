@@ -9,14 +9,7 @@ public interface MetadataIdentifier {
 
 	Path asBasePath();
 
-	Metadata createMetadata(Lister lister);
-
-	interface Lister {
-		interface Consumer {
-			void entry(String name);
-		}
-		void list(Consumer consumer);
-	}
+	Metadata createMetadata(EntryLister lister);
 
 	boolean matches(Filter filter);
 }

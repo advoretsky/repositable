@@ -30,8 +30,18 @@ public final class PackageIdentifier implements ArtifactIdentifier {
 	}
 
 	@Override
-	public Path asFilePath() {
-		return versionIdentifier.asPackagePath(classifier, packaging);
+	public Path asFetchPath(EntryLister lister) {
+		return versionIdentifier.asFetchPath(lister, classifier, packaging);
+	}
+
+	@Override
+	public Path asBasePath() {
+		return versionIdentifier.asBasePath();
+	}
+
+	@Override
+	public Path asUploadPath() {
+		return versionIdentifier.asUploadPath(classifier, packaging);
 	}
 
 	@Override
