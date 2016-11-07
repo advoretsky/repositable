@@ -37,7 +37,7 @@ public class VersionMetadataLocation implements MetadataLocation {
 		String versionQualifier = matcher.group(5);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(6));
 		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
-		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionQualifier), Optional.empty(), "pom"), hashMethod);
+		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionQualifier)), hashMethod);
 	}
 
 	@Override

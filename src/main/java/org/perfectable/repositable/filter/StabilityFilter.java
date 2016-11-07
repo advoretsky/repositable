@@ -2,6 +2,7 @@ package org.perfectable.repositable.filter;
 
 import org.perfectable.repositable.Filter;
 import org.perfectable.repositable.ModuleIdentifier;
+import org.perfectable.repositable.PackageIdentifier;
 import org.perfectable.repositable.VersionIdentifier;
 
 import java.time.LocalDateTime;
@@ -24,13 +25,18 @@ public final class StabilityFilter implements Filter {
 	}
 
 	@Override
-	public boolean matchesSnapshot(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId) {
-		return allowSnapshots;
+	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier) {
+		boolean isSnapshot = versionQualifier.isPresent() && versionQualifier.get().equals("SNAPSHOT");
+		return allowSnapshots == isSnapshot;
 	}
 
 	@Override
-	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier, Optional<String> classifier, String packaging) {
-		boolean isSnapshot = versionQualifier.isPresent() && versionQualifier.get().equals("SNAPSHOT");
-		return allowSnapshots == isSnapshot;
+	public boolean matchesPackage(VersionIdentifier versionIdentifier, Optional<String> classifier, String packaging) {
+		return versionIdentifier.matches(this);
+	}
+
+	@Override
+	public boolean matchesSnapshot(PackageIdentifier packageIdentifier, LocalDateTime timestamp, int buildId) {
+		return allowSnapshots;
 	}
 }

@@ -10,25 +10,25 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public final class ReleaseLocation implements ArtifactLocation {
+public final class PackageLocation implements ArtifactLocation {
 
 	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.0/buildable-1.2.0.jar"
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]+)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)\\/\\3-\\4(?:-([a-z-]+))?\\.(\\w+)(?:\\.(\\w+))?$");
 
-	private static final String REPRESENTATION_FORMAT = "ReleaseLocation(%s, %s, %s)";
+	private static final String REPRESENTATION_FORMAT = "PackageLocation(%s, %s, %s)";
 
 	private final String repositoryName;
-	private final VersionIdentifier versionIdentifier;
+	private final PackageIdentifier packageIdentifier;
 	private final HashMethod hashMethod;
 
-	private ReleaseLocation(String repositoryName, VersionIdentifier versionIdentifier, HashMethod hashMethod) {
+	private PackageLocation(String repositoryName, PackageIdentifier packageIdentifier, HashMethod hashMethod) {
 		this.repositoryName = repositoryName;
-		this.versionIdentifier = versionIdentifier;
+		this.packageIdentifier = packageIdentifier;
 		this.hashMethod = hashMethod;
 	}
 
-	public static ReleaseLocation fromPath(String path) {
+	public static PackageLocation fromPath(String path) {
 		Matcher matcher = PATH_PATTERN.matcher(path);
 		checkState(matcher.matches());
 		String repositoryName = matcher.group(1);
@@ -39,21 +39,22 @@ public final class ReleaseLocation implements ArtifactLocation {
 		String packaging = matcher.group(6);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(7));
 		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
-		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, version, Optional.empty(), Optional.ofNullable(classifier), packaging);
-		return new ReleaseLocation(repositoryName, versionIdentifier, hashMethod);
+		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, version, Optional.empty());
+		PackageIdentifier packageIdentifier = PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
+		return new PackageLocation(repositoryName, packageIdentifier, hashMethod);
 	}
 
 	@Override
 	public Optional<Artifact> find(RepositorySelector repositorySelector) {
 		Repository repository = repositorySelector.select(repositoryName);
-		return repository.findArtifact(versionIdentifier);
+		return repository.findArtifact(packageIdentifier);
 	}
 
 	@Override
 	public void add(RepositorySelector repositorySelector, Artifact artifact, User uploader)
 			throws UnauthorizedUserException, InsertionRejected {
 		Repository repository = repositorySelector.select(repositoryName);
-		repository.put(versionIdentifier, artifact, uploader, hashMethod);
+		repository.put(packageIdentifier, artifact, uploader, hashMethod);
 	}
 
 	@Override
@@ -63,6 +64,6 @@ public final class ReleaseLocation implements ArtifactLocation {
 
 	@Override
 	public String toString() {
-		return String.format(REPRESENTATION_FORMAT, repositoryName, versionIdentifier.asFilePath(), hashMethod);
+		return String.format(REPRESENTATION_FORMAT, repositoryName, packageIdentifier.asFilePath(), hashMethod);
 	}
 }

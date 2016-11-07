@@ -5,6 +5,7 @@ import org.perfectable.repositable.metadata.Metadata;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,23 +18,23 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 
 	static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd.HHmmss");
 
-	private final VersionIdentifier versionIdentifier;
+	private final PackageIdentifier packageIdentifier;
 	private final LocalDateTime timestamp;
 	private final int buildId;
 
-	public SnapshotIdentifier(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId) {
-		this.versionIdentifier = versionIdentifier;
+	public SnapshotIdentifier(PackageIdentifier packageIdentifier, LocalDateTime timestamp, int buildId) {
+		this.packageIdentifier = packageIdentifier;
 		this.timestamp = timestamp;
 		this.buildId = buildId;
 	}
 
-	public static SnapshotIdentifier of(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId) {
-		return new SnapshotIdentifier(versionIdentifier, timestamp, buildId);
+	public static SnapshotIdentifier of(PackageIdentifier packageIdentifier, LocalDateTime timestamp, int buildId) {
+		return new SnapshotIdentifier(packageIdentifier, timestamp, buildId);
 	}
 
 	public static SnapshotIdentifier ofEntry(VersionIdentifier versionIdentifier, Path nested) {
 		Path entryPath = nested.subpath(1,nested.getNameCount());
-		entryPath = versionIdentifier.asFilePath().relativize(entryPath);
+		entryPath = versionIdentifier.asBasePath().relativize(entryPath);
 		Path filePath = checkNotNull(entryPath.getFileName());
 		String fileName = filePath.toString();
 		String baseName = versionIdentifier.fileBaseName();
@@ -45,24 +46,21 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 		int buildId = Integer.parseInt(matcher.group(2));
 		String classifier = matcher.group(3);
 		String packaging = matcher.group(4);
-		VersionIdentifier actualVersionIdentifier = versionIdentifier.withPackaging(packaging);
-		if(classifier != null) {
-			actualVersionIdentifier = actualVersionIdentifier.withClassifier(classifier);
-		}
-		return of(actualVersionIdentifier, timestamp, buildId);
+		PackageIdentifier packageIdentifier = PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
+		return of(packageIdentifier, timestamp, buildId);
 	}
 
 	@Override
 	public Path asFilePath() {
-		return versionIdentifier.asSnapshotPath(timestamp, buildId);
+		return packageIdentifier.asSnapshotPath(timestamp, buildId);
 	}
 
 	@Override
 	public boolean matches(Filter filter) {
-		return filter.matchesSnapshot(versionIdentifier, timestamp, buildId);
+		return filter.matchesSnapshot(packageIdentifier, timestamp, buildId);
 	}
 
 	public void appendVersion(Metadata metadata) {
-		versionIdentifier.addSnapshotVersion(metadata, timestamp, buildId);
+		packageIdentifier.addSnapshotVersion(metadata, timestamp, buildId);
 	}
 }

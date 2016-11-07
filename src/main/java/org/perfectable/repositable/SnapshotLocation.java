@@ -42,8 +42,9 @@ public final class SnapshotLocation implements ArtifactLocation {
 		String packaging = matcher.group(8);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(9));
 		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
-		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, versionBare, Optional.of("SNAPSHOT"), Optional.ofNullable(classifier), packaging);
-		SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.of(versionIdentifier, timestamp, buildId);
+		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, versionBare, Optional.of("SNAPSHOT"));
+		PackageIdentifier packageIdentifier = PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
+		SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.of(packageIdentifier, timestamp, buildId);
 		return new SnapshotLocation(repositoryName, snapshotIdentifier, hashMethod);
 	}
 

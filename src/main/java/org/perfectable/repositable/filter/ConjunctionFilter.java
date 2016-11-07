@@ -3,6 +3,7 @@ package org.perfectable.repositable.filter;
 import com.google.common.collect.ImmutableSet;
 import org.perfectable.repositable.Filter;
 import org.perfectable.repositable.ModuleIdentifier;
+import org.perfectable.repositable.PackageIdentifier;
 import org.perfectable.repositable.VersionIdentifier;
 
 import java.time.LocalDateTime;
@@ -25,16 +26,6 @@ public final class ConjunctionFilter implements Filter {
 	}
 
 	@Override
-	public boolean matchesSnapshot(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId) {
-		for (Filter component : components) {
-			if (!component.matchesSnapshot(versionIdentifier, timestamp, buildId)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	@Override
 	public boolean matchesModule(String groupId, String artifactId) {
 		for (Filter component : components) {
 			if (!component.matchesModule(groupId, artifactId)) {
@@ -45,12 +36,33 @@ public final class ConjunctionFilter implements Filter {
 	}
 
 	@Override
-	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier, Optional<String> classifier, String packaging) {
+	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier) {
 		for (Filter component : components) {
-			if (!component.matchesVersion(moduleIdentifier, versionBare, versionQualifier, classifier, packaging)) {
+			if (!component.matchesVersion(moduleIdentifier, versionBare, versionQualifier)) {
 				return false;
 			}
 		}
 		return true;
 	}
+
+	@Override
+	public boolean matchesPackage(VersionIdentifier versionIdentifier, Optional<String> classifier, String packaging) {
+		for (Filter component : components) {
+			if (!component.matchesPackage(versionIdentifier, classifier, packaging)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public boolean matchesSnapshot(PackageIdentifier packageIdentifier, LocalDateTime timestamp, int buildId) {
+		for (Filter component : components) {
+			if (!component.matchesSnapshot(packageIdentifier, timestamp, buildId)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 }

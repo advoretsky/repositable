@@ -2,6 +2,7 @@ package org.perfectable.repositable.filter;
 
 import org.perfectable.repositable.Filter;
 import org.perfectable.repositable.ModuleIdentifier;
+import org.perfectable.repositable.PackageIdentifier;
 import org.perfectable.repositable.VersionIdentifier;
 
 import java.time.LocalDateTime;
@@ -24,12 +25,17 @@ public final class GroupFilter implements Filter {
 	}
 
 	@Override
-	public boolean matchesSnapshot(VersionIdentifier versionIdentifier, LocalDateTime timestamp, int buildId) {
-		return versionIdentifier.hasGroupId(groupId);
+	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier) {
+		return moduleIdentifier.matches(this);
 	}
 
 	@Override
-	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier, Optional<String> classifier, String packaging) {
-		return moduleIdentifier.hasGroupId(groupId);
+	public boolean matchesPackage(VersionIdentifier versionIdentifier, Optional<String> classifier, String packaging) {
+		return versionIdentifier.matches(this);
+	}
+
+	@Override
+	public boolean matchesSnapshot(PackageIdentifier packageIdentifier, LocalDateTime timestamp, int buildId) {
+		return packageIdentifier.matches(this);
 	}
 }
