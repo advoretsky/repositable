@@ -29,8 +29,8 @@ public final class StabilityFilter implements Filter {
 	}
 
 	@Override
-	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionModifier, Optional<String> classifier, String packaging) {
-		boolean isSnapshot = versionModifier.isPresent() && versionModifier.get().equals("SNAPSHOT");
+	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier, Optional<String> classifier, String packaging) {
+		boolean isSnapshot = versionQualifier.isPresent() && versionQualifier.get().equals("SNAPSHOT");
 		return allowSnapshots == isSnapshot;
 	}
 }
