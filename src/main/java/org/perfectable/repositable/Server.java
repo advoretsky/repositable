@@ -3,6 +3,7 @@ package org.perfectable.repositable;
 import com.google.common.base.StandardSystemProperty;
 import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.configuration.ServerConfiguration;
+import org.perfectable.repositable.repository.Repositories;
 import org.perfectable.webable.ServerConfigurator;
 import org.perfectable.webable.ServerMonitor;
 import org.perfectable.webable.WebApplication;
@@ -24,12 +25,12 @@ public final class Server {
 	private static final int DEFAULT_PORT = 8080;
 
 	private final int port;
-	private final Repositories repositories;
+	private final RepositorySelector repositorySelector;
 	private final Group loggableUsers;
 
-	private Server(int port, Repositories repositories, Group loggableUsers) {
+	private Server(int port, RepositorySelector repositorySelector, Group loggableUsers) {
 		this.port = port;
-		this.repositories = repositories;
+		this.repositorySelector = repositorySelector;
 		this.loggableUsers = loggableUsers;
 	}
 
@@ -38,15 +39,15 @@ public final class Server {
 	}
 
 	public Server withPort(int newPort) {
-		return new Server(newPort, repositories, loggableUsers);
+		return new Server(newPort, repositorySelector, loggableUsers);
 	}
 
-	public Server withRepositories(Repositories newRepositories) {
-		return new Server(port, newRepositories, loggableUsers);
+	public Server withRepositories(RepositorySelector repositorySelector) {
+		return new Server(port, repositorySelector, loggableUsers);
 	}
 
 	public Server withLoggableUser(Group newLoggableUsers) {
-		return new Server(port, repositories, newLoggableUsers);
+		return new Server(port, repositorySelector, newLoggableUsers);
 	}
 
 	private ServerConfigurator<?> createServerConfiguration() {
@@ -55,10 +56,10 @@ public final class Server {
 				.withPort(port)
 				.extend(HandlerServerConfigurationExtension.create())
 				.withGlobalChannel(BasicAuthenticationRequestChannel.of(requestAuthenticator))
-				.withHandler(VersionMetadataLocation.PATH_PATTERN, MetadataHandler.of(repositories, VersionMetadataLocation::fromPath))
-				.withHandler(ModuleMetadataLocation.PATH_PATTERN, MetadataHandler.of(repositories, ModuleMetadataLocation::fromPath))
-				.withHandler(ReleaseLocation.PATH_PATTERN, ArtifactHandler.of(repositories, ReleaseLocation::fromPath))
-				.withHandler(SnapshotLocation.PATH_PATTERN, ArtifactHandler.of(repositories, SnapshotLocation::fromPath))
+				.withHandler(VersionMetadataLocation.PATH_PATTERN, MetadataHandler.of(repositorySelector, VersionMetadataLocation::fromPath))
+				.withHandler(ModuleMetadataLocation.PATH_PATTERN, MetadataHandler.of(repositorySelector, ModuleMetadataLocation::fromPath))
+				.withHandler(ReleaseLocation.PATH_PATTERN, ArtifactHandler.of(repositorySelector, ReleaseLocation::fromPath))
+				.withHandler(SnapshotLocation.PATH_PATTERN, ArtifactHandler.of(repositorySelector, SnapshotLocation::fromPath))
 				.withRootHandler(RequestHandler.constant(HttpResponse.NOT_FOUND));
 	}
 

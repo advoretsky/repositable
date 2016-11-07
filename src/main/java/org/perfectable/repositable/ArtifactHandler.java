@@ -18,15 +18,15 @@ import java.util.Optional;
 public class ArtifactHandler implements RequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactHandler.class);
 
-	private final Repositories repositories;
+	private final RepositorySelector repositorySelector;
 	private final Locator locator;
 
-	public static ArtifactHandler of(Repositories repositories, Locator locator) {
-		return new ArtifactHandler(repositories, locator);
+	public static ArtifactHandler of(RepositorySelector repositorySelector, Locator locator) {
+		return new ArtifactHandler(repositorySelector, locator);
 	}
 
-	private ArtifactHandler(Repositories repositories, Locator locator) {
-		this.repositories = repositories;
+	private ArtifactHandler(RepositorySelector repositorySelector, Locator locator) {
+		this.repositorySelector = repositorySelector;
 		this.locator = locator;
 	}
 
@@ -51,7 +51,7 @@ public class ArtifactHandler implements RequestHandler {
 	}
 
 	private HttpResponse handleRetrieval(ArtifactLocation location) {
-		Optional<Artifact> artifactContent = location.find(repositories);
+		Optional<Artifact> artifactContent = location.find(repositorySelector);
 		if(!artifactContent.isPresent()) {
 			return HttpResponse.NOT_FOUND;
 		}
@@ -62,7 +62,7 @@ public class ArtifactHandler implements RequestHandler {
 	}
 
 	private HttpResponse handleProbe(ArtifactLocation location) {
-		Optional<Artifact> artifactHeaders = location.find(repositories);
+		Optional<Artifact> artifactHeaders = location.find(repositorySelector);
 		if(!artifactHeaders.isPresent()) {
 			return HttpResponse.NOT_FOUND;
 		}
@@ -81,7 +81,7 @@ public class ArtifactHandler implements RequestHandler {
 			return HttpResponse.status(HttpStatus.UNAUTHORIZED);
 		}
 		try {
-			location.add(repositories, PublishedArtifact.of(request), uploader);
+			location.add(repositorySelector, PublishedArtifact.of(request), uploader);
 		}
 		catch (UnauthorizedUserException e) {
 			LOGGER.info("Not allowed user {} tried to upload {}", uploader, location);

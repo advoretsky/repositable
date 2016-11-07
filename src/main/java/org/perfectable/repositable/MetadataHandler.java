@@ -15,15 +15,15 @@ import java.io.OutputStream;
 public final class MetadataHandler implements RequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MetadataHandler.class);
 
-	private final Repositories repositories;
+	private final RepositorySelector repositorySelector;
 	private final Locator locator;
 
-	public static MetadataHandler of(Repositories repositories, Locator locator) {
-		return new MetadataHandler(repositories, locator);
+	public static MetadataHandler of(RepositorySelector repositorySelector, Locator locator) {
+		return new MetadataHandler(repositorySelector, locator);
 	}
 
-	private MetadataHandler(Repositories repositories, Locator locator) {
-		this.repositories = repositories;
+	private MetadataHandler(RepositorySelector repositorySelector, Locator locator) {
+		this.repositorySelector = repositorySelector;
 		this.locator = locator;
 	}
 
@@ -46,7 +46,7 @@ public final class MetadataHandler implements RequestHandler {
 	}
 
 	private HttpResponse handleRetrieval(MetadataLocation location) {
-		Metadata metadata = location.fetch(repositories);
+		Metadata metadata = location.fetch(repositorySelector);
 		LOGGER.debug("Requested metadata {}", location);
 		if(metadata.isEmpty()) {
 			return HttpResponse.NOT_FOUND;

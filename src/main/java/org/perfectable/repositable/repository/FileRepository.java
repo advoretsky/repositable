@@ -1,6 +1,13 @@
-package org.perfectable.repositable;
+package org.perfectable.repositable.repository;
 
 import com.google.common.io.Files;
+import org.perfectable.repositable.Artifact;
+import org.perfectable.repositable.ArtifactIdentifier;
+import org.perfectable.repositable.FileArtifact;
+import org.perfectable.repositable.HashMethod;
+import org.perfectable.repositable.InsertionRejected;
+import org.perfectable.repositable.MetadataIdentifier;
+import org.perfectable.repositable.Repository;
 import org.perfectable.repositable.authorization.UnauthorizedUserException;
 import org.perfectable.repositable.authorization.User;
 import org.perfectable.repositable.metadata.Metadata;

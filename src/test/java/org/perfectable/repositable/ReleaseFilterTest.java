@@ -6,8 +6,9 @@ import com.google.common.net.MediaType;
 import org.junit.Test;
 import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.authorization.User;
-import org.perfectable.repositable.filter.GroupFilter;
 import org.perfectable.repositable.filter.StabilityFilter;
+import org.perfectable.repositable.repository.FileRepository;
+import org.perfectable.repositable.repository.Repositories;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;

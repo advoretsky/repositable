@@ -1,6 +1,12 @@
-package org.perfectable.repositable;
+package org.perfectable.repositable.repository;
 
 import com.google.common.collect.ImmutableSortedMap;
+import org.perfectable.repositable.Artifact;
+import org.perfectable.repositable.ArtifactIdentifier;
+import org.perfectable.repositable.MetadataIdentifier;
+import org.perfectable.repositable.Repository;
+import org.perfectable.repositable.RepositorySelector;
+import org.perfectable.repositable.RepositorySet;
 import org.perfectable.repositable.metadata.Metadata;
 
 import java.util.Collection;

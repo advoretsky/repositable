@@ -1,9 +1,9 @@
 <BugCollection version='3.0.1'>
     <BugInstance abbrev='RV' category='BAD_PRACTICE' priority='2' type='RV_RETURN_VALUE_IGNORED_BAD_PRACTICE'>
         <LongMessage>Exceptional return value of java.io.File.mkdirs() ignored in
-			org.perfectable.repositable.FileRepository.createDirectoryIfNeeded(Path)</LongMessage>
-        <Class classname='org.perfectable.repositable.FileRepository' primary='true' />
-        <Method classname='org.perfectable.repositable.FileRepository' name='createDirectoryIfNeeded'
+			org.perfectable.repositable.repository.FileRepository.createDirectoryIfNeeded(Path)</LongMessage>
+        <Class classname='org.perfectable.repositable.repository.FileRepository' primary='true' />
+        <Method classname='org.perfectable.repositable.repository.FileRepository' name='createDirectoryIfNeeded'
 				signature='(Ljava/nio/file/Path;)V'
 				isStatic='false' primary='true' />
         <Method classname='java.io.File' name='mkdirs'

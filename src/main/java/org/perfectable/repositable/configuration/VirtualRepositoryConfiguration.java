@@ -1,7 +1,7 @@
 package org.perfectable.repositable.configuration;
 
-import org.perfectable.repositable.Repositories;
-import org.perfectable.repositable.VirtualRepository;
+import org.perfectable.repositable.repository.Repositories;
+import org.perfectable.repositable.repository.VirtualRepository;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;

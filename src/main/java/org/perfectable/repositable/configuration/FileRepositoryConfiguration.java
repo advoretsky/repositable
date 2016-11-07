@@ -1,6 +1,6 @@
 package org.perfectable.repositable.configuration;
 
-import org.perfectable.repositable.FileRepository;
+import org.perfectable.repositable.repository.FileRepository;
 import org.perfectable.repositable.Filter;
 import org.perfectable.repositable.Repository;
 import org.perfectable.repositable.authorization.Group;

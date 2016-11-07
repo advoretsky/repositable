@@ -4,6 +4,8 @@ import org.perfectable.repositable.authorization.UnauthorizedUserException;
 import org.perfectable.repositable.authorization.User;
 import org.perfectable.repositable.authorization.UserSet;
 import org.perfectable.repositable.metadata.Metadata;
+import org.perfectable.repositable.repository.AuthorizedRepository;
+import org.perfectable.repositable.repository.FilteredRepository;
 
 import java.util.Optional;
 
