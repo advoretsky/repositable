@@ -2,17 +2,11 @@ package org.perfectable.repositable;
 
 import org.perfectable.repositable.metadata.Metadata;
 
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-import static java.nio.file.Files.newDirectoryStream;
 import static org.perfectable.repositable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
-
 
 public final class VersionIdentifier implements MetadataIdentifier {
 	private static final char QUALIFIER_SEPARATOR = '-';
@@ -36,20 +30,16 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		return artifactPath.resolve(version);
 	}
 
-	public static VersionIdentifier ofEntry(ModuleIdentifier moduleIdentifier, Path versionPath) {
-		Path entryPath = versionPath.subpath(1,versionPath.getNameCount());
-		entryPath = moduleIdentifier.asBasePath().relativize(entryPath);
-		Path filePath = checkNotNull(entryPath.getFileName());
-		String fileName = filePath.toString();
+	public static VersionIdentifier ofEntry(ModuleIdentifier moduleIdentifier, String entry) {
 		String versionBare;
 		Optional<String> versionQualifier;
-		int qualifierStart = fileName.indexOf(QUALIFIER_SEPARATOR);
+		int qualifierStart = entry.indexOf(QUALIFIER_SEPARATOR);
 		if(qualifierStart >= 0) {
-			versionBare = fileName.substring(0, qualifierStart);
-			versionQualifier = Optional.of(fileName.substring(qualifierStart));
+			versionBare = entry.substring(0, qualifierStart);
+			versionQualifier = Optional.of(entry.substring(qualifierStart));
 		}
 		else {
-			versionBare = fileName;
+			versionBare = entry;
 			versionQualifier = Optional.empty();
 		}
 		return of(moduleIdentifier, versionBare, versionQualifier);
@@ -71,22 +61,12 @@ public final class VersionIdentifier implements MetadataIdentifier {
 	}
 
 	@Override
-	public Metadata createMetadata(Path location) {
+	public Metadata createMetadata(Lister lister) {
 		Metadata metadata = createEmptyMetadata();
-		Path artifactPath = asBasePath();
-		Path absolutePath = location.resolve(artifactPath);
-		try (DirectoryStream<Path> versionStream = newDirectoryStream(absolutePath)) {
-			for (Path versionPath : versionStream) {
-				SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.ofEntry(this, versionPath);
-				snapshotIdentifier.appendVersion(metadata);
-			}
-		}
-		catch (NoSuchFileException e) { // NOPMD
-			// just dont addSnapshot versions
-		}
-		catch (IOException e) {
-			throw new AssertionError(e);
-		}
+		lister.list(element -> {
+			SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.ofEntry(this, element);
+			snapshotIdentifier.appendVersion(metadata);
+		});
 		return metadata;
 	}
 

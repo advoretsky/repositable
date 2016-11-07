@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static com.google.common.base.Preconditions.checkNotNull;
 import static com.google.common.base.Preconditions.checkState;
 
 public class SnapshotIdentifier implements ArtifactIdentifier {
@@ -32,14 +31,10 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 		return new SnapshotIdentifier(packageIdentifier, timestamp, buildId);
 	}
 
-	public static SnapshotIdentifier ofEntry(VersionIdentifier versionIdentifier, Path nested) {
-		Path entryPath = nested.subpath(1,nested.getNameCount());
-		entryPath = versionIdentifier.asBasePath().relativize(entryPath);
-		Path filePath = checkNotNull(entryPath.getFileName());
-		String fileName = filePath.toString();
+	public static SnapshotIdentifier ofEntry(VersionIdentifier versionIdentifier, String entry) {
 		String baseName = versionIdentifier.fileBaseName();
-		checkState(fileName.startsWith(baseName));
-		String suffix = fileName.substring(baseName.length() + 1);
+		checkState(entry.startsWith(baseName));
+		String suffix = entry.substring(baseName.length() + 1);
 		Matcher matcher = SUFFIX_PATTERN.matcher(suffix);
 		checkState(matcher.matches());
 		LocalDateTime timestamp = LocalDateTime.parse(matcher.group(1), TIMESTAMP_FORMATTER);

@@ -2,14 +2,9 @@ package org.perfectable.repositable;
 
 import org.perfectable.repositable.metadata.Metadata;
 
-import java.io.IOException;
-import java.nio.file.DirectoryStream;
-import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
-
-import static java.nio.file.Files.newDirectoryStream;
 
 public final class ModuleIdentifier implements MetadataIdentifier {
 	private final String groupId;
@@ -30,22 +25,12 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 	}
 
 	@Override
-	public Metadata createMetadata(Path location) {
+	public Metadata createMetadata(Lister lister) {
 		Metadata metadata = createEmptyMetadata();
-		Path artifactPath = asBasePath();
-		Path absolutePath = location.resolve(artifactPath);
-		try (DirectoryStream<Path> versionStream = newDirectoryStream(absolutePath)) {
-			for (Path versionPath : versionStream) {
-				VersionIdentifier versionIdentifier = VersionIdentifier.ofEntry(this, versionPath);
-				versionIdentifier.appendVersion(metadata);
-			}
-		}
-		catch (NoSuchFileException e) { // NOPMD
-			// just dont addSnapshot versions
-		}
-		catch (IOException e) {
-			throw new AssertionError(e);
-		}
+		lister.list(element -> {
+			VersionIdentifier versionIdentifier = VersionIdentifier.ofEntry(this, element);
+			versionIdentifier.appendVersion(metadata);
+		});
 		return metadata;
 	}
 
