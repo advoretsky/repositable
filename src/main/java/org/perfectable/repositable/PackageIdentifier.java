@@ -21,17 +21,13 @@ public final class PackageIdentifier implements ArtifactIdentifier {
 		this.packaging = packaging;
 	}
 
-	public Path asSnapshotPath(LocalDateTime timestamp, int buildId) {
-		return versionIdentifier.asSnapshotPath(classifier, packaging, timestamp, buildId);
-	}
-
-	public void addSnapshotVersion(Metadata metadata, LocalDateTime timestamp, int buildId) {
-		versionIdentifier.addSnapshotVersion(metadata, classifier, packaging, timestamp, buildId);
-	}
-
 	@Override
-	public Path asFetchPath(EntryLister lister) {
-		return versionIdentifier.asFetchPath(lister, classifier, packaging);
+	public Path asBasePath() {
+		return versionIdentifier.asBasePath();
+	}
+
+	public Path asBuildPath(LocalDateTime timestamp, int buildId) {
+		return versionIdentifier.asBuildPath(classifier, packaging, timestamp, buildId);
 	}
 
 	public Path asArtifactPath() {
@@ -39,13 +35,17 @@ public final class PackageIdentifier implements ArtifactIdentifier {
 	}
 
 	@Override
-	public Path asBasePath() {
-		return versionIdentifier.asBasePath();
+	public Path asFetchPath(EntryLister lister) {
+		return versionIdentifier.asFetchPath(lister, classifier, packaging);
 	}
 
 	@Override
 	public Path asUploadPath(BuildGenerator buildGenerator) {
 		return versionIdentifier.asUploadPath(buildGenerator, classifier, packaging);
+	}
+
+	public void addSnapshotVersion(Metadata metadata, LocalDateTime timestamp, int buildId) {
+		versionIdentifier.addSnapshotVersion(metadata, classifier, packaging, timestamp, buildId);
 	}
 
 	@Override

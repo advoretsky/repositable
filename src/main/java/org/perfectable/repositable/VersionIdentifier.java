@@ -20,18 +20,6 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		return new VersionIdentifier(moduleIdentifier, versionBare, versionQualifier);
 	}
 
-	private VersionIdentifier(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier) {
-		this.moduleIdentifier = moduleIdentifier;
-		this.versionBare = versionBare;
-		this.versionQualifier = versionQualifier;
-	}
-
-	public Path asBasePath() {
-		Path artifactPath = moduleIdentifier.asBasePath();
-		String version = completeVersion();
-		return artifactPath.resolve(version);
-	}
-
 	public static VersionIdentifier ofEntry(ModuleIdentifier moduleIdentifier, String entry) {
 		String versionBare;
 		Optional<String> versionQualifier;
@@ -47,12 +35,10 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		return of(moduleIdentifier, versionBare, versionQualifier);
 	}
 
-	private String completeVersion() {
-		return versionQualifier.isPresent() ? (versionBare + QUALIFIER_SEPARATOR + versionQualifier.get()) : versionBare;
-	}
-
-	public String fileBaseName() {
-		return moduleIdentifier.asFileBaseName(versionBare);
+	private VersionIdentifier(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier) {
+		this.moduleIdentifier = moduleIdentifier;
+		this.versionBare = versionBare;
+		this.versionQualifier = versionQualifier;
 	}
 
 	@Override
@@ -72,17 +58,28 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		return metadata;
 	}
 
+	private String completeVersion() {
+		return versionQualifier.isPresent() ? (versionBare + QUALIFIER_SEPARATOR + versionQualifier.get()) : versionBare;
+	}
+
+	public Path asBasePath() {
+		Path artifactPath = moduleIdentifier.asBasePath();
+		String version = completeVersion();
+		return artifactPath.resolve(version);
+	}
+
+	public String asFileBaseName() {
+		return moduleIdentifier.asFileBaseName(versionBare);
+	}
+
 
 	public Path asUploadPath(ArtifactIdentifier.BuildGenerator buildGenerator,
 							 Optional<String> classifier, String packaging) {
+		PackageIdentifier packageIdentifier = PackageIdentifier.of(this, classifier, packaging);
 		if(isSnapshot()) {
-			PackageIdentifier packageIdentifier = PackageIdentifier.of(this, classifier, packaging);
 			return buildGenerator.generate(packageIdentifier).asBuildPath();
 		}
-		Path versionPath = asBasePath();
-		String version = completeVersion();
-		String fileName = moduleIdentifier.asFileName(version, classifier, packaging);
-		return versionPath.resolve(fileName);
+		return packageIdentifier.asArtifactPath();
 	}
 
 	public Path asFetchPath(EntryLister lister, Optional<String> classifier, String packaging) {
@@ -101,25 +98,18 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		return asArtifactPath(classifier, packaging);
 	}
 
+	public Path asArtifactPath(Optional<String> classifier, String packaging) {
+		String fileName = moduleIdentifier.asFileName(completeVersion(), classifier, packaging);
+		return asBasePath().resolve(fileName);
+	}
+
+	public Path asBuildPath(Optional<String> classifier, String packaging, LocalDateTime timestamp, int buildId) {
+		String fileName = moduleIdentifier.asSnapshotFilename(versionBare, classifier, packaging, timestamp, buildId);
+		return asBasePath().resolve(fileName);
+	}
+
 	private boolean isSnapshot() {
 		return versionQualifier.isPresent() && versionQualifier.get().equals("SNAPSHOT");
-	}
-
-	public Path asArtifactPath(Optional<String> classifier, String packaging) {
-		Path artifactPath = asBasePath();
-		String classifierSuffix = classifier.isPresent() ? QUALIFIER_SEPARATOR + classifier.get() : "";
-		String fullVersion = completeVersion() + classifierSuffix + "." + packaging;
-		String fileName = moduleIdentifier.asSnapshotFilename(fullVersion);
-		return artifactPath.resolve(fileName);
-	}
-
-	public Path asSnapshotPath(Optional<String> classifier, String packaging, LocalDateTime timestamp, int buildId) {
-		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
-		Path artifactPath = asBasePath();
-		String classifierSuffix = classifier.isPresent() ? QUALIFIER_SEPARATOR + classifier.get() : "";
-		String fullVersion = versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
-		String fileName = moduleIdentifier.asSnapshotFilename(fullVersion);
-		return artifactPath.resolve(fileName);
 	}
 
 	public void addSnapshotVersion(Metadata metadata, Optional<String> classifier, String packaging, LocalDateTime timestamp, int buildId) {

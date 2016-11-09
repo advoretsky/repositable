@@ -34,7 +34,7 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 	}
 
 	public static SnapshotIdentifier ofEntry(VersionIdentifier versionIdentifier, String entry) {
-		String baseName = versionIdentifier.fileBaseName();
+		String baseName = versionIdentifier.asFileBaseName();
 		checkState(entry.startsWith(baseName));
 		String suffix = entry.substring(baseName.length() + 1);
 		Matcher matcher = SUFFIX_PATTERN.matcher(suffix);
@@ -53,7 +53,7 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 	}
 
 	Path asBuildPath() {
-		return packageIdentifier.asSnapshotPath(timestamp, buildId);
+		return packageIdentifier.asBuildPath(timestamp, buildId);
 	}
 
 	@Override
@@ -66,13 +66,13 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 		return asBuildPath();
 	}
 
+	public void appendVersion(Metadata metadata) {
+		packageIdentifier.addSnapshotVersion(metadata, timestamp, buildId);
+	}
+
 	@Override
 	public boolean matches(Filter filter) {
 		return filter.matchesSnapshot(packageIdentifier, timestamp, buildId);
-	}
-
-	public void appendVersion(Metadata metadata) {
-		packageIdentifier.addSnapshotVersion(metadata, timestamp, buildId);
 	}
 
 	public static SnapshotIdentifier newest(List<SnapshotIdentifier> candidates) {

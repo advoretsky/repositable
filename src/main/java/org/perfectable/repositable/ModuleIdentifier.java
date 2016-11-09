@@ -4,7 +4,10 @@ import org.perfectable.repositable.metadata.Metadata;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.Optional;
+
+import static org.perfectable.repositable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
 
 public final class ModuleIdentifier implements MetadataIdentifier {
 	private final String groupId;
@@ -45,13 +48,13 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 
 	public String asFileName(String version, Optional<String> classifier, String packaging) {
 		String classifierSuffix = classifier.isPresent() ? "-" + classifier.get() : "";
-		String fileName = artifactId + "-" + version + classifierSuffix + "." + packaging;
-		return fileName;
+		return artifactId + "-" + version + classifierSuffix + "." + packaging;
 	}
 
-	public String asSnapshotFilename(String fullVersionWithExtension) {
-		String filePath = artifactId + "-" + fullVersionWithExtension;
-		return filePath;
+	public String asSnapshotFilename(String versionBare, Optional<String> classifier, String packaging, LocalDateTime timestamp, int buildId) {
+		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
+		String classifierSuffix = classifier.isPresent() ? "-" + classifier.get() : "";
+		return artifactId + "-" + versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
 	}
 
 	public Metadata createEmptyMetadata() {
