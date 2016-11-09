@@ -7,7 +7,11 @@ public interface ArtifactIdentifier {
 
 	Path asFetchPath(EntryLister lister);
 
-	Path asUploadPath();
+	Path asUploadPath(BuildGenerator buildGenerator);
 
 	boolean matches(Filter filter);
+
+	interface BuildGenerator {
+		SnapshotIdentifier generate(PackageIdentifier packageIdentifier);
+	}
 }

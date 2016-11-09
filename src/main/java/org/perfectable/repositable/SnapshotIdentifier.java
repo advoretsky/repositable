@@ -52,14 +52,18 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 		return packageIdentifier.asBasePath();
 	}
 
-	@Override
-	public Path asFetchPath(EntryLister lister) {
-		return asUploadPath();
+	Path asBuildPath() {
+		return packageIdentifier.asSnapshotPath(timestamp, buildId);
 	}
 
 	@Override
-	public Path asUploadPath() {
-		return packageIdentifier.asSnapshotPath(timestamp, buildId);
+	public Path asFetchPath(EntryLister lister) {
+		return asBuildPath();
+	}
+
+	@Override
+	public Path asUploadPath(BuildGenerator buildGenerator) {
+		return asBuildPath();
 	}
 
 	@Override

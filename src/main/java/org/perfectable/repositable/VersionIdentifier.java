@@ -73,10 +73,11 @@ public final class VersionIdentifier implements MetadataIdentifier {
 	}
 
 
-	public Path asUploadPath(Optional<String> classifier, String packaging) {
+	public Path asUploadPath(ArtifactIdentifier.BuildGenerator buildGenerator,
+							 Optional<String> classifier, String packaging) {
 		if(isSnapshot()) {
 			PackageIdentifier packageIdentifier = PackageIdentifier.of(this, classifier, packaging);
-			return packageIdentifier.asSnapshotPath(LocalDateTime.now(), 1);
+			return buildGenerator.generate(packageIdentifier).asBuildPath();
 		}
 		Path versionPath = asBasePath();
 		String version = completeVersion();
@@ -92,16 +93,24 @@ public final class VersionIdentifier implements MetadataIdentifier {
 				candidates.add(candidate);
 			});
 			if(candidates.isEmpty()) {
-				return asUploadPath(classifier, packaging);
+				return asArtifactPath(classifier, packaging);
 			}
 			SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.newest(candidates);
-			return snapshotIdentifier.asUploadPath();
+			return snapshotIdentifier.asFetchPath(lister);
 		}
-		return asUploadPath(classifier, packaging);
+		return asArtifactPath(classifier, packaging);
 	}
 
 	private boolean isSnapshot() {
 		return versionQualifier.isPresent() && versionQualifier.get().equals("SNAPSHOT");
+	}
+
+	public Path asArtifactPath(Optional<String> classifier, String packaging) {
+		Path artifactPath = asBasePath();
+		String classifierSuffix = classifier.isPresent() ? QUALIFIER_SEPARATOR + classifier.get() : "";
+		String fullVersion = completeVersion() + classifierSuffix + "." + packaging;
+		String fileName = moduleIdentifier.asSnapshotFilename(fullVersion);
+		return artifactPath.resolve(fileName);
 	}
 
 	public Path asSnapshotPath(Optional<String> classifier, String packaging, LocalDateTime timestamp, int buildId) {

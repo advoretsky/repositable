@@ -68,6 +68,6 @@ public final class SnapshotLocation implements ArtifactLocation {
 
 	@Override
 	public String toString() {
-		return String.format(REPRESENTATION_FORMAT, repositoryName, snapshotIdentifier.asUploadPath(), hashMethod);
+		return String.format(REPRESENTATION_FORMAT, repositoryName, snapshotIdentifier.asBuildPath(), hashMethod);
 	}
 }

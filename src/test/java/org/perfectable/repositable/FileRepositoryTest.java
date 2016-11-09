@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 
@@ -28,6 +29,8 @@ public class FileRepositoryTest extends AbstractServerTest {
 		Group loggableUsers = uploaders
 				.join(authorizedUser);
 		Repository repository = FileRepository.create(repositoryBase.toPath())
+				.withBuildGenerator(packageIdentifier ->
+						SnapshotIdentifier.of(packageIdentifier, LocalDateTime.parse("2016-11-08T10:00:00"), 1))
 				.restrictUploaders(uploaders);
 		Repositories repositories = Repositories.create()
 				.withAdditional("test-repository", repository);
@@ -147,7 +150,6 @@ public class FileRepositoryTest extends AbstractServerTest {
 				.hasContentType(MediaType.create("text", "plain"))
 				.hasContentText(calculatedHash);
 	}
-
 
 	@Test
 	public void testArtifactLatestSnapshotMissing() {
@@ -637,6 +639,151 @@ public class FileRepositoryTest extends AbstractServerTest {
 				.withContent(uploadedContent)
 				.returnedStatus(HttpServletResponse.SC_OK);
 		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar");
+	}
+
+
+	@Test
+	public void testPutLatestSnapshotInvalidUser() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("missing-user:invalid-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotInvalidPassword() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("test-uploader:invalid-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotUnauthorizedUser() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("test-user:test-user-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotValid() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("test-uploader:test-uploader-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_OK);
+		assertFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar", uploadedContent);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotMd5InvalidUser() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.md5"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("missing-user:invalid-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotMd5InvalidPassword() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.md5"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("test-uploader:invalid-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotMd5UnauthorizedUser() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.md5"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("test-user:test-user-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotMd5Valid() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.md5"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("test-uploader:test-uploader-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_OK);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotSha1InvalidUser() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.sha1"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("missing-user:invalid-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotSha1InvalidPassword() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.sha1"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("test-uploader:invalid-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotSha1UnauthorizedUser() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.sha1"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("test-user:test-user-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_FORBIDDEN);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
+	}
+
+	@Test
+	public void testPutLatestSnapshotSha1Valid() {
+		byte[] uploadedContent = {1, 2, 3};
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.sha1"))
+				.withMethod("PUT")
+				.withHeader(HttpHeaders.AUTHORIZATION, "Basic " + calculateBase64("test-uploader:test-uploader-password"))
+				.withContent(uploadedContent)
+				.returnedStatus(HttpServletResponse.SC_OK);
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161108.100000-1.jar");
+		assertNoFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar");
 	}
 
 }

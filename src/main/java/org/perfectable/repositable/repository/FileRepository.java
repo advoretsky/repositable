@@ -9,6 +9,7 @@ import org.perfectable.repositable.HashMethod;
 import org.perfectable.repositable.InsertionRejected;
 import org.perfectable.repositable.MetadataIdentifier;
 import org.perfectable.repositable.Repository;
+import org.perfectable.repositable.SnapshotIdentifier;
 import org.perfectable.repositable.authorization.UnauthorizedUserException;
 import org.perfectable.repositable.authorization.User;
 import org.perfectable.repositable.metadata.Metadata;
@@ -18,19 +19,31 @@ import java.io.InputStream;
 import java.nio.file.DirectoryStream;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 import static java.nio.file.Files.newDirectoryStream;
 
-public class FileRepository implements Repository {
+public final class FileRepository implements Repository {
+	private static final ArtifactIdentifier.BuildGenerator DEFAULT_BUILD_GENERATOR =
+			packageIdentifier -> SnapshotIdentifier.of(packageIdentifier, LocalDateTime.now(ZoneOffset.UTC), 1);
+
 	private final Path location;
 
-	public FileRepository(Path location) {
+	private final ArtifactIdentifier.BuildGenerator buildGenerator;
+
+	private FileRepository(Path location, ArtifactIdentifier.BuildGenerator buildGenerator) {
 		this.location = location;
+		this.buildGenerator = buildGenerator;
 	}
 
 	public static FileRepository create(Path location) {
-		return new FileRepository(location);
+		return new FileRepository(location, DEFAULT_BUILD_GENERATOR);
+	}
+
+	public FileRepository withBuildGenerator(ArtifactIdentifier.BuildGenerator newBuildGenerator) {
+		return new FileRepository(location, newBuildGenerator);
 	}
 
 	@Override
@@ -57,7 +70,7 @@ public class FileRepository implements Repository {
 		if(hashMethod != HashMethod.NONE) {
 			return; // dont put hashes into repository
 		}
-		Path artifactPath = identifier.asUploadPath();
+		Path artifactPath = identifier.asUploadPath(buildGenerator);
 		Path absolutePath = location.resolve(artifactPath);
 		Path parent = absolutePath.resolveSibling(".");
 		createDirectoryIfNeeded(parent);
