@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
 
+import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.file.Files.newDirectoryStream;
 
 public final class FileRepository implements Repository {
@@ -72,7 +73,7 @@ public final class FileRepository implements Repository {
 		}
 		Path artifactPath = identifier.asUploadPath(buildGenerator);
 		Path absolutePath = location.resolve(artifactPath);
-		Path parent = absolutePath.resolveSibling(".");
+		Path parent = checkNotNull(absolutePath.getParent());
 		createDirectoryIfNeeded(parent);
 		try {
 			InputStream source = artifact.openStream();
