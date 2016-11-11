@@ -46,7 +46,8 @@ public class Metadata {
 		versioning.addVersion(version);
 	}
 
-	public void addSnapshotVersion(String classifier, String extension, String version, int buildId, LocalDateTime timestamp) {
+	public void addSnapshotVersion(String classifier, String extension, String version, int buildId,
+								   LocalDateTime timestamp) {
 		versioning.addSnapshotVersion(classifier, extension, version, buildId, timestamp);
 	}
 

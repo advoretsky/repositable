@@ -14,9 +14,13 @@ import static com.google.common.base.Preconditions.checkState;
 public final class SnapshotLocation implements ArtifactLocation {
 	private static final String REPRESENTATION_FORMAT = "SnapshotLocation(%s, %s, %s)";
 
-	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar" // NOPMD
+	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar"
 	static final Pattern PATH_PATTERN =
-			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]+)\\/([a-zA-Z][\\w-]*)\\/([0-9][\\w\\.-]*?)-SNAPSHOT\\/\\3-\\4-([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z-]+))?\\.(\\w+)(?:\\.(\\w+))?$");
+			Pattern.compile("\\/([a-zA-Z-]+)" + // repository
+					"\\/([a-zA-Z][\\w\\/-]+)" + // groupId
+					"\\/([a-zA-Z][\\w-]*)" + // artifactId
+					"\\/([0-9][\\w\\.-]*?)-SNAPSHOT" + // version
+					"\\/\\3-\\4-([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z-]+))?\\.(\\w+)(?:\\.(\\w+))?$"); // filename
 
 	private final String repositoryName;
 	private final SnapshotIdentifier snapshotIdentifier;
@@ -41,10 +45,14 @@ public final class SnapshotLocation implements ArtifactLocation {
 		String classifier = matcher.group(7);
 		String packaging = matcher.group(8);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(9));
-		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
-		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, versionBare, Optional.of("SNAPSHOT"));
-		PackageIdentifier packageIdentifier = PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
-		SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.of(packageIdentifier, timestamp, buildId);
+		ModuleIdentifier moduleIdentifier =
+				ModuleIdentifier.of(groupId, artifactId);
+		VersionIdentifier versionIdentifier =
+				VersionIdentifier.of(moduleIdentifier, versionBare, Optional.of("SNAPSHOT"));
+		PackageIdentifier packageIdentifier =
+				PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
+		SnapshotIdentifier snapshotIdentifier =
+				SnapshotIdentifier.of(packageIdentifier, timestamp, buildId);
 		return new SnapshotLocation(repositoryName, snapshotIdentifier, hashMethod);
 	}
 

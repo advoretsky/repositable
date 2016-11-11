@@ -15,7 +15,11 @@ public final class PackageLocation implements ArtifactLocation {
 	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.0/buildable-1.2.0.jar"
 	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.0-SNAPSHOT/buildable-1.2.0-SNAPSHOT.jar" // NOPMD
 	static final Pattern PATH_PATTERN =
-			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]+)\\/([a-zA-Z][\\w-]*)\\/([\\d\\.]+)(?:-([\\w\\.-]+))?\\/\\3-\\4(?:-\\5)?(?:-([a-z-]+))?\\.(\\w+)(?:\\.(\\w+))?$");
+			Pattern.compile("\\/([a-zA-Z-]+)" + // repository
+					"\\/([a-zA-Z][\\w\\/-]+)" + // groupId
+					"\\/([a-zA-Z][\\w-]*)" + // artifactId
+					"\\/([\\d\\.]+)(?:-([\\w\\.-]+))?\\/" + // version
+					"\\3-\\4(?:-\\5)?(?:-([a-z-]+))?\\.(\\w+)(?:\\.(\\w+))?$"); // filename
 
 	private static final String REPRESENTATION_FORMAT = "PackageLocation(%s, %s, %s)";
 
@@ -41,8 +45,10 @@ public final class PackageLocation implements ArtifactLocation {
 		String packaging = matcher.group(7);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(8));
 		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
-		VersionIdentifier versionIdentifier = VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionQualifier));
-		PackageIdentifier packageIdentifier = PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
+		VersionIdentifier versionIdentifier =
+				VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionQualifier));
+		PackageIdentifier packageIdentifier =
+				PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
 		return new PackageLocation(repositoryName, packageIdentifier, hashMethod);
 	}
 

@@ -36,7 +36,8 @@ public final class ConjunctionFilter implements Filter {
 	}
 
 	@Override
-	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier) {
+	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare,
+								  Optional<String> versionQualifier) {
 		for (Filter component : components) {
 			if (!component.matchesVersion(moduleIdentifier, versionBare, versionQualifier)) {
 				return false;

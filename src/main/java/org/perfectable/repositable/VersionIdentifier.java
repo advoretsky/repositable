@@ -16,7 +16,8 @@ public final class VersionIdentifier implements MetadataIdentifier {
 	private final String versionBare;
 	private final Optional<String> versionQualifier;
 
-	public static VersionIdentifier of(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier) {
+	public static VersionIdentifier of(ModuleIdentifier moduleIdentifier, String versionBare,
+									   Optional<String> versionQualifier) {
 		return new VersionIdentifier(moduleIdentifier, versionBare, versionQualifier);
 	}
 
@@ -35,7 +36,8 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		return of(moduleIdentifier, versionBare, versionQualifier);
 	}
 
-	private VersionIdentifier(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier) {
+	private VersionIdentifier(ModuleIdentifier moduleIdentifier, String versionBare,
+							  Optional<String> versionQualifier) {
 		this.moduleIdentifier = moduleIdentifier;
 		this.versionBare = versionBare;
 		this.versionQualifier = versionQualifier;
@@ -59,7 +61,8 @@ public final class VersionIdentifier implements MetadataIdentifier {
 	}
 
 	private String completeVersion() {
-		return versionQualifier.isPresent() ? (versionBare + QUALIFIER_SEPARATOR + versionQualifier.get()) : versionBare;
+		return versionQualifier.isPresent() ?
+				(versionBare + QUALIFIER_SEPARATOR + versionQualifier.get()) : versionBare;
 	}
 
 	@Override
@@ -113,7 +116,8 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		return versionQualifier.isPresent() && versionQualifier.get().equals("SNAPSHOT");
 	}
 
-	public void addSnapshotVersion(Metadata metadata, Optional<String> classifier, String packaging, LocalDateTime timestamp, int buildId) {
+	public void addSnapshotVersion(Metadata metadata, Optional<String> classifier, String packaging,
+								   LocalDateTime timestamp, int buildId) {
 		String version = versionBare + "-" + timestamp.format(TIMESTAMP_FORMATTER) + "-" + buildId;
 		metadata.addSnapshotVersion(classifier.orElse(""), packaging, version, buildId, timestamp);
 	}

@@ -15,7 +15,8 @@ import static com.google.common.base.Preconditions.checkState;
 
 public class SnapshotIdentifier implements ArtifactIdentifier {
 
-	private static final Pattern SUFFIX_PATTERN = Pattern.compile("([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z-]+))?\\.(\\w+)$");
+	private static final Pattern SUFFIX_PATTERN =
+			Pattern.compile("([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z-]+))?\\.(\\w+)$");
 
 	static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd.HHmmss");
 
@@ -43,7 +44,8 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 		int buildId = Integer.parseInt(matcher.group(2));
 		String classifier = matcher.group(3);
 		String packaging = matcher.group(4);
-		PackageIdentifier packageIdentifier = PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
+		PackageIdentifier packageIdentifier =
+				PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
 		return of(packageIdentifier, timestamp, buildId);
 	}
 

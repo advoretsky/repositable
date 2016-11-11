@@ -53,7 +53,8 @@ public final class Repositories implements RepositorySelector, RepositorySet {
 
 	@Override
 	public Collection<Artifact> listArtifacts(ArtifactIdentifier artifactIdentifier) {
-		Function<Repository, Optional<Artifact>> transformation = repository -> repository.findArtifact(artifactIdentifier);
+		Function<Repository, Optional<Artifact>> transformation =
+				repository -> repository.findArtifact(artifactIdentifier);
 		return repositoryByName.values().stream()
 				.map(transformation)
 				.flatMap(candidate -> candidate.isPresent() ? Stream.of(candidate.get()) : Stream.empty())

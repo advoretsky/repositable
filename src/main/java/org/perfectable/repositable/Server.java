@@ -56,10 +56,14 @@ public final class Server {
 				.withPort(port)
 				.extend(HandlerServerConfigurationExtension.create())
 				.withGlobalChannel(BasicAuthenticationRequestChannel.of(requestAuthenticator))
-				.withHandler(VersionMetadataLocation.PATH_PATTERN, MetadataHandler.of(repositorySelector, VersionMetadataLocation::fromPath))
-				.withHandler(ModuleMetadataLocation.PATH_PATTERN, MetadataHandler.of(repositorySelector, ModuleMetadataLocation::fromPath))
-				.withHandler(PackageLocation.PATH_PATTERN, ArtifactHandler.of(repositorySelector, PackageLocation::fromPath))
-				.withHandler(SnapshotLocation.PATH_PATTERN, ArtifactHandler.of(repositorySelector, SnapshotLocation::fromPath))
+				.withHandler(VersionMetadataLocation.PATH_PATTERN,
+						MetadataHandler.of(repositorySelector, VersionMetadataLocation::fromPath))
+				.withHandler(ModuleMetadataLocation.PATH_PATTERN,
+						MetadataHandler.of(repositorySelector, ModuleMetadataLocation::fromPath))
+				.withHandler(PackageLocation.PATH_PATTERN,
+						ArtifactHandler.of(repositorySelector, PackageLocation::fromPath))
+				.withHandler(SnapshotLocation.PATH_PATTERN,
+						ArtifactHandler.of(repositorySelector, SnapshotLocation::fromPath))
 				.withRootHandler(RequestHandler.constant(HttpResponse.NOT_FOUND));
 	}
 

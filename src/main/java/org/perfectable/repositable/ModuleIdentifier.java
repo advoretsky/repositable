@@ -55,10 +55,12 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 		return artifactId + "-" + version + classifierSuffix + "." + packaging;
 	}
 
-	public String asSnapshotFilename(String versionBare, Optional<String> classifier, String packaging, LocalDateTime timestamp, int buildId) {
+	public String asSnapshotFilename(String versionBare, Optional<String> classifier, String packaging,
+									 LocalDateTime timestamp, int buildId) {
 		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
 		String classifierSuffix = classifier.isPresent() ? "-" + classifier.get() : "";
-		return artifactId + "-" + versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
+		return artifactId + "-" + versionBare +
+				"-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
 	}
 
 	@Override

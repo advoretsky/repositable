@@ -30,7 +30,8 @@ final class StoringRequestAuthenticator implements Authenticator {
 	}
 
 	@Override
-	public void visitAuthentication(HttpRequest request, String username, String password) throws AuthenticationException {
+	public void visitAuthentication(HttpRequest request, String username, String password)
+			throws AuthenticationException {
 		User current;
 		try {
 			current = allowedUsers.authenticate(username, password);

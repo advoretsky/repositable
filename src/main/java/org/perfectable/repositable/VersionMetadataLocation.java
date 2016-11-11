@@ -13,7 +13,11 @@ public class VersionMetadataLocation implements MetadataLocation {
 
 	// ex. "/libs-snapshot-local/org/perfectable/webable/1.1.0-SNAPSHOT/maven-metadata.xml" // NOPMD
 	static final Pattern PATH_PATTERN =
-			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]*)\\/([a-zA-Z][\\w-]*)\\/([\\d\\.]+)(?:-([\\w\\.-]+))?\\/maven-metadata\\.xml(?:\\.(\\w+))?");
+			Pattern.compile("\\/([a-zA-Z-]+)" + // repository
+					"\\/([a-zA-Z][\\w\\/-]*)" + // groupId
+					"\\/([a-zA-Z][\\w-]*)" + // artifactId
+					"\\/([\\d\\.]+)(?:-([\\w\\.-]+))?" + // version
+					"\\/maven-metadata\\.xml(?:\\.(\\w+))?"); // filename
 
 	private static final String REPRESENTATION_FORMAT = "VersionMetadataLocation(%s, %s, %s)";
 
@@ -36,8 +40,11 @@ public class VersionMetadataLocation implements MetadataLocation {
 		String versionBare = matcher.group(4);
 		String versionQualifier = matcher.group(5);
 		HashMethod hashMethod = HashMethod.byExtension(matcher.group(6));
-		ModuleIdentifier moduleIdentifier = ModuleIdentifier.of(groupId, artifactId);
-		return new VersionMetadataLocation(repositoryName, VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionQualifier)), hashMethod);
+		ModuleIdentifier moduleIdentifier =
+				ModuleIdentifier.of(groupId, artifactId);
+		VersionIdentifier versionIdentifier =
+				VersionIdentifier.of(moduleIdentifier, versionBare, Optional.ofNullable(versionQualifier));
+		return new VersionMetadataLocation(repositoryName, versionIdentifier, hashMethod);
 	}
 
 	@Override

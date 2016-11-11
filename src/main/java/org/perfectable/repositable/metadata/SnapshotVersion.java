@@ -27,7 +27,8 @@ public class SnapshotVersion {
 	private LocalDateTime updated;
 	private int buildId;
 
-	public static SnapshotVersion of(String classifier, String extension, String version, int buildId, LocalDateTime updated) {
+	public static SnapshotVersion of(String classifier, String extension, String version, int buildId,
+									 LocalDateTime updated) {
 		SnapshotVersion snapshotVersion = new SnapshotVersion();
 		snapshotVersion.setClassifier(classifier);
 		snapshotVersion.setExtension(extension);
@@ -93,7 +94,8 @@ public class SnapshotVersion {
 		return Snapshot.of(updated, buildId);
 	}
 
-	public static SortedSet<SnapshotVersion> merge(Collection<SnapshotVersion> first, Collection<SnapshotVersion> second) {
+	public static SortedSet<SnapshotVersion> merge(Collection<SnapshotVersion> first,
+												   Collection<SnapshotVersion> second) {
 		SortedSet<SnapshotVersion> merged = new TreeSet<>(COMPARATOR.reversed());
 		merged.addAll(first);
 		merged.addAll(second);

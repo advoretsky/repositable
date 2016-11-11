@@ -11,7 +11,10 @@ import static com.google.common.base.Preconditions.checkState;
 public class ModuleMetadataLocation implements MetadataLocation {
 	// ex. "/libs-snapshot-local/org/perfectable/webable/maven-metadata.xml" // NOPMD
 	static final Pattern PATH_PATTERN =
-			Pattern.compile("\\/([a-zA-Z-]+)\\/([a-zA-Z][\\w\\/-]*)\\/([a-zA-Z][\\w-]*)\\/maven-metadata\\.xml(?:\\.(\\w+))?");
+			Pattern.compile("\\/([a-zA-Z-]+)" + // repository
+					"\\/([a-zA-Z][\\w\\/-]*)" + // groupId
+					"\\/([a-zA-Z][\\w-]*)" + // artifactId
+					"\\/maven-metadata\\.xml(?:\\.(\\w+))?");
 
 	private static final String REPRESENTATION_FORMAT = "ModuleMetadataLocation(%s, %s, %s)";
 

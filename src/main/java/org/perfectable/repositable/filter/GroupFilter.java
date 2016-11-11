@@ -25,7 +25,8 @@ public final class GroupFilter implements Filter {
 	}
 
 	@Override
-	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare, Optional<String> versionQualifier) {
+	public boolean matchesVersion(ModuleIdentifier moduleIdentifier, String versionBare,
+								  Optional<String> versionQualifier) {
 		return moduleIdentifier.matches(this);
 	}
 

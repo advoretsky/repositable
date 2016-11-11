@@ -11,7 +11,8 @@ public final class PackageIdentifier implements ArtifactIdentifier {
 	private final Optional<String> classifier;
 	private final String packaging;
 
-	public static PackageIdentifier of(VersionIdentifier versionIdentifier, Optional<String> classifier, String packaging) {
+	public static PackageIdentifier of(VersionIdentifier versionIdentifier, Optional<String> classifier,
+									   String packaging) {
 		return new PackageIdentifier(versionIdentifier, classifier, packaging);
 	}
 

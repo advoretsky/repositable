@@ -37,7 +37,8 @@ public final class AuthorizedRepository implements Repository {
 	}
 
 	@Override
-	public void put(ArtifactIdentifier identifier, Artifact content, User uploader, HashMethod hashMethod) throws UnauthorizedUserException, InsertionRejected {
+	public void put(ArtifactIdentifier identifier, Artifact content, User uploader, HashMethod hashMethod)
+			throws UnauthorizedUserException, InsertionRejected {
 		if(!uploaders.contains(uploader)) {
 			throw new UnauthorizedUserException();
 		}

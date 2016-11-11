@@ -103,10 +103,12 @@ public class Versioning {
 		setLatest(versions.first());
 	}
 
-	public void addSnapshotVersion(String classifier, String extension, String version, int buildId, LocalDateTime timestamp) {
+	public void addSnapshotVersion(String classifier, String extension, String version, int buildId,
+								   LocalDateTime timestamp) {
 		snapshotVersions.add(SnapshotVersion.of(classifier, extension, version, buildId, timestamp));
 		setSnapshot(snapshotVersions.first().toSnapshot());
-		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(timestamp, lastUpdated) > 0 ? timestamp : lastUpdated;
+		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(timestamp, lastUpdated) > 0 ?
+				timestamp : lastUpdated;
 		setLastUpdated(newLastUpdated);
 	}
 
@@ -125,7 +127,8 @@ public class Versioning {
 		result.setRelease(Version.latest(other.release, release));
 		result.setSnapshot(Snapshot.latest(other.snapshot, snapshot));
 		result.setVersions(Version.merge(other.versions, versions));
-		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(other.lastUpdated, lastUpdated) > 0  ? other.lastUpdated : lastUpdated;
+		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(other.lastUpdated, lastUpdated) > 0  ?
+				other.lastUpdated : lastUpdated;
 		result.setLastUpdated(newLastUpdated);
 		result.setSnapshotVersions(SnapshotVersion.merge(other.snapshotVersions, snapshotVersions));
 		return result;
