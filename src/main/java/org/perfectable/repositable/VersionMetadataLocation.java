@@ -34,12 +34,12 @@ public class VersionMetadataLocation implements MetadataLocation {
 	public static VersionMetadataLocation fromPath(String path) {
 		Matcher matcher = PATH_PATTERN.matcher(path);
 		checkState(matcher.matches());
-		String repositoryName = matcher.group(1);
-		String groupId = matcher.group(2).replace("/", ".");
-		String artifactId = matcher.group(3);
-		String versionBare = matcher.group(4);
-		String versionQualifier = matcher.group(5);
-		HashMethod hashMethod = HashMethod.byExtension(matcher.group(6));
+		String repositoryName = matcher.group(1); // SUPPRESS MagicNumber
+		String groupId = matcher.group(2).replace("/", "."); // SUPPRESS MagicNumber
+		String artifactId = matcher.group(3); // SUPPRESS MagicNumber
+		String versionBare = matcher.group(4); // SUPPRESS MagicNumber
+		String versionQualifier = matcher.group(5); // SUPPRESS MagicNumber
+		HashMethod hashMethod = HashMethod.byExtension(matcher.group(6)); // SUPPRESS MagicNumber
 		ModuleIdentifier moduleIdentifier =
 				ModuleIdentifier.of(groupId, artifactId);
 		VersionIdentifier versionIdentifier =

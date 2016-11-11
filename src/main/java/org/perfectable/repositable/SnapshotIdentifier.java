@@ -41,10 +41,10 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 		String suffix = entry.substring(baseName.length() + 1);
 		Matcher matcher = SUFFIX_PATTERN.matcher(suffix);
 		checkState(matcher.matches());
-		LocalDateTime timestamp = LocalDateTime.parse(matcher.group(1), TIMESTAMP_FORMATTER);
-		int buildId = Integer.parseInt(matcher.group(2));
-		String classifier = matcher.group(3);
-		String packaging = matcher.group(4);
+		LocalDateTime timestamp = LocalDateTime.parse(matcher.group(1), TIMESTAMP_FORMATTER); // SUPPRESS MagicNumber
+		int buildId = Integer.parseInt(matcher.group(2)); // SUPPRESS MagicNumber
+		String classifier = matcher.group(3); // SUPPRESS MagicNumber
+		String packaging = matcher.group(4); // SUPPRESS MagicNumber
 		PackageIdentifier packageIdentifier =
 				PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
 		return of(packageIdentifier, timestamp, buildId);

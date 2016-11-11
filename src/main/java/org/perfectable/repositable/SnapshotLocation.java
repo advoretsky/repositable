@@ -35,16 +35,16 @@ public final class SnapshotLocation implements ArtifactLocation {
 	public static SnapshotLocation fromPath(String path) {
 		Matcher matcher = PATH_PATTERN.matcher(path);
 		checkState(matcher.matches());
-		String repositoryName = matcher.group(1);
-		String groupId = matcher.group(2).replace('/', '.');
-		String artifactId = matcher.group(3);
-		String versionBare = matcher.group(4);
-		String timestampString = matcher.group(5);
+		String repositoryName = matcher.group(1); // SUPPRESS MagicNumber
+		String groupId = matcher.group(2).replace('/', '.'); // SUPPRESS MagicNumber
+		String artifactId = matcher.group(3); // SUPPRESS MagicNumber
+		String versionBare = matcher.group(4); // SUPPRESS MagicNumber
+		String timestampString = matcher.group(5); // SUPPRESS MagicNumber
 		LocalDateTime timestamp = LocalDateTime.parse(timestampString, SnapshotIdentifier.TIMESTAMP_FORMATTER);
-		int buildId = Integer.parseInt(matcher.group(6));
-		String classifier = matcher.group(7);
-		String packaging = matcher.group(8);
-		HashMethod hashMethod = HashMethod.byExtension(matcher.group(9));
+		int buildId = Integer.parseInt(matcher.group(6)); // SUPPRESS MagicNumber
+		String classifier = matcher.group(7); // SUPPRESS MagicNumber
+		String packaging = matcher.group(8); // SUPPRESS MagicNumber
+		HashMethod hashMethod = HashMethod.byExtension(matcher.group(9)); // SUPPRESS MagicNumber
 		ModuleIdentifier moduleIdentifier =
 				ModuleIdentifier.of(groupId, artifactId);
 		VersionIdentifier versionIdentifier =
