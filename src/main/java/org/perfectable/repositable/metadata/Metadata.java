@@ -42,13 +42,13 @@ public class Metadata {
 		this.groupId = groupId;
 	}
 
-	public void addVersion(String version) {
-		versioning.addVersion(version);
+	public void addVersion(String additionalVersion) {
+		versioning.addVersion(additionalVersion);
 	}
 
-	public void addSnapshotVersion(String classifier, String extension, String version, int buildId,
-								   LocalDateTime timestamp) {
-		versioning.addSnapshotVersion(classifier, extension, version, buildId, timestamp);
+	public void addSnapshotVersion(String classifier, String extension, String additionalVersion,
+								   int buildId, LocalDateTime timestamp) {
+		versioning.addSnapshotVersion(classifier, extension, additionalVersion, buildId, timestamp);
 	}
 
 	private void setVersion(Version version) {

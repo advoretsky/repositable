@@ -9,19 +9,19 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 public final class GroupFilter implements Filter {
-	private final String groupId;
+	private final String acceptedGroupId;
 
-	public static GroupFilter of(String groupId) {
-		return new GroupFilter(groupId);
+	public static GroupFilter of(String acceptedGroupId) {
+		return new GroupFilter(acceptedGroupId);
 	}
 
-	private GroupFilter(String groupId) {
-		this.groupId = groupId;
+	private GroupFilter(String acceptedGroupId) {
+		this.acceptedGroupId = acceptedGroupId;
 	}
 
 	@Override
 	public boolean matchesModule(String groupId, String artifactId) {
-		return groupId.equals(this.groupId);
+		return groupId.equals(this.acceptedGroupId);
 	}
 
 	@Override

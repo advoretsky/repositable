@@ -52,7 +52,7 @@ public final class FilteredRepository implements Repository {
 	}
 
 	@Override
-	public Repository filtered(Filter filter) {
-		return FilteredRepository.of(wrapped, this.filter.and(filter));
+	public Repository filtered(Filter newFilter) {
+		return FilteredRepository.of(wrapped, this.filter.and(newFilter));
 	}
 }

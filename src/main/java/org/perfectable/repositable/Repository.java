@@ -17,11 +17,11 @@ public interface Repository {
 	void put(ArtifactIdentifier identifier, Artifact content, User uploader, HashMethod hashMethod)
 			throws UnauthorizedUserException, InsertionRejected;
 
-	default Repository restrictUploaders(UserSet uploaders) {
-		return AuthorizedRepository.of(this, uploaders);
+	default Repository restrictUploaders(UserSet newUploaders) {
+		return AuthorizedRepository.of(this, newUploaders);
 	}
 
-	default Repository filtered(Filter filter) {
-		return FilteredRepository.of(this, filter);
+	default Repository filtered(Filter newFilter) {
+		return FilteredRepository.of(this, newFilter);
 	}
 }

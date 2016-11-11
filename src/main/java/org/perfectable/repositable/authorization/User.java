@@ -15,8 +15,8 @@ public final class User {
 		return new User(username, password);
 	}
 
-	public void authenticate(String username, String password) throws UnauthenticatedUserException {
-		if (!username.equals(this.username) || !password.equals(this.password)) {
+	public void authenticate(String providedUsername, String providedPassword) throws UnauthenticatedUserException {
+		if (!providedUsername.equals(this.username) || !providedPassword.equals(this.password)) {
 			throw new UnauthenticatedUserException();
 		}
 	}

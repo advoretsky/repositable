@@ -43,8 +43,8 @@ public final class Server {
 		return new Server(newPort, repositorySelector, loggableUsers);
 	}
 
-	public Server withRepositories(RepositorySelector repositorySelector) {
-		return new Server(port, repositorySelector, loggableUsers);
+	public Server withRepositories(RepositorySelector newRepositorySelector) {
+		return new Server(port, newRepositorySelector, loggableUsers);
 	}
 
 	public Server withLoggableUser(Group newLoggableUsers) {

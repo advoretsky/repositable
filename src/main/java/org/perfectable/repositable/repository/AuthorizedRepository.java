@@ -46,7 +46,7 @@ public final class AuthorizedRepository implements Repository {
 	}
 
 	@Override
-	public Repository restrictUploaders(UserSet uploaders) {
-		return new AuthorizedRepository(wrapped, this.uploaders.intersection(uploaders));
+	public Repository restrictUploaders(UserSet newUploaders) {
+		return new AuthorizedRepository(wrapped, this.uploaders.intersection(newUploaders));
 	}
 }

@@ -47,11 +47,11 @@ public class ServerConfiguration {
 			loggableUsers = user.appendTo(loggableUsers);
 		}
 		server = server.withLoggableUser(loggableUsers);
-		Repositories repositories = Repositories.create();
+		Repositories builtRepositories = Repositories.create();
 		for (RepositoryConfiguration repositoryConfiguration : this.repositories) {
-			repositories = repositoryConfiguration.appendTo(repositories);
+			builtRepositories = repositoryConfiguration.appendTo(builtRepositories);
 		}
-		server = server.withRepositories(repositories);
+		server = server.withRepositories(builtRepositories);
 		return server;
 
 	}
