@@ -23,6 +23,7 @@ public class VirtualRepositoryConfiguration extends RepositoryConfiguration {
 
 	private transient VirtualRepository built;
 
+	@Override
 	protected VirtualRepository build() {
 		if(built == null) {
 			Repositories repositories = Repositories.create();

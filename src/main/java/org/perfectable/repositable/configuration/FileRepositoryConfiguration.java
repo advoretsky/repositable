@@ -45,6 +45,7 @@ public class FileRepositoryConfiguration extends RepositoryConfiguration {
 
 	private transient Repository built;
 
+	@Override
 	protected Repository build() {
 		if(built == null) {
 			Set<Filter> filterSet = filters.stream().map(FilterConfiguration::build).collect(Collectors.toSet());

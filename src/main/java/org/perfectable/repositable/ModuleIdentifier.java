@@ -22,9 +22,12 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 		this.artifactId = artifactId;
 	}
 
-	public Path asBasePath() {
-		String groupPath = groupId.replace(".", "/");
-		return Paths.get(groupPath, artifactId);
+	@Override
+	public Metadata createEmptyMetadata() {
+		Metadata metadata = new Metadata();
+		metadata.setArtifactId(artifactId);
+		metadata.setGroupId(groupId);
+		return metadata;
 	}
 
 	@Override
@@ -38,8 +41,9 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 	}
 
 	@Override
-	public boolean matches(Filter filter) {
-		return filter.matchesModule(groupId, artifactId);
+	public Path asBasePath() {
+		String groupPath = groupId.replace(".", "/");
+		return Paths.get(groupPath, artifactId);
 	}
 
 	public String asFileBaseName(String versionBare) {
@@ -57,10 +61,8 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 		return artifactId + "-" + versionBare + "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
 	}
 
-	public Metadata createEmptyMetadata() {
-		Metadata metadata = new Metadata();
-		metadata.setArtifactId(artifactId);
-		metadata.setGroupId(groupId);
-		return metadata;
+	@Override
+	public boolean matches(Filter filter) {
+		return filter.matchesModule(groupId, artifactId);
 	}
 }

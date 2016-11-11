@@ -62,6 +62,7 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		return versionQualifier.isPresent() ? (versionBare + QUALIFIER_SEPARATOR + versionQualifier.get()) : versionBare;
 	}
 
+	@Override
 	public Path asBasePath() {
 		Path artifactPath = moduleIdentifier.asBasePath();
 		String version = completeVersion();
