@@ -59,8 +59,8 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 									 LocalDateTime timestamp, int buildId) {
 		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
 		String classifierSuffix = classifier.isPresent() ? "-" + classifier.get() : "";
-		return artifactId + "-" + versionBare +
-				"-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
+		return artifactId + "-" + versionBare
+				+ "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
 	}
 
 	@Override

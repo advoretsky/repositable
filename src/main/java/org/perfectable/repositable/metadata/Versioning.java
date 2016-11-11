@@ -107,18 +107,18 @@ public class Versioning {
 								   LocalDateTime timestamp) {
 		snapshotVersions.add(SnapshotVersion.of(classifier, extension, version, buildId, timestamp));
 		setSnapshot(snapshotVersions.first().toSnapshot());
-		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(timestamp, lastUpdated) > 0 ?
-				timestamp : lastUpdated;
+		LocalDateTime newLastUpdated =
+				TIMESTAMP_COMPARATOR.compare(timestamp, lastUpdated) > 0 ? timestamp : lastUpdated;
 		setLastUpdated(newLastUpdated);
 	}
 
 	public boolean isEmpty() {
-		return latest == null &&
-				release == null &&
-				snapshot == null &&
-				versions.isEmpty() &&
-				lastUpdated == null &&
-				snapshotVersions.isEmpty();
+		return latest == null
+				&& release == null
+				&& snapshot == null
+				&& versions.isEmpty()
+				&& lastUpdated == null
+				&& snapshotVersions.isEmpty();
 	}
 
 	public Versioning merge(Versioning other) {
@@ -127,8 +127,8 @@ public class Versioning {
 		result.setRelease(Version.latest(other.release, release));
 		result.setSnapshot(Snapshot.latest(other.snapshot, snapshot));
 		result.setVersions(Version.merge(other.versions, versions));
-		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(other.lastUpdated, lastUpdated) > 0 ?
-				other.lastUpdated : lastUpdated;
+		LocalDateTime newLastUpdated =
+				TIMESTAMP_COMPARATOR.compare(other.lastUpdated, lastUpdated) > 0 ? other.lastUpdated : lastUpdated;
 		result.setLastUpdated(newLastUpdated);
 		result.setSnapshotVersions(SnapshotVersion.merge(other.snapshotVersions, snapshotVersions));
 		return result;
