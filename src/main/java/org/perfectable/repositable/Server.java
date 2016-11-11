@@ -24,6 +24,7 @@ public final class Server {
 	private static final Logger LOGGER = LoggerFactory.getLogger(Server.class);
 
 	private static final int DEFAULT_PORT = 8080;
+	private static final int REQUIRED_ARGUMENTS_COUNT = 1;
 
 	private final int port;
 	private final RepositorySelector repositorySelector;
@@ -78,8 +79,6 @@ public final class Server {
 		createServerConfiguration()
 				.serveBlocking();
 	}
-
-	private static final int REQUIRED_ARGUMENTS_COUNT = 1;
 
 	public static void main(String[] args) throws IOException {
 		String workingDirectory = StandardSystemProperty.USER_DIR.value();

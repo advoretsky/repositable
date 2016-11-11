@@ -10,6 +10,12 @@ import java.util.Optional;
 import static org.perfectable.repositable.SnapshotIdentifier.TIMESTAMP_FORMATTER;
 
 public final class ModuleIdentifier implements MetadataIdentifier {
+	static final char CLASSIFIER_SEPARATOR = '-';
+	static final char VERSION_SEPARATOR = '-';
+	static final char TIMESTAMP_SEPARATOR = '-';
+	static final char BUILD_ID_SEPARATOR = '-';
+	static final char PACKAGING_SEPARATOR = '.';
+
 	private final String groupId;
 	private final String artifactId;
 
@@ -47,20 +53,21 @@ public final class ModuleIdentifier implements MetadataIdentifier {
 	}
 
 	public String asFileBaseName(String versionBare) {
-		return artifactId + "-" + versionBare;
+		return artifactId + VERSION_SEPARATOR + versionBare;
 	}
 
 	public String asFileName(String version, Optional<String> classifier, String packaging) {
-		String classifierSuffix = classifier.isPresent() ? "-" + classifier.get() : "";
-		return artifactId + "-" + version + classifierSuffix + "." + packaging;
+		String classifierSuffix = classifier.isPresent() ? CLASSIFIER_SEPARATOR + classifier.get() : "";
+		return artifactId + VERSION_SEPARATOR + version + classifierSuffix + PACKAGING_SEPARATOR + packaging;
 	}
 
 	public String asSnapshotFilename(String versionBare, Optional<String> classifier, String packaging,
 									 LocalDateTime timestamp, int buildId) {
 		String timestampString = TIMESTAMP_FORMATTER.format(timestamp);
-		String classifierSuffix = classifier.isPresent() ? "-" + classifier.get() : "";
-		return artifactId + "-" + versionBare
-				+ "-" + timestampString + "-" + buildId + classifierSuffix + "." + packaging;
+		String classifierSuffix = classifier.isPresent() ? CLASSIFIER_SEPARATOR + classifier.get() : "";
+		return artifactId + VERSION_SEPARATOR + versionBare
+				+ TIMESTAMP_SEPARATOR + timestampString
+				+ BUILD_ID_SEPARATOR + buildId + classifierSuffix + PACKAGING_SEPARATOR + packaging;
 	}
 
 	@Override
