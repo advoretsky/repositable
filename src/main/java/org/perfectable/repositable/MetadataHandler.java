@@ -36,7 +36,7 @@ public final class MetadataHandler implements RequestHandler {
 	public HttpResponse handle(HttpRequest request) {
 		String path = request.completePath();
 		MetadataLocation location = locator.createLocation(path);
-		switch(request.method()) {
+		switch (request.method()) {
 			case GET:
 				return handleRetrieval(location);
 			case PUT:
@@ -49,7 +49,7 @@ public final class MetadataHandler implements RequestHandler {
 	private HttpResponse handleRetrieval(MetadataLocation location) {
 		Metadata metadata = location.fetch(repositorySelector);
 		LOGGER.debug("Requested metadata {}", location);
-		if(metadata.isEmpty()) {
+		if (metadata.isEmpty()) {
 			return HttpResponse.NOT_FOUND;
 		}
 		HttpResponse response = MetadataHttpResponse.of(metadata);
@@ -77,7 +77,7 @@ public final class MetadataHandler implements RequestHandler {
 		public void writeTo(Writer writer) throws IOException {
 			writer.setStatus(HttpStatus.OK);
 			writer.setContentType(MediaType.XML_UTF_8);
-			try(OutputStream stream = writer.stream()) {
+			try (OutputStream stream = writer.stream()) {
 				metadata.writeInto(stream);
 			}
 		}

@@ -32,14 +32,14 @@ public class ServerConfiguration {
 	private List<UserConfiguration> users = new LinkedList<>(); // NOPMD cannot be final, injected by JAXB
 
 	@XmlElements({
-			@XmlElement(name="repository", type=FileRepositoryConfiguration.class),
-			@XmlElement(name="virtual", type= VirtualRepositoryConfiguration.class)
+			@XmlElement(name = "repository", type = FileRepositoryConfiguration.class),
+			@XmlElement(name = "virtual", type = VirtualRepositoryConfiguration.class)
 	})
 	private List<RepositoryConfiguration> repositories = new LinkedList<>(); // NOPMD cannot be final, injected by JAXB
 
 	public Server build() {
 		Server server = Server.create();
-		if(port != NOT_CONFIGURED) {
+		if (port != NOT_CONFIGURED) {
 			server = server.withPort(port);
 		}
 		Group loggableUsers = Group.create();

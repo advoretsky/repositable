@@ -28,7 +28,7 @@ public final class VirtualRepository implements Repository {
 	public Metadata fetchMetadata(MetadataIdentifier metadataIdentifier) {
 		Collection<Metadata> sourceMetadataList = sources.listMetadata(metadataIdentifier);
 		Metadata result = metadataIdentifier.createEmptyMetadata();
-		for(Metadata sourceMetadata : sourceMetadataList) {
+		for (Metadata sourceMetadata : sourceMetadataList) {
 			result = result.merge(sourceMetadata);
 		}
 		return result;
@@ -37,7 +37,7 @@ public final class VirtualRepository implements Repository {
 	@Override
 	public Optional<Artifact> findArtifact(ArtifactIdentifier artifactIdentifier) {
 		Collection<Artifact> artifacts = sources.listArtifacts(artifactIdentifier);
-		if(artifacts.isEmpty()) {
+		if (artifacts.isEmpty()) {
 			return Optional.empty();
 		}
 		return Optional.of(artifacts.iterator().next());

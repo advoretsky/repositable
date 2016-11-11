@@ -48,8 +48,8 @@ public class Version {
 
 	public static Version latest(Version first, Version... more) {
 		Version best = first;
-		for(Version candidate : more) {
-			if(COMPARATOR.compare(candidate, best) > 0) {
+		for (Version candidate : more) {
+			if (COMPARATOR.compare(candidate, best) > 0) {
 				best = candidate;
 			}
 		}

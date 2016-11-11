@@ -31,7 +31,7 @@ public class UserConfiguration {
 	private transient User builtUser;
 
 	public User build() {
-		if(builtUser == null) {
+		if (builtUser == null) {
 			builtUser = User.create(username, password);
 		}
 		return builtUser;

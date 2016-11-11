@@ -30,12 +30,12 @@ public final class Group implements UserSet {
 	}
 
 	public User authenticate(String username, String password) throws UnauthenticatedUserException {
-		for(User candidate : users) {
+		for (User candidate : users) {
 			try {
 				candidate.authenticate(username, password);
 				return candidate;
 			}
-			catch(UnauthenticatedUserException e) { // NOPMD
+			catch (UnauthenticatedUserException e) { // NOPMD
 				// try next
 			}
 		}

@@ -28,7 +28,7 @@ public final class FilteredRepository implements Repository {
 
 	@Override
 	public Metadata fetchMetadata(MetadataIdentifier metadataIdentifier) {
-		if(!metadataIdentifier.matches(filter)) {
+		if (!metadataIdentifier.matches(filter)) {
 			return metadataIdentifier.createEmptyMetadata();
 		}
 		return wrapped.fetchMetadata(metadataIdentifier);
@@ -36,7 +36,7 @@ public final class FilteredRepository implements Repository {
 
 	@Override
 	public Optional<Artifact> findArtifact(ArtifactIdentifier artifactIdentifier) {
-		if(!artifactIdentifier.matches(filter)) {
+		if (!artifactIdentifier.matches(filter)) {
 			return Optional.empty();
 		}
 		return wrapped.findArtifact(artifactIdentifier);
@@ -45,7 +45,7 @@ public final class FilteredRepository implements Repository {
 	@Override
 	public void put(ArtifactIdentifier identifier, Artifact content, User uploader, HashMethod hashMethod)
 			throws UnauthorizedUserException, InsertionRejected {
-		if(!identifier.matches(filter)) {
+		if (!identifier.matches(filter)) {
 			throw new InsertionRejected();
 		}
 		wrapped.put(identifier, content, uploader, hashMethod);

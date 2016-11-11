@@ -60,7 +60,7 @@ public final class FileRepository implements Repository {
 		Path absolutePath = location.resolve(identifier.asBasePath());
 		EntryLister lister = new DirectoryLister(absolutePath);
 		Path artifactPath = location.resolve(identifier.asFetchPath(lister));
-		if(!artifactPath.toFile().exists()) {
+		if (!artifactPath.toFile().exists()) {
 			return Optional.empty();
 		}
 		return Optional.of(FileArtifact.of(artifactPath));
@@ -69,7 +69,7 @@ public final class FileRepository implements Repository {
 	@Override
 	public void put(ArtifactIdentifier identifier, Artifact artifact, User uploader, HashMethod hashMethod)
 			throws UnauthorizedUserException, InsertionRejected {
-		if(hashMethod != HashMethod.NONE) {
+		if (hashMethod != HashMethod.NONE) {
 			return; // dont put hashes into repository
 		}
 		Path artifactPath = identifier.asUploadPath(buildGenerator);
@@ -100,11 +100,11 @@ public final class FileRepository implements Repository {
 		public void list(Consumer consumer) {
 			try (DirectoryStream<Path> stream = newDirectoryStream(basePath)) {
 				for (Path elementPath : stream) {
-					if(elementPath == null) {
+					if (elementPath == null) {
 						continue;
 					}
 					Path fileName = elementPath.getFileName();
-					if(fileName == null) {
+					if (fileName == null) {
 						continue;
 					}
 					consumer.entry(fileName.toString());

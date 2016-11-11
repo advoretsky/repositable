@@ -84,7 +84,7 @@ public final class Server {
 	public static void main(String[] args) throws IOException {
 		String workingDirectory = StandardSystemProperty.USER_DIR.value();
 		LOGGER.info("Starting server; Working directory is {}", workingDirectory);
-		if(args.length < REQUIRED_ARGUMENTS_COUNT) {
+		if (args.length < REQUIRED_ARGUMENTS_COUNT) {
 			LOGGER.error("No configuration file provided");
 			return;
 		}
@@ -96,7 +96,7 @@ public final class Server {
 	public static ServerConfiguration parseConfiguration(String configurationLocation) throws IOException {
 		LOGGER.info("Reading configuration from {}", configurationLocation);
 		File configurationFile = new File(configurationLocation);
-		try(FileInputStream configurationStream = new FileInputStream(configurationFile)) {
+		try (FileInputStream configurationStream = new FileInputStream(configurationFile)) {
 			return ServerConfiguration.parse(configurationStream);
 		}
 		catch (FileNotFoundException e) {

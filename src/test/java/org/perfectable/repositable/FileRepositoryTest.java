@@ -60,7 +60,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactReleasePresent() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar"))
 				.hasContentType(MediaType.create("application", "x-java-archive"))
@@ -75,7 +75,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactReleaseMd5Present() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
 		String calculatedHash = Hashing.md5().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.md5"))
@@ -93,7 +93,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactReleaseSha1Present() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar", artifactContent);
 		String calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.0/test-artifact-1.0.0.jar.sha1"))
@@ -110,7 +110,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactSnapshotPresent() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar"))
 				.returnedStatus(HttpServletResponse.SC_OK)
@@ -126,7 +126,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactSnapshotMd5Present() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
 		String calculatedHash = Hashing.md5().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar.md5"))
@@ -143,7 +143,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactSnapshotSha1Present() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
 		String calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar.sha1"))
@@ -160,7 +160,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactLatestSnapshotPresent() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
 				.returnedStatus(HttpServletResponse.SC_OK)
@@ -170,8 +170,8 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactLatestSnapshotDouble() throws IOException {
-		byte[] artifactContent1 = {2,5,2,100};
-		byte[] artifactContent2 = {2,5,2,120};
+		byte[] artifactContent1 = {2, 5, 2, 100};
+		byte[] artifactContent2 = {2, 5, 2, 120};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent1);
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.102020-2.jar", artifactContent2);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
@@ -188,7 +188,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactLatestSnapshotMd5Present() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
 		String calculatedHash = Hashing.md5().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.md5"))
@@ -199,8 +199,8 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactLatestSnapshotMd5Double() throws IOException {
-		byte[] artifactContent1 = {2,5,2,100};
-		byte[] artifactContent2 = {2,5,2,120};
+		byte[] artifactContent1 = {2, 5, 2, 100};
+		byte[] artifactContent2 = {2, 5, 2, 120};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent1);
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.102020-2.jar", artifactContent2);
 		String calculatedHash = Hashing.md5().hashBytes(artifactContent2).toString();
@@ -218,7 +218,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactLatestSnapshotSha1Present() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
 		String calculatedHash = Hashing.sha1().hashBytes(artifactContent).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.sha1"))
@@ -229,8 +229,8 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testArtifactLatestSnapshotSha1Double() throws IOException {
-		byte[] artifactContent1 = {2,5,2,100};
-		byte[] artifactContent2 = {2,5,2,120};
+		byte[] artifactContent1 = {2, 5, 2, 100};
+		byte[] artifactContent2 = {2, 5, 2, 120};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent1);
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.102020-2.jar", artifactContent2);
 		String calculatedHash = Hashing.sha1().hashBytes(artifactContent2).toString();
@@ -262,7 +262,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testMetadataReleasePresent() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml"))
 				.returnedStatus(HttpServletResponse.SC_OK)
@@ -278,7 +278,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testMetadataReleasePresentMd5() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
 		String calculatedHash = Hashing.md5().hashString(METADATA_RELASE, StandardCharsets.UTF_8).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.md5"))
@@ -295,7 +295,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testMetadataReleasePresentSha1() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
 		String calculatedHash = Hashing.sha1().hashString(METADATA_RELASE, StandardCharsets.UTF_8).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.sha1"))
@@ -336,7 +336,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testMetadataSnapshotPresent() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml"))
 				.returnedStatus(HttpServletResponse.SC_OK)
@@ -352,7 +352,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testMetadataSnapshotMd5Present() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
 		String calculatedHash = Hashing.md5().hashString(METADATA_SNAPSHOT, StandardCharsets.UTF_8).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml.md5"))
@@ -369,7 +369,7 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Test
 	public void testMetadataSnapshotSha1Present() throws IOException {
-		byte[] artifactContent = {2,5,2,100};
+		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
 		String calculatedHash = Hashing.sha1().hashString(METADATA_SNAPSHOT, StandardCharsets.UTF_8).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml.sha1"))

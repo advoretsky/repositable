@@ -48,8 +48,8 @@ public class Snapshot {
 
 	public static Snapshot latest(Snapshot first, Snapshot... more) {
 		Snapshot best = first;
-		for(Snapshot candidate : more) {
-			if(COMPARATOR.compare(candidate, best) > 0) {
+		for (Snapshot candidate : more) {
+			if (COMPARATOR.compare(candidate, best) > 0) {
 				best = candidate;
 			}
 		}

@@ -25,11 +25,10 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		String versionBare;
 		Optional<String> versionQualifier;
 		int qualifierStart = entry.indexOf(QUALIFIER_SEPARATOR);
-		if(qualifierStart >= 0) {
+		if (qualifierStart >= 0) {
 			versionBare = entry.substring(0, qualifierStart);
 			versionQualifier = Optional.of(entry.substring(qualifierStart));
-		}
-		else {
+		} else {
 			versionBare = entry;
 			versionQualifier = Optional.empty();
 		}
@@ -80,20 +79,20 @@ public final class VersionIdentifier implements MetadataIdentifier {
 	public Path asUploadPath(ArtifactIdentifier.BuildGenerator buildGenerator,
 							 Optional<String> classifier, String packaging) {
 		PackageIdentifier packageIdentifier = PackageIdentifier.of(this, classifier, packaging);
-		if(isSnapshot()) {
+		if (isSnapshot()) {
 			return buildGenerator.generate(packageIdentifier).asBuildPath();
 		}
 		return packageIdentifier.asArtifactPath();
 	}
 
 	public Path asFetchPath(EntryLister lister, Optional<String> classifier, String packaging) {
-		if(isSnapshot()) {
+		if (isSnapshot()) {
 			List<SnapshotIdentifier> candidates = new LinkedList<>();
 			lister.list(element -> {
 				SnapshotIdentifier candidate = SnapshotIdentifier.ofEntry(this, element);
 				candidates.add(candidate);
 			});
-			if(candidates.isEmpty()) {
+			if (candidates.isEmpty()) {
 				return asArtifactPath(classifier, packaging);
 			}
 			SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.newest(candidates);

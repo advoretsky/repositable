@@ -25,7 +25,7 @@ public class VirtualRepositoryConfiguration extends RepositoryConfiguration {
 
 	@Override
 	protected VirtualRepository build() {
-		if(built == null) {
+		if (built == null) {
 			Repositories repositories = Repositories.create();
 			for (RepositoryConfiguration source : sources) {
 				repositories = source.appendTo(repositories);

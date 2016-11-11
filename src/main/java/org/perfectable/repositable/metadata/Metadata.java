@@ -16,7 +16,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @XmlRootElement(name = "metadata")
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Metadata",
-	propOrder = {"groupId", "artifactId", "version", "versioning"}) // plugins are ignored
+		propOrder = {"groupId", "artifactId", "version", "versioning"}) // plugins are ignored
 public class Metadata {
 	@SuppressWarnings("unused")
 	@XmlElement(name = "groupId")

@@ -24,7 +24,7 @@ public final class FileArtifact implements Artifact {
 
 	@Override
 	public void writeContent(OutputStream outputStream) {
-		try(FileInputStream inputStream = new FileInputStream(sourceFile.toFile())) {
+		try (FileInputStream inputStream = new FileInputStream(sourceFile.toFile())) {
 			ByteStreams.copy(inputStream, outputStream);
 		}
 		catch (IOException e) {
@@ -51,7 +51,7 @@ public final class FileArtifact implements Artifact {
 		catch (IOException e) {
 			throw new AssertionError(e);
 		}
-		if(mediaTypeString == null) {
+		if (mediaTypeString == null) {
 			return MediaType.OCTET_STREAM;
 		}
 		return MediaType.parse(mediaTypeString);

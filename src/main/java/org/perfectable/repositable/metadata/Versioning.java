@@ -127,7 +127,7 @@ public class Versioning {
 		result.setRelease(Version.latest(other.release, release));
 		result.setSnapshot(Snapshot.latest(other.snapshot, snapshot));
 		result.setVersions(Version.merge(other.versions, versions));
-		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(other.lastUpdated, lastUpdated) > 0  ?
+		LocalDateTime newLastUpdated = TIMESTAMP_COMPARATOR.compare(other.lastUpdated, lastUpdated) > 0 ?
 				other.lastUpdated : lastUpdated;
 		result.setLastUpdated(newLastUpdated);
 		result.setSnapshotVersions(SnapshotVersion.merge(other.snapshotVersions, snapshotVersions));

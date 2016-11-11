@@ -46,7 +46,7 @@ public enum HashMethod implements OutputStreamTransformer {
 	};
 
 	public static HashMethod byExtension(String extension) {
-		if(extension == null) {
+		if (extension == null) {
 			return NONE;
 		}
 		switch (extension) {

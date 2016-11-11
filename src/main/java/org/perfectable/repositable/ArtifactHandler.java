@@ -39,7 +39,7 @@ public class ArtifactHandler implements RequestHandler {
 	public HttpResponse handle(HttpRequest request) {
 		String path = request.completePath();
 		ArtifactLocation location = locator.createLocation(path);
-		switch(request.method()) {
+		switch (request.method()) {
 			case GET:
 				return handleRetrieval(location);
 			case HEAD:
@@ -53,7 +53,7 @@ public class ArtifactHandler implements RequestHandler {
 
 	private HttpResponse handleRetrieval(ArtifactLocation location) {
 		Optional<Artifact> artifactContent = location.find(repositorySelector);
-		if(!artifactContent.isPresent()) {
+		if (!artifactContent.isPresent()) {
 			return HttpResponse.NOT_FOUND;
 		}
 		LOGGER.debug("Requested artifact content {}", location);
@@ -64,7 +64,7 @@ public class ArtifactHandler implements RequestHandler {
 
 	private HttpResponse handleProbe(ArtifactLocation location) {
 		Optional<Artifact> artifactHeaders = location.find(repositorySelector);
-		if(!artifactHeaders.isPresent()) {
+		if (!artifactHeaders.isPresent()) {
 			return HttpResponse.NOT_FOUND;
 		}
 		LOGGER.debug("Requested artifact header {}", location);
@@ -111,7 +111,7 @@ public class ArtifactHandler implements RequestHandler {
 		public void writeTo(Writer writer) throws IOException {
 			writer.setStatus(HttpStatus.OK);
 			writer.setContentType(artifact.mediaType());
-			try(OutputStream stream = writer.stream()) {
+			try (OutputStream stream = writer.stream()) {
 				artifact.writeContent(stream);
 			}
 		}
