@@ -58,7 +58,7 @@ public final class MetadataHandler implements RequestHandler {
 
 	private HttpResponse handleUpload(MetadataLocation location) {
 		LOGGER.debug("Ignored upload of metadata {}", location);
-		// MARK metadata upload is ignored
+		// metadata upload is ignored
 		return HttpResponse.status(HttpStatus.OK);
 	}
 
