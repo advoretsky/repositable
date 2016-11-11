@@ -69,7 +69,7 @@ public enum HashMethod implements OutputStreamTransformer {
 		private final Hasher hasher;
 		private final OutputStream rawStream;
 
-		public HashingOutputStream(Hasher hasher, OutputStream rawStream) {
+		HashingOutputStream(Hasher hasher, OutputStream rawStream) {
 			this.hasher = hasher;
 			this.rawStream = rawStream;
 		}

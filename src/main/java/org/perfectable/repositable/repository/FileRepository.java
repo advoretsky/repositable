@@ -92,7 +92,7 @@ public final class FileRepository implements Repository {
 	private static class DirectoryLister implements EntryLister {
 		private final Path basePath;
 
-		public DirectoryLister(Path basePath) {
+		DirectoryLister(Path basePath) {
 			this.basePath = basePath;
 		}
 

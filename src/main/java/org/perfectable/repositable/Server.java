@@ -117,7 +117,7 @@ public final class Server {
 	private static class MonitorWrapper implements Monitor {
 		private final ServerMonitor serverMonitor;
 
-		public MonitorWrapper(ServerMonitor serverMonitor) {
+		MonitorWrapper(ServerMonitor serverMonitor) {
 			this.serverMonitor = serverMonitor;
 		}
 

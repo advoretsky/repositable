@@ -7,7 +7,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 class TimestampAdapter extends XmlAdapter<String, LocalDateTime> {
 	private final DateTimeFormatter formatter;
 
-	public TimestampAdapter(DateTimeFormatter formatter) {
+	TimestampAdapter(DateTimeFormatter formatter) {
 		this.formatter = formatter;
 	}
 
@@ -24,7 +24,7 @@ class TimestampAdapter extends XmlAdapter<String, LocalDateTime> {
 	public static class WithSeparator extends TimestampAdapter {
 		private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd.HHmmss");
 
-		public WithSeparator() {
+		WithSeparator() {
 			super(TIMESTAMP_FORMATTER);
 		}
 	}
@@ -32,7 +32,7 @@ class TimestampAdapter extends XmlAdapter<String, LocalDateTime> {
 	public static class WithoutSeparator extends TimestampAdapter {
 		private static final DateTimeFormatter TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-		public WithoutSeparator() {
+		WithoutSeparator() {
 			super(TIMESTAMP_FORMATTER);
 		}
 	}
