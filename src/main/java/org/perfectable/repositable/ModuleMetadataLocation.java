@@ -8,7 +8,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class ModuleMetadataLocation implements MetadataLocation {
+public final class ModuleMetadataLocation implements MetadataLocation {
 	// ex. "/libs-snapshot-local/org/perfectable/webable/maven-metadata.xml" // NOPMD
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)" + // repository
@@ -22,7 +22,7 @@ public class ModuleMetadataLocation implements MetadataLocation {
 	private final ModuleIdentifier moduleIdentifier;
 	private final HashMethod hashMethod;
 
-	public ModuleMetadataLocation(String repositoryName, ModuleIdentifier moduleIdentifier, HashMethod hashMethod) {
+	private ModuleMetadataLocation(String repositoryName, ModuleIdentifier moduleIdentifier, HashMethod hashMethod) {
 		this.repositoryName = repositoryName;
 		this.moduleIdentifier = moduleIdentifier;
 		this.hashMethod = hashMethod;

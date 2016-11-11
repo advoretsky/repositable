@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class VersionMetadataLocation implements MetadataLocation {
+public final class VersionMetadataLocation implements MetadataLocation {
 
 	// ex. "/libs-snapshot-local/org/perfectable/webable/1.1.0-SNAPSHOT/maven-metadata.xml" // NOPMD
 	static final Pattern PATH_PATTERN =
@@ -25,7 +25,7 @@ public class VersionMetadataLocation implements MetadataLocation {
 	private final VersionIdentifier versionIdentifier;
 	private final HashMethod hashMethod;
 
-	public VersionMetadataLocation(String repositoryName, VersionIdentifier versionIdentifier, HashMethod hashMethod) {
+	private VersionMetadataLocation(String repositoryName, VersionIdentifier versionIdentifier, HashMethod hashMethod) {
 		this.repositoryName = repositoryName;
 		this.versionIdentifier = versionIdentifier;
 		this.hashMethod = hashMethod;

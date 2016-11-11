@@ -16,7 +16,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class ArtifactHandler implements RequestHandler {
+public final class ArtifactHandler implements RequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactHandler.class);
 
 	private final RepositorySelector repositorySelector;

@@ -14,7 +14,7 @@ import com.google.common.collect.Ordering;
 
 import static com.google.common.base.Preconditions.checkState;
 
-public class SnapshotIdentifier implements ArtifactIdentifier {
+public final class SnapshotIdentifier implements ArtifactIdentifier {
 
 	private static final Pattern SUFFIX_PATTERN =
 			Pattern.compile("([0-9]{8}\\.[0-9]{6})-([0-9]+)(?:-([a-z-]+))?\\.(\\w+)$");
@@ -25,7 +25,7 @@ public class SnapshotIdentifier implements ArtifactIdentifier {
 	private final LocalDateTime timestamp;
 	private final int buildId;
 
-	public SnapshotIdentifier(PackageIdentifier packageIdentifier, LocalDateTime timestamp, int buildId) {
+	private SnapshotIdentifier(PackageIdentifier packageIdentifier, LocalDateTime timestamp, int buildId) {
 		this.packageIdentifier = packageIdentifier;
 		this.timestamp = timestamp;
 		this.buildId = buildId;
