@@ -16,9 +16,9 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 @XmlRootElement(name = "virtual")
 @XmlAccessorType(XmlAccessType.NONE)
 public class VirtualRepositoryConfiguration extends RepositoryConfiguration {
-	@XmlJavaTypeAdapter(value = RepositoryConfiguration.Reference.Adapter.class)
 	@XmlElementWrapper(name = "sources")
 	@XmlElement(name = "repository")
+	@XmlJavaTypeAdapter(RepositoryConfiguration.Reference.Adapter.class)
 	private Set<RepositoryConfiguration> sources;
 
 	private transient VirtualRepository built;

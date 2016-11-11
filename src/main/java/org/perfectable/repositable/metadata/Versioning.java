@@ -77,7 +77,7 @@ public class Versioning {
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "lastUpdated")
-	@XmlJavaTypeAdapter(value = TimestampAdapter.WithoutSeparator.class)
+	@XmlJavaTypeAdapter(TimestampAdapter.WithoutSeparator.class)
 	public LocalDateTime getLastUpdated() {
 		return lastUpdated;
 	}
@@ -113,7 +113,7 @@ public class Versioning {
 	}
 
 	public boolean isEmpty() {
-		return latest == null
+		return latest == null // SUPPRESS BooleanExpressionComplexity
 				&& release == null
 				&& snapshot == null
 				&& versions.isEmpty()
