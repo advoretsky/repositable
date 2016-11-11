@@ -36,12 +36,12 @@ public class FileRepositoryConfiguration extends RepositoryConfiguration {
 			@XmlElement(name = "snapshots", type = SnapshotFilterConfiguration.class),
 			@XmlElement(name = "releases", type = ReleaseFilterConfiguration.class)
 	})
-	private List<FilterConfiguration> filters = new LinkedList<>(); // NOPMD cant be final, injected by jaxb
+	private List<FilterConfiguration> filters = new LinkedList<>(); // SUPPRESS - cant be final, injected by jaxb
 
 	@XmlElementWrapper(name = "uploaders")
 	@XmlElement(name = "user")
 	@XmlJavaTypeAdapter(UserConfiguration.Reference.Adapter.class)
-	private Set<UserConfiguration> users = new HashSet<>(); // NOPMD cant be final, injected by jaxb
+	private Set<UserConfiguration> users = new HashSet<>(); // SUPPRESS - cant be final, injected by jaxb
 
 	private transient Repository built;
 

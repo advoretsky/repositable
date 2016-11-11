@@ -20,19 +20,19 @@ import static com.google.common.base.Preconditions.checkArgument;
 public class Metadata {
 	@SuppressWarnings("unused")
 	@XmlElement(name = "groupId")
-	private String groupId; // NOPMD is read only by JAXB
+	private String groupId; // SUPPRESS - is read only by JAXB
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "artifactId")
-	private String artifactId; // NOPMD is read only by JAXB
+	private String artifactId; // SUPPRESS - is read only by JAXB
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "version")
-	private Version version; // NOPMD is read only by JAXB
+	private Version version; // SUPPRESS - is read only by JAXB
 
 	@SuppressWarnings("unused")
 	@XmlElement(name = "versioning")
-	private Versioning versioning = Versioning.create(); // NOPMD is read only by JAXB
+	private Versioning versioning = Versioning.create(); // SUPPRESS - is read only by JAXB
 
 	public void setArtifactId(String artifactId) {
 		this.artifactId = artifactId;

@@ -35,7 +35,7 @@ public final class Group implements UserSet {
 				candidate.authenticate(username, password);
 				return candidate;
 			}
-			catch (UnauthenticatedUserException e) { // NOPMD
+			catch (UnauthenticatedUserException ignored) { // SUPPRESS EmptyBlock
 				// try next
 			}
 		}

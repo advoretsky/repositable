@@ -99,11 +99,11 @@ public final class Server {
 			return ServerConfiguration.parse(configurationStream);
 		}
 		catch (FileNotFoundException e) {
-			LOGGER.error("No such file: {}", configurationFile, e); // NOPMD pmd counts 2 arguments needed
+			LOGGER.error("No such file: {}", configurationFile, e); // SUPPRESS pmd counts 2 arguments needed
 			throw e;
 		}
 		catch (IOException e) {
-			LOGGER.error("Error reading file: {}", configurationFile, e); // NOPMD pmd counts 2 arguments needed
+			LOGGER.error("Error reading file: {}", configurationFile, e); // SUPPRESS pmd counts 2 arguments needed
 			throw e;
 		}
 	}

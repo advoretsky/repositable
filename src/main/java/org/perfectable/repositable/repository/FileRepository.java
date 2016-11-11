@@ -110,7 +110,7 @@ public final class FileRepository implements Repository {
 					consumer.entry(fileName.toString());
 				}
 			}
-			catch (NoSuchFileException e) { // NOPMD
+			catch (NoSuchFileException ignored) { // SUPPRESS EmptyBlock
 				// no entries
 			}
 			catch (IOException e) {

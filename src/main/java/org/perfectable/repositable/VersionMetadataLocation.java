@@ -11,7 +11,7 @@ import static com.google.common.base.Preconditions.checkState;
 
 public final class VersionMetadataLocation implements MetadataLocation {
 
-	// ex. "/libs-snapshot-local/org/perfectable/webable/1.1.0-SNAPSHOT/maven-metadata.xml" // NOPMD
+	// ex. "/libs-snapshot-local/org/perfectable/webable/1.1.0-SNAPSHOT/maven-metadata.xml"
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)" + // repository
 					"\\/([a-zA-Z][\\w\\/-]*)" + // groupId

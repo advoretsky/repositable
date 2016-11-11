@@ -25,17 +25,17 @@ public class ServerConfiguration {
 	private static final int NOT_CONFIGURED = -1;
 
 	@XmlElement(name = "port")
-	private int port = NOT_CONFIGURED; // NOPMD cannot be final, injected by JAXB
+	private int port = NOT_CONFIGURED; // SUPPRESS - cannot be final, injected by JAXB
 
 	@XmlElementWrapper(name = "users")
 	@XmlElement(name = "user")
-	private List<UserConfiguration> users = new LinkedList<>(); // NOPMD cannot be final, injected by JAXB
+	private List<UserConfiguration> users = new LinkedList<>(); // SUPPRESS - cannot be final, injected by JAXB
 
 	@XmlElements({
 			@XmlElement(name = "repository", type = FileRepositoryConfiguration.class),
 			@XmlElement(name = "virtual", type = VirtualRepositoryConfiguration.class)
 	})
-	private List<RepositoryConfiguration> repositories = new LinkedList<>(); // NOPMD cannot be final, injected by JAXB
+	private List<RepositoryConfiguration> repositories = new LinkedList<>(); // SUPPRESS - injected by JAXB
 
 	public Server build() {
 		Server server = Server.create();

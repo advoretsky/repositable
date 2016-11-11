@@ -13,7 +13,7 @@ import static com.google.common.base.Preconditions.checkState;
 public final class PackageLocation implements ArtifactLocation {
 
 	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.0/buildable-1.2.0.jar"
-	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.0-SNAPSHOT/buildable-1.2.0-SNAPSHOT.jar" // NOPMD
+	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.0-SNAPSHOT/buildable-1.2.0-SNAPSHOT.jar"
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)" + // repository
 					"\\/([a-zA-Z][\\w\\/-]+)" + // groupId

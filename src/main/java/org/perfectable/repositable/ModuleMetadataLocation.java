@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import static com.google.common.base.Preconditions.checkState;
 
 public final class ModuleMetadataLocation implements MetadataLocation {
-	// ex. "/libs-snapshot-local/org/perfectable/webable/maven-metadata.xml" // NOPMD
+	// ex. "/libs-snapshot-local/org/perfectable/webable/maven-metadata.xml"
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)" + // repository
 					"\\/([a-zA-Z][\\w\\/-]*)" + // groupId
