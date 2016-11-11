@@ -1,6 +1,5 @@
 package org.perfectable.repositable;
 
-import com.google.common.collect.Ordering;
 import org.perfectable.repositable.metadata.Metadata;
 
 import java.nio.file.Path;
@@ -10,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.google.common.collect.Ordering;
 
 import static com.google.common.base.Preconditions.checkState;
 

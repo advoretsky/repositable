@@ -1,6 +1,5 @@
 package org.perfectable.repositable.repository;
 
-import com.google.common.io.Files;
 import org.perfectable.repositable.Artifact;
 import org.perfectable.repositable.ArtifactIdentifier;
 import org.perfectable.repositable.EntryLister;
@@ -22,6 +21,8 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
+
+import com.google.common.io.Files;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.file.Files.newDirectoryStream;

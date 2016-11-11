@@ -1,11 +1,12 @@
 package org.perfectable.repositable;
 
-import com.google.common.net.MediaType;
 import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.HttpStatus;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
+import com.google.common.net.MediaType;
 
 public final class TransformedHttpResponse implements HttpResponse {
 	private final HttpResponse wrapped;

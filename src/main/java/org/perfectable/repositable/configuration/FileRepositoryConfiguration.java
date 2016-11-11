@@ -1,12 +1,18 @@
 package org.perfectable.repositable.configuration;
 
-import org.perfectable.repositable.repository.FileRepository;
 import org.perfectable.repositable.Filter;
 import org.perfectable.repositable.Repository;
 import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.authorization.User;
 import org.perfectable.repositable.filter.ConjunctionFilter;
+import org.perfectable.repositable.repository.FileRepository;
 
+import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -15,12 +21,6 @@ import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.nio.file.Path;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 @XmlType(name = "FileRepository", propOrder = {"location", "filters", "users"})
 @XmlRootElement(name = "repository")
@@ -47,7 +47,7 @@ public class FileRepositoryConfiguration extends RepositoryConfiguration {
 
 	@Override
 	protected Repository build() {
-		if(built == null) {
+		if (built == null) {
 			Set<Filter> filterSet = filters.stream().map(FilterConfiguration::build).collect(Collectors.toSet());
 			Filter filter = ConjunctionFilter.of(filterSet);
 			Set<User> uploaderSet = users.stream().map(UserConfiguration::build).collect(Collectors.toSet());

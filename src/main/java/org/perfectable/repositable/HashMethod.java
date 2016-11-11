@@ -1,12 +1,12 @@
 package org.perfectable.repositable;
 
-import com.google.common.hash.Hasher;
-import com.google.common.hash.Hashing;
-import com.google.common.net.MediaType;
-
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+
+import com.google.common.hash.Hasher;
+import com.google.common.hash.Hashing;
+import com.google.common.net.MediaType;
 
 public enum HashMethod implements OutputStreamTransformer {
 	NONE {

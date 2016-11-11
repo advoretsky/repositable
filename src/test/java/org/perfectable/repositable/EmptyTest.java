@@ -1,8 +1,8 @@
 package org.perfectable.repositable;
 
-import org.junit.Test;
-
 import javax.servlet.http.HttpServletResponse;
+
+import org.junit.Test;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 

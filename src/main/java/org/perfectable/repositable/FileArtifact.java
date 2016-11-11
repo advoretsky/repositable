@@ -1,8 +1,5 @@
 package org.perfectable.repositable;
 
-import com.google.common.io.ByteStreams;
-import com.google.common.net.MediaType;
-
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -10,6 +7,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import com.google.common.io.ByteStreams;
+import com.google.common.net.MediaType;
 
 public final class FileArtifact implements Artifact {
 	private final Path sourceFile;

@@ -1,14 +1,14 @@
 package org.perfectable.repositable.metadata;
 
-import com.google.common.collect.Ordering;
-
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlValue;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.SortedSet;
 import java.util.TreeSet;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlValue;
+
+import com.google.common.collect.Ordering;
 
 @XmlAccessorType(XmlAccessType.NONE)
 public class Version {

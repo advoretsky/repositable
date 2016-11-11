@@ -1,6 +1,5 @@
 package org.perfectable.repositable.filter;
 
-import com.google.common.collect.ImmutableSet;
 import org.perfectable.repositable.Filter;
 import org.perfectable.repositable.ModuleIdentifier;
 import org.perfectable.repositable.PackageIdentifier;
@@ -9,6 +8,8 @@ import org.perfectable.repositable.VersionIdentifier;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 public final class ConjunctionFilter implements Filter {
 	private final ImmutableSet<Filter> components;

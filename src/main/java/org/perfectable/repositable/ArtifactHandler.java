@@ -8,12 +8,13 @@ import org.perfectable.webable.handler.HttpRequest;
 import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.HttpStatus;
 import org.perfectable.webable.handler.RequestHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ArtifactHandler implements RequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ArtifactHandler.class);

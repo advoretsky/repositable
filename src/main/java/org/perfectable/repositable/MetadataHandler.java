@@ -1,16 +1,17 @@
 package org.perfectable.repositable;
 
-import com.google.common.net.MediaType;
 import org.perfectable.repositable.metadata.Metadata;
 import org.perfectable.webable.handler.HttpRequest;
 import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.HttpStatus;
 import org.perfectable.webable.handler.RequestHandler;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.OutputStream;
+
+import com.google.common.net.MediaType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class MetadataHandler implements RequestHandler {
 	private static final Logger LOGGER = LoggerFactory.getLogger(MetadataHandler.class);

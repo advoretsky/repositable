@@ -1,11 +1,12 @@
 package org.perfectable.repositable;
 
-import com.google.common.net.HttpHeaders;
-import com.google.common.net.MediaType;
 import org.perfectable.webable.handler.HttpRequest;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import com.google.common.net.HttpHeaders;
+import com.google.common.net.MediaType;
 
 public final class PublishedArtifact implements Artifact {
 	private final HttpRequest request;

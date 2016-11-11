@@ -1,10 +1,5 @@
 package org.perfectable.repositable;
 
-import com.google.common.base.Splitter;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.rules.TemporaryFolder;
 import org.perfectable.webable.PortHelper;
 
 import java.io.File;
@@ -18,6 +13,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Base64;
 import java.util.List;
+
+import com.google.common.base.Splitter;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.rules.TemporaryFolder;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

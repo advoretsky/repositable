@@ -1,8 +1,8 @@
 package org.perfectable.repositable.configuration;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 class XmlPathAdapter extends XmlAdapter<String, Path> {
 	@Override

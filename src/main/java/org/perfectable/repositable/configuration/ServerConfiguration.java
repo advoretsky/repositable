@@ -1,9 +1,12 @@
 package org.perfectable.repositable.configuration;
 
-import org.perfectable.repositable.repository.Repositories;
 import org.perfectable.repositable.Server;
 import org.perfectable.repositable.authorization.Group;
+import org.perfectable.repositable.repository.Repositories;
 
+import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -14,9 +17,6 @@ import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlElements;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.io.InputStream;
-import java.util.LinkedList;
-import java.util.List;
 
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlType(name = "Server", propOrder = {"port", "users", "repositories"})

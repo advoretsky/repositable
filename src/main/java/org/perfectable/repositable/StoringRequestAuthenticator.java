@@ -4,9 +4,10 @@ import org.perfectable.repositable.authorization.Authentication;
 import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.authorization.UnauthenticatedUserException;
 import org.perfectable.repositable.authorization.User;
+import org.perfectable.webable.handler.HttpRequest;
 import org.perfectable.webable.handler.authorization.AuthenticationException;
 import org.perfectable.webable.handler.authorization.Authenticator;
-import org.perfectable.webable.handler.HttpRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

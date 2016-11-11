@@ -1,5 +1,7 @@
 package org.perfectable.repositable.metadata;
 
+import java.io.OutputStream;
+import java.time.LocalDateTime;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -8,8 +10,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
-import java.io.OutputStream;
-import java.time.LocalDateTime;
 
 import static com.google.common.base.Preconditions.checkArgument;
 

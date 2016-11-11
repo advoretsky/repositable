@@ -1,8 +1,8 @@
 package org.perfectable.repositable.authorization;
 
-import com.google.common.collect.ImmutableSet;
-
 import java.util.Set;
+
+import com.google.common.collect.ImmutableSet;
 
 public final class Group implements UserSet {
 	private final ImmutableSet<User> users;

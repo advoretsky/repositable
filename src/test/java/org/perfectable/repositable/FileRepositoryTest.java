@@ -1,19 +1,20 @@
 package org.perfectable.repositable;
 
-import com.google.common.hash.Hashing;
-import com.google.common.net.HttpHeaders;
-import com.google.common.net.MediaType;
-import org.junit.Test;
 import org.perfectable.repositable.authorization.Group;
 import org.perfectable.repositable.authorization.User;
 import org.perfectable.repositable.repository.FileRepository;
 import org.perfectable.repositable.repository.Repositories;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
+import javax.servlet.http.HttpServletResponse;
+
+import com.google.common.hash.Hashing;
+import com.google.common.net.HttpHeaders;
+import com.google.common.net.MediaType;
+import org.junit.Test;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 

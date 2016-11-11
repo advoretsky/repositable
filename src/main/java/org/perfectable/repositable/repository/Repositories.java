@@ -1,6 +1,5 @@
 package org.perfectable.repositable.repository;
 
-import com.google.common.collect.ImmutableSortedMap;
 import org.perfectable.repositable.Artifact;
 import org.perfectable.repositable.ArtifactIdentifier;
 import org.perfectable.repositable.MetadataIdentifier;
@@ -14,6 +13,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import com.google.common.collect.ImmutableSortedMap;
 
 public final class Repositories implements RepositorySelector, RepositorySet {
 	private final ImmutableSortedMap<String, Repository> repositoryByName;

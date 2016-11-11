@@ -1,8 +1,8 @@
 package org.perfectable.repositable.metadata;
 
-import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import javax.xml.bind.annotation.adapters.XmlAdapter;
 
 class TimestampAdapter extends XmlAdapter<String, LocalDateTime> {
 	private final DateTimeFormatter formatter;
