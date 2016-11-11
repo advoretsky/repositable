@@ -14,7 +14,7 @@ import static com.google.common.base.Preconditions.checkState;
 public final class SnapshotLocation implements ArtifactLocation {
 	private static final String REPRESENTATION_FORMAT = "SnapshotLocation(%s, %s, %s)";
 
-	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar"
+	// ex. "/libs-snapshot-local/org/perfectable/buildable/1.2.1-SNAPSHOT/buildable-1.2.1-20161022.184306-1.jar" NOPMD
 	static final Pattern PATH_PATTERN =
 			Pattern.compile("\\/([a-zA-Z-]+)" + // repository
 					"\\/([a-zA-Z][\\w\\/-]+)" + // groupId

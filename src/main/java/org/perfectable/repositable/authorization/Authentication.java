@@ -5,7 +5,9 @@ import org.perfectable.webable.handler.HttpRequestAttribute;
 public interface Authentication {
 	HttpRequestAttribute<Authentication> ATTRIBUTE = HttpRequestAttribute.named("authorization");
 
-	Authentication EMPTY = () -> { throw new UnauthenticatedUserException(); };
+	Authentication EMPTY = () -> {
+		throw new UnauthenticatedUserException();
+	};
 
 	User requireUser() throws UnauthenticatedUserException;
 

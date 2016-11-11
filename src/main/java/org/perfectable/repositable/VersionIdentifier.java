@@ -28,7 +28,8 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		if (qualifierStart >= 0) {
 			versionBare = entry.substring(0, qualifierStart);
 			versionQualifier = Optional.of(entry.substring(qualifierStart));
-		} else {
+		}
+		else {
 			versionBare = entry;
 			versionQualifier = Optional.empty();
 		}
@@ -117,7 +118,9 @@ public final class VersionIdentifier implements MetadataIdentifier {
 
 	public void addSnapshotVersion(Metadata metadata, Optional<String> classifier, String packaging,
 								   LocalDateTime timestamp, int buildId) {
-		String version = versionBare + "-" + timestamp.format(TIMESTAMP_FORMATTER) + "-" + buildId;
+		String version = versionBare
+				+ ModuleIdentifier.TIMESTAMP_SEPARATOR + timestamp.format(TIMESTAMP_FORMATTER)
+				+ ModuleIdentifier.BUILD_ID_SEPARATOR + buildId;
 		metadata.addSnapshotVersion(classifier.orElse(""), packaging, version, buildId, timestamp);
 	}
 

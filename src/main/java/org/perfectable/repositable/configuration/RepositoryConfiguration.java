@@ -16,9 +16,10 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 @XmlAccessorType(XmlAccessType.NONE)
 @XmlSeeAlso({FileRepositoryConfiguration.class, VirtualRepositoryConfiguration.class})
 public abstract class RepositoryConfiguration {
+	@SuppressWarnings("unused")
 	@XmlID
 	@XmlAttribute(name = "name")
-	protected String name;
+	private String name;
 
 	protected abstract Repository build();
 
