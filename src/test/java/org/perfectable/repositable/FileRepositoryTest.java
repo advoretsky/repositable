@@ -270,6 +270,44 @@ public class FileRepositoryTest extends AbstractServerTest {
 				.hasContentXml(METADATA_RELASE);
 	}
 
+	private static final String METADATA_RELASE_MULTIPLE =
+			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+					"<metadata>\n" +
+					"    <groupId>org.perfectable.test</groupId>\n" +
+					"    <artifactId>test-artifact</artifactId>\n" +
+					"    <versioning>\n" +
+					"        <latest>1.2.5</latest>\n" +
+					"        <versions>\n" +
+					"            <version>1.2.5</version>\n" +
+					"            <version>1.2.1</version>\n" +
+					"        </versions>\n" +
+					"        <snapshotVersions/>\n" +
+					"    </versioning>\n" +
+					"</metadata>\n";
+
+	@Test
+	public void testMetadataReleasePresentMultiple() throws IOException {
+		byte[] artifactContent = {2, 5, 2, 100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.5/test-artifact-1.2.5.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.XML_UTF_8)
+				.hasContentXml(METADATA_RELASE_MULTIPLE);
+	}
+
+	@Test
+	public void testMetadataReleasePresentMultipleWithClassifier() throws IOException {
+		byte[] artifactContent = {2, 5, 2, 100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.5/test-artifact-1.2.5-tests.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.5/test-artifact-1.2.5.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.XML_UTF_8)
+				.hasContentXml(METADATA_RELASE_MULTIPLE);
+	}
+
 	@Test
 	public void testMetadataReleaseMd5Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.md5"))
@@ -288,6 +326,31 @@ public class FileRepositoryTest extends AbstractServerTest {
 	}
 
 	@Test
+	public void testMetadataReleasePresentMd5Multiple() throws IOException {
+		byte[] artifactContent = {2, 5, 2, 100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.5/test-artifact-1.2.5.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
+		String calculatedHash = Hashing.md5().hashString(METADATA_RELASE_MULTIPLE, StandardCharsets.UTF_8).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.md5"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
+	@Test
+	public void testMetadataReleasePresentMd5MultipleWithClassifier() throws IOException {
+		byte[] artifactContent = {2, 5, 2, 100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.5/test-artifact-1.2.5-tests.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.5/test-artifact-1.2.5.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
+		String calculatedHash = Hashing.md5().hashString(METADATA_RELASE_MULTIPLE, StandardCharsets.UTF_8).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.md5"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
+	@Test
 	public void testMetadataReleaseSha1Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.sha1"))
 				.isNotFound();
@@ -298,6 +361,31 @@ public class FileRepositoryTest extends AbstractServerTest {
 		byte[] artifactContent = {2, 5, 2, 100};
 		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
 		String calculatedHash = Hashing.sha1().hashString(METADATA_RELASE, StandardCharsets.UTF_8).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.sha1"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
+	@Test
+	public void testMetadataReleasePresentSha1Multiple() throws IOException {
+		byte[] artifactContent = {2, 5, 2, 100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.5/test-artifact-1.2.5.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
+		String calculatedHash = Hashing.sha1().hashString(METADATA_RELASE_MULTIPLE, StandardCharsets.UTF_8).toString();
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.sha1"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("text", "plain"))
+				.hasContentText(calculatedHash);
+	}
+
+	@Test
+	public void testMetadataReleasePresentSha1MultipleWithClassifier() throws IOException {
+		byte[] artifactContent = {2, 5, 2, 100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.5/test-artifact-1.2.5-tests.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.5/test-artifact-1.2.5.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.2.1/test-artifact-1.2.1.jar", artifactContent);
+		String calculatedHash = Hashing.sha1().hashString(METADATA_RELASE_MULTIPLE, StandardCharsets.UTF_8).toString();
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/maven-metadata.xml.sha1"))
 				.returnedStatus(HttpServletResponse.SC_OK)
 				.hasContentType(MediaType.create("text", "plain"))
@@ -343,6 +431,96 @@ public class FileRepositoryTest extends AbstractServerTest {
 				.hasContentType(MediaType.XML_UTF_8)
 				.hasContentXml(METADATA_SNAPSHOT);
 	}
+
+	private static final String METADATA_SNAPSHOT_MULTIPLE =
+			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+					"<metadata>\n" +
+					"    <groupId>org.perfectable.test</groupId>\n" +
+					"    <artifactId>test-artifact</artifactId>\n" +
+					"    <version>1.0.1-SNAPSHOT</version>\n" +
+					"    <versioning>\n" +
+					"        <snapshot>\n" +
+					"            <timestamp>20161001.102020</timestamp>\n" +
+					"            <buildNumber>2</buildNumber>\n" +
+					"        </snapshot>\n" +
+					"        <versions/>\n" +
+					"        <lastUpdated>20161001102020</lastUpdated>\n" +
+					"        <snapshotVersions>\n" +
+					"            <snapshotVersion>\n" +
+					"                <classifier></classifier>\n" +
+					"                <extension>jar</extension>\n" +
+					"                <value>1.0.1-20161001.102020-2</value>\n" +
+					"                <updated>20161001102020</updated>\n" +
+					"            </snapshotVersion>\n" +
+					"            <snapshotVersion>\n" +
+					"                <classifier></classifier>\n" +
+					"                <extension>jar</extension>\n" +
+					"                <value>1.0.1-20161001.101010-1</value>\n" +
+					"                <updated>20161001101010</updated>\n" +
+					"            </snapshotVersion>\n" +
+					"        </snapshotVersions>\n" +
+					"    </versioning>\n" +
+					"</metadata>\n";
+
+	@Test
+	public void testMetadataSnapshotMultiplePresent() throws IOException {
+		byte[] artifactContent = {2, 5, 2, 100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.102020-2.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.XML_UTF_8)
+				.hasContentXml(METADATA_SNAPSHOT_MULTIPLE);
+	}
+
+	private static final String METADATA_SNAPSHOT_MULTIPLE_CLASSIFIER =
+			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+					"<metadata>\n" +
+					"    <groupId>org.perfectable.test</groupId>\n" +
+					"    <artifactId>test-artifact</artifactId>\n" +
+					"    <version>1.0.1-SNAPSHOT</version>\n" +
+					"    <versioning>\n" +
+					"        <snapshot>\n" +
+					"            <timestamp>20161001.102020</timestamp>\n" +
+					"            <buildNumber>2</buildNumber>\n" +
+					"        </snapshot>\n" +
+					"        <versions/>\n" +
+					"        <lastUpdated>20161001103030</lastUpdated>\n" +
+					"        <snapshotVersions>\n" +
+					"            <snapshotVersion>\n" +
+					"                <classifier>tests</classifier>\n" +
+					"                <extension>jar</extension>\n" +
+					"                <value>1.0.1-20161001.103030-3</value>\n" +
+					"                <updated>20161001103030</updated>\n" +
+					"            </snapshotVersion>\n" +
+					"            <snapshotVersion>\n" +
+					"                <classifier></classifier>\n" +
+					"                <extension>jar</extension>\n" +
+					"                <value>1.0.1-20161001.102020-2</value>\n" +
+					"                <updated>20161001102020</updated>\n" +
+					"            </snapshotVersion>\n" +
+					"            <snapshotVersion>\n" +
+					"                <classifier></classifier>\n" +
+					"                <extension>jar</extension>\n" +
+					"                <value>1.0.1-20161001.101010-1</value>\n" +
+					"                <updated>20161001101010</updated>\n" +
+					"            </snapshotVersion>\n" +
+					"        </snapshotVersions>\n" +
+					"    </versioning>\n" +
+					"</metadata>\n";
+
+	@Test
+	public void testMetadataSnapshotMultiplePresentClassifier() throws IOException {
+		byte[] artifactContent = {2, 5, 2, 100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.103030-3-tests.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.102020-2.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.XML_UTF_8)
+				.hasContentXml(METADATA_SNAPSHOT_MULTIPLE_CLASSIFIER);
+	}
+
 
 	@Test
 	public void testMetadataSnapshotMd5Missing() {

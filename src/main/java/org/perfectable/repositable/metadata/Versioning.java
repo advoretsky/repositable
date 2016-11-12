@@ -106,7 +106,11 @@ public class Versioning {
 	public void addSnapshotVersion(String classifier, String extension, String version, int buildId,
 								   LocalDateTime timestamp) {
 		snapshotVersions.add(SnapshotVersion.of(classifier, extension, version, buildId, timestamp));
-		setSnapshot(snapshotVersions.first().toSnapshot());
+		snapshotVersions.stream()
+				.filter(candidate -> candidate.getClassifier().isEmpty())
+				.findFirst()
+				.map(SnapshotVersion::toSnapshot)
+				.ifPresent(this::setSnapshot);
 		LocalDateTime newLastUpdated =
 				TIMESTAMP_COMPARATOR.compare(timestamp, lastUpdated) > 0 ? timestamp : lastUpdated;
 		setLastUpdated(newLastUpdated);
