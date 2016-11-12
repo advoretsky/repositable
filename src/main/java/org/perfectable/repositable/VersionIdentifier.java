@@ -90,7 +90,10 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		if (isSnapshot()) {
 			List<SnapshotIdentifier> candidates = new LinkedList<>();
 			lister.list(element -> {
-				SnapshotIdentifier.ofEntry(this, element).ifPresent(candidates::add);
+				SnapshotIdentifier.ofEntry(this, element)
+						.filter(candidate -> candidate.hasClassifier(classifier))
+						.filter(candidate -> candidate.hasPackaging(packaging))
+						.ifPresent(candidates::add);
 			});
 			if (candidates.isEmpty()) {
 				return asArtifactPath(classifier, packaging);

@@ -84,4 +84,12 @@ public final class SnapshotIdentifier implements ArtifactIdentifier {
 	public static SnapshotIdentifier newest(List<SnapshotIdentifier> candidates) {
 		return Ordering.natural().<SnapshotIdentifier>onResultOf(candidate -> candidate.timestamp).max(candidates);
 	}
+
+	boolean hasClassifier(Optional<String> candidateClassifier) {
+		return packageIdentifier.hasClassifier(candidateClassifier);
+	}
+
+	boolean hasPackaging(String candidatePackaging) {
+		return packageIdentifier.hasPackaging(candidatePackaging);
+	}
 }

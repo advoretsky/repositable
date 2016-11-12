@@ -53,4 +53,12 @@ public final class PackageIdentifier implements ArtifactIdentifier {
 	public boolean matches(Filter filter) {
 		return filter.matchesPackage(versionIdentifier, classifier, packaging);
 	}
+
+	boolean hasClassifier(Optional<String> candidateClassifier) {
+		return this.classifier.equals(candidateClassifier);
+	}
+
+	boolean hasPackaging(String candidatePackaging) {
+		return this.packaging.equals(candidatePackaging);
+	}
 }

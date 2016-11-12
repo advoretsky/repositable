@@ -181,6 +181,19 @@ public class FileRepositoryTest extends AbstractServerTest {
 	}
 
 	@Test
+	public void testArtifactLatestSnapshotDifferentPackaging() throws IOException {
+		byte[] artifactContent1 = {2, 5, 2, 100};
+		byte[] artifactContent2 = {2, 5, 2, 120};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent1);
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.102020-2.pom", artifactContent2);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.create("application", "x-java-archive"))
+				.hasContent(artifactContent1);
+	}
+
+
+	@Test
 	public void testArtifactLatestSnapshotMd5Missing() {
 		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-SNAPSHOT.jar.md5"))
 				.isNotFound();
