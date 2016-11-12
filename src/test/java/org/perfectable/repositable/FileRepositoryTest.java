@@ -432,6 +432,17 @@ public class FileRepositoryTest extends AbstractServerTest {
 				.hasContentXml(METADATA_SNAPSHOT);
 	}
 
+	@Test
+	public void testMetadataSnapshotPresentInvalidFile() throws IOException {
+		byte[] artifactContent = {2, 5, 2, 100};
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-20161001.101010-1.jar", artifactContent);
+		createFile("test-content/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/test-artifact-1.0.1-tests.jar", artifactContent);
+		assertConnectionTo(createUrl("/test-repository/org/perfectable/test/test-artifact/1.0.1-SNAPSHOT/maven-metadata.xml"))
+				.returnedStatus(HttpServletResponse.SC_OK)
+				.hasContentType(MediaType.XML_UTF_8)
+				.hasContentXml(METADATA_SNAPSHOT);
+	}
+
 	private static final String METADATA_SNAPSHOT_MULTIPLE =
 			"<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
 					"<metadata>\n" +

@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 
 import com.google.common.collect.Ordering;
 
-import static com.google.common.base.Preconditions.checkState;
-
 public final class SnapshotIdentifier implements ArtifactIdentifier {
 
 	private static final Pattern SUFFIX_PATTERN =
@@ -35,19 +33,24 @@ public final class SnapshotIdentifier implements ArtifactIdentifier {
 		return new SnapshotIdentifier(packageIdentifier, timestamp, buildId);
 	}
 
-	public static SnapshotIdentifier ofEntry(VersionIdentifier versionIdentifier, String entry) {
+	public static Optional<SnapshotIdentifier> ofEntry(VersionIdentifier versionIdentifier, String entry) {
 		String baseName = versionIdentifier.asFileBaseName();
-		checkState(entry.startsWith(baseName));
+		if (!entry.startsWith(baseName)) {
+			return Optional.empty();
+		}
 		String suffix = entry.substring(baseName.length() + 1);
 		Matcher matcher = SUFFIX_PATTERN.matcher(suffix);
-		checkState(matcher.matches());
+		if (!matcher.matches()) {
+			return Optional.empty();
+		}
 		LocalDateTime timestamp = LocalDateTime.parse(matcher.group(1), TIMESTAMP_FORMATTER); // SUPPRESS MagicNumber
 		int buildId = Integer.parseInt(matcher.group(2)); // SUPPRESS MagicNumber
 		String classifier = matcher.group(3); // SUPPRESS MagicNumber
 		String packaging = matcher.group(4); // SUPPRESS MagicNumber
 		PackageIdentifier packageIdentifier =
 				PackageIdentifier.of(versionIdentifier, Optional.ofNullable(classifier), packaging);
-		return of(packageIdentifier, timestamp, buildId);
+		SnapshotIdentifier snapshotIdentifier = of(packageIdentifier, timestamp, buildId);
+		return Optional.of(snapshotIdentifier);
 	}
 
 	@Override

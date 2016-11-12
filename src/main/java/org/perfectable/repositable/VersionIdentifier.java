@@ -54,8 +54,8 @@ public final class VersionIdentifier implements MetadataIdentifier {
 	public Metadata createMetadata(EntryLister lister) {
 		Metadata metadata = createEmptyMetadata();
 		lister.list(element -> {
-			SnapshotIdentifier snapshotIdentifier = SnapshotIdentifier.ofEntry(this, element);
-			snapshotIdentifier.appendVersion(metadata);
+			SnapshotIdentifier.ofEntry(this, element)
+					.ifPresent(identifier -> identifier.appendVersion(metadata));
 		});
 		return metadata;
 	}
@@ -90,8 +90,7 @@ public final class VersionIdentifier implements MetadataIdentifier {
 		if (isSnapshot()) {
 			List<SnapshotIdentifier> candidates = new LinkedList<>();
 			lister.list(element -> {
-				SnapshotIdentifier candidate = SnapshotIdentifier.ofEntry(this, element);
-				candidates.add(candidate);
+				SnapshotIdentifier.ofEntry(this, element).ifPresent(candidates::add);
 			});
 			if (candidates.isEmpty()) {
 				return asArtifactPath(classifier, packaging);
