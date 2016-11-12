@@ -1,11 +1,11 @@
 package org.perfectable.repositable;
 
 import org.perfectable.webable.handler.HttpRequest;
+import org.perfectable.webable.handler.HttpResponse;
 
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
-import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
 
 public final class PublishedArtifact implements Artifact {
@@ -20,19 +20,14 @@ public final class PublishedArtifact implements Artifact {
 	}
 
 	@Override
-	public void writeContent(OutputStream stream) {
-		throw new UnsupportedOperationException("Cannot write to published artifact");
-	}
-
-	@Override
-	public InputStream openStream() {
+	public InputStream openStream() throws IOException {
 		return request.contentStream();
 	}
 
 	@Override
-	public MediaType mediaType() {
-		return request.header(HttpHeaders.CONTENT_TYPE)
-				.map(MediaType::parse)
+	public HttpResponse asResponse() {
+		MediaType contentType = request.declaredContentType()
 				.orElse(MediaType.OCTET_STREAM);
+		return HttpResponse.OK.withContentSource(contentType, request.contentSource());
 	}
 }

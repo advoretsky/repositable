@@ -9,8 +9,6 @@ import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.HttpStatus;
 import org.perfectable.webable.handler.RequestHandler;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -58,7 +56,7 @@ public final class ArtifactHandler implements RequestHandler {
 		}
 		LOGGER.debug("Requested artifact content {}", location);
 		Artifact artifact = artifactContent.get();
-		HttpResponse response = ArtifactHttpResponse.of(artifact);
+		HttpResponse response = artifact.asResponse();
 		return location.transformResponse(response);
 	}
 
@@ -94,26 +92,5 @@ public final class ArtifactHandler implements RequestHandler {
 		}
 		LOGGER.info("User {} uploaded {}", uploader, location);
 		return HttpResponse.status(HttpStatus.OK);
-	}
-
-	private static final class ArtifactHttpResponse implements HttpResponse {
-		private final Artifact artifact;
-
-		public static ArtifactHttpResponse of(Artifact artifact) {
-			return new ArtifactHttpResponse(artifact);
-		}
-
-		private ArtifactHttpResponse(Artifact artifact) {
-			this.artifact = artifact;
-		}
-
-		@Override
-		public void writeTo(Writer writer) throws IOException {
-			writer.setStatus(HttpStatus.OK);
-			writer.setContentType(artifact.mediaType());
-			try (OutputStream stream = writer.stream()) {
-				artifact.writeContent(stream);
-			}
-		}
 	}
 }

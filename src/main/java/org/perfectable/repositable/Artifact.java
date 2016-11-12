@@ -1,14 +1,12 @@
 package org.perfectable.repositable;
 
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.perfectable.webable.handler.HttpResponse;
 
-import com.google.common.net.MediaType;
+import java.io.IOException;
+import java.io.InputStream;
 
 public interface Artifact {
-	void writeContent(OutputStream stream);
+	InputStream openStream() throws IOException;
 
-	InputStream openStream();
-
-	MediaType mediaType();
+	HttpResponse asResponse();
 }

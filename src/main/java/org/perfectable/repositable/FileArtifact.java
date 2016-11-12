@@ -1,15 +1,12 @@
 package org.perfectable.repositable;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import org.perfectable.webable.handler.HttpResponse;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-
-import com.google.common.io.ByteStreams;
-import com.google.common.net.MediaType;
+import java.nio.file.StandardOpenOption;
 
 public final class FileArtifact implements Artifact {
 	private final Path sourceFile;
@@ -23,37 +20,12 @@ public final class FileArtifact implements Artifact {
 	}
 
 	@Override
-	public void writeContent(OutputStream outputStream) {
-		try (FileInputStream inputStream = new FileInputStream(sourceFile.toFile())) {
-			ByteStreams.copy(inputStream, outputStream);
-		}
-		catch (IOException e) {
-			throw new AssertionError(e);
-		}
+	public InputStream openStream() throws IOException {
+		return Files.newInputStream(sourceFile, StandardOpenOption.READ);
 	}
 
 	@Override
-	public InputStream openStream() {
-		try {
-			return new FileInputStream(sourceFile.toFile());
-		}
-		catch (FileNotFoundException e) {
-			throw new AssertionError(e);
-		}
-	}
-
-	@Override
-	public MediaType mediaType() {
-		String mediaTypeString;
-		try {
-			mediaTypeString = Files.probeContentType(sourceFile);
-		}
-		catch (IOException e) {
-			throw new AssertionError(e);
-		}
-		if (mediaTypeString == null) {
-			return MediaType.OCTET_STREAM;
-		}
-		return MediaType.parse(mediaTypeString);
+	public HttpResponse asResponse() {
+		return HttpResponse.OK.withGuessedFileContent(sourceFile);
 	}
 }

@@ -15,14 +15,17 @@ import org.perfectable.repositable.metadata.Metadata;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.DirectoryStream;
+import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Optional;
 
-import com.google.common.io.Files;
+import com.google.common.io.ByteStreams;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.file.Files.newDirectoryStream;
@@ -78,7 +81,10 @@ public final class FileRepository implements Repository {
 		createDirectoryIfNeeded(parent);
 		try {
 			InputStream source = artifact.openStream();
-			Files.asByteSink(absolutePath.toFile()).writeFrom(source);
+			try (OutputStream target = Files.newOutputStream(absolutePath,
+					StandardOpenOption.CREATE, StandardOpenOption.WRITE, StandardOpenOption.TRUNCATE_EXISTING)) {
+				ByteStreams.copy(source, target);
+			}
 		}
 		catch (IOException e) {
 			throw new AssertionError(e);

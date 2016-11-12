@@ -6,9 +6,6 @@ import org.perfectable.webable.handler.HttpResponse;
 import org.perfectable.webable.handler.HttpStatus;
 import org.perfectable.webable.handler.RequestHandler;
 
-import java.io.IOException;
-import java.io.OutputStream;
-
 import com.google.common.net.MediaType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +49,8 @@ public final class MetadataHandler implements RequestHandler {
 		if (metadata.isEmpty()) {
 			return HttpResponse.NOT_FOUND;
 		}
-		HttpResponse response = MetadataHttpResponse.of(metadata);
+		HttpResponse response = HttpResponse.OK
+				.withContentWriter(MediaType.XML_UTF_8, metadata::writeInto);
 		return location.transformResponse(response);
 	}
 
@@ -60,26 +58,5 @@ public final class MetadataHandler implements RequestHandler {
 		LOGGER.debug("Ignored upload of metadata {}", location);
 		// metadata upload is ignored
 		return HttpResponse.status(HttpStatus.OK);
-	}
-
-	private static final class MetadataHttpResponse implements HttpResponse {
-		private final Metadata metadata;
-
-		public static MetadataHttpResponse of(Metadata metadata) {
-			return new MetadataHttpResponse(metadata);
-		}
-
-		private MetadataHttpResponse(Metadata metadata) {
-			this.metadata = metadata;
-		}
-
-		@Override
-		public void writeTo(Writer writer) throws IOException {
-			writer.setStatus(HttpStatus.OK);
-			writer.setContentType(MediaType.XML_UTF_8);
-			try (OutputStream stream = writer.stream()) {
-				metadata.writeInto(stream);
-			}
-		}
 	}
 }
