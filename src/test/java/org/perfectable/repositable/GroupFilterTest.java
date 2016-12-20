@@ -6,15 +6,15 @@ import org.perfectable.repositable.filter.GroupFilter;
 import org.perfectable.repositable.repository.FileRepository;
 import org.perfectable.repositable.repository.Repositories;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.hash.Hashing;
 import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 
@@ -22,11 +22,11 @@ public class GroupFilterTest extends AbstractServerTest {
 
 	@Override
 	protected Server createBaseConfiguration() throws IOException {
-		File repositoryBase = folder.newFolder("test-content");
+		Path repositoryBase = baseDirectory.createDirectory("test-content").asPath();
 		User uploader = User.create("test-uploader", "test-uploader-password");
 		Group uploaders = Group.create().join(uploader);
 		Repository repository =
-				FileRepository.create(repositoryBase.toPath())
+				FileRepository.create(repositoryBase)
 						.filtered(GroupFilter.of("org.perfectable.allowed"))
 						.restrictUploaders(uploaders);
 		Repositories repositories = Repositories.create()

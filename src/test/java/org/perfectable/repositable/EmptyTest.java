@@ -2,7 +2,7 @@ package org.perfectable.repositable;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 

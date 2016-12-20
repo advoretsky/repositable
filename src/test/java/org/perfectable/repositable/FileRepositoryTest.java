@@ -5,16 +5,16 @@ import org.perfectable.repositable.authorization.User;
 import org.perfectable.repositable.repository.FileRepository;
 import org.perfectable.repositable.repository.Repositories;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.hash.Hashing;
 import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 
@@ -22,14 +22,14 @@ public class FileRepositoryTest extends AbstractServerTest {
 
 	@Override
 	protected Server createBaseConfiguration() throws IOException {
-		File repositoryBase = folder.newFolder("test-content");
+		Path repositoryBase = baseDirectory.createDirectory("test-content").asPath();
 		User authorizedUser = User.create("test-user", "test-user-password");
 		User uploader = User.create("test-uploader", "test-uploader-password");
 		Group uploaders = Group.create()
 				.join(uploader);
 		Group loggableUsers = uploaders
 				.join(authorizedUser);
-		Repository repository = FileRepository.create(repositoryBase.toPath())
+		Repository repository = FileRepository.create(repositoryBase)
 				.withBuildGenerator(packageIdentifier ->
 						SnapshotIdentifier.of(packageIdentifier, LocalDateTime.parse("2016-11-08T10:00:00"), 1))
 				.restrictUploaders(uploaders);

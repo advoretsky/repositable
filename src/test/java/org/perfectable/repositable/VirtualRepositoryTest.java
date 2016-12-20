@@ -6,15 +6,15 @@ import org.perfectable.repositable.repository.FileRepository;
 import org.perfectable.repositable.repository.Repositories;
 import org.perfectable.repositable.repository.VirtualRepository;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import javax.servlet.http.HttpServletResponse;
 
 import com.google.common.hash.Hashing;
 import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
 
@@ -24,11 +24,11 @@ public class VirtualRepositoryTest extends AbstractServerTest {
 	protected Server createBaseConfiguration() throws IOException {
 		User uploader = User.create("test-uploader", "test-uploader-password");
 		Group uploaders = Group.create().join(uploader);
-		File repository1Base = folder.newFolder("test-1");
-		Repository repository1 = FileRepository.create(repository1Base.toPath())
+		Path repository1Base = baseDirectory.createDirectory("test-1").asPath();
+		Repository repository1 = FileRepository.create(repository1Base)
 				.restrictUploaders(uploaders);
-		File repository2Base = folder.newFolder("test-2");
-		Repository repository2 = FileRepository.create(repository2Base.toPath())
+		Path repository2Base = baseDirectory.createDirectory("test-2").asPath();
+		Repository repository2 = FileRepository.create(repository2Base)
 				.restrictUploaders(uploaders);
 		Repositories sources = Repositories.create()
 				.withAdditional("1", repository1)
