@@ -16,7 +16,7 @@ import com.google.common.net.HttpHeaders;
 import com.google.common.net.MediaType;
 import org.junit.jupiter.api.Test;
 
-import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
+import static org.perfectable.testable.http.HttpConnectionAssertions.assertConnectionTo;
 
 public class SnapshotFilterTest extends AbstractServerTest {
 

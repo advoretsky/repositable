@@ -3,7 +3,7 @@ package org.perfectable.repositable;
 import org.perfectable.testable.files.Directory;
 import org.perfectable.testable.files.FilesExtension;
 import org.perfectable.testable.files.Temporary;
-import org.perfectable.webable.PortHelper;
+import org.perfectable.testable.tcp.Ports;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -25,7 +25,7 @@ public abstract class AbstractServerTest {
 
 	@BeforeEach
 	public final void createServer() throws Exception {
-		port = PortHelper.determineAvailablePort(20000, 30000);
+		port = Ports.availablePort();
 		Server server = createBaseConfiguration()
 				.withPort(port);
 		monitor = server.serve();

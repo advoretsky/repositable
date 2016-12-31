@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.junit.jupiter.api.Test;
 
-import static org.perfectable.webable.ConnectionAssertions.assertConnectionTo;
+import static org.perfectable.testable.http.HttpConnectionAssertions.assertConnectionTo;
 
 public class EmptyTest extends AbstractServerTest {
 
